@@ -1,0 +1,16 @@
+name: Notify Portfolio on Update
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger portfolio rebuild
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.PORTFOLIO_DISPATCH_TOKEN }}
+          repository: Kush-Singh-26/Kush-Singh-26.github.io
+          event-type: theme-updated
