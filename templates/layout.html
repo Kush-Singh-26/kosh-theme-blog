@@ -15,22 +15,19 @@
 
     <link rel="preconnect" href="{{ .BaseURL }}">
     <link rel="dns-prefetch" href="{{ .BaseURL }}">
-    
-    <!-- Preload WASM search engine for faster first search -->
-    <link rel="preload" href="{{ .BaseURL }}/static/wasm/search.wasm" as="fetch" crossorigin>
 
     <title>{{ .TabTitle }}</title>
     <meta name="description" content="{{ .Description }}">
-        
+
     <!-- Interactive math simulations -->
-    <script src="/static/js/wasm_engine.js" defer></script>
+    <script src="{{ relativize .BaseURL .RelativePrefix "/static/js/wasm_engine.js" }}" defer></script>
 
     <meta name="google-site-verification" content="Xr0Ov0Imhz_enNxV6fyMfzSrJyICO_V5PZV49w4b2DM" />
 
     <link rel="canonical" href="{{ .Permalink }}">
-    <link rel="alternate" type="application/rss+xml" title="{{ .Title }} RSS Feed" href="{{ .BaseURL }}/rss.xml" />
+    <link rel="alternate" type="application/rss+xml" title="{{ .Title }} RSS Feed" href="{{ relativize .BaseURL .RelativePrefix "/rss.xml" }}" />
     <meta name="theme-color" content="#111113">
-    <link rel="apple-touch-icon" href="{{ .BaseURL }}/static/images/icon-192.png">
+    <link rel="apple-touch-icon" href="{{ relativize .BaseURL .RelativePrefix "/static/images/icon-192.png" }}">
 
     <meta property="og:type" content="article">
 
@@ -50,72 +47,78 @@
     <meta name="twitter:image" content="{{ .Image }}">
 
     {{ if len .Assets }}
-    <link rel="stylesheet" href="{{ .BaseURL }}{{ index .Assets "/static/css/layout.css" }}">
+    <link rel="stylesheet" href="{{ relativize .BaseURL .RelativePrefix (index .Assets "/static/css/layout.css") }}">
     {{ else }}
-    <link rel="stylesheet" href="{{ .BaseURL }}/static/css/layout.css">
-    {{ end }}
-    
-    <script>window.siteBaseURL = "{{ .BaseURL }}";</script>
-    {{ if .Config.Logo }}
-    <link rel="icon" type="image/png" href="{{ .BaseURL }}/{{ .Config.Logo }}">
-    {{ else }}
-    <link rel="icon" href="{{ .BaseURL }}/static/images/favicon.png" width="35" height="35">
+    <link rel="stylesheet" href="{{ relativize .BaseURL .RelativePrefix "/static/css/layout.css" }}">
     {{ end }}
 
-    <link rel="manifest" href="{{ .BaseURL }}/manifest.json">
+
+    <script>
+        window.siteBaseURL = "{{ .BaseURL }}";
+        window.buildVersion = "{{ .BuildVersion }}";
+    </script>
+    {{ if .Config.Logo }}
+    <link rel="icon" type="image/png" href="{{ relativize .BaseURL .RelativePrefix (printf "/%s" .Config.Logo) }}">
+    {{ else }}
+    <link rel="icon" href="{{ relativize .BaseURL .RelativePrefix "/static/images/favicon.png" }}" width="35" height="35">
+    {{ end }}
+
+    <link rel="manifest" href="{{ relativize .BaseURL .RelativePrefix "/manifest.json" }}">
 
 
     {{ if not .IsIndex }}
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "BlogPosting",
-      "headline": "{{ .Title }}",
-      "image": ["{{ .Image }}"],
-      "description": "{{ .Description }}",
-      "datePublished": "{{ .Meta.date }}",
-      "author": {
-        "@type": "Person",
-        "name": "{{ .Config.Author.Name }}",
-        "url": "{{ .Config.Author.URL }}"
-      }
-    }
-    </script>
+    <script type="application/ld+json">{{ .JSONLD }}</script>
     {{ end }}
 </head>
 
 <body>
     <!-- Reading Progress Bar -->
     <div id="progress-bar"></div>
-    
-    <header>
-        <a href="{{ .BaseURL }}/" class="site-title">
+
+        <header>
+        <a href="{{ relativize .BaseURL .RelativePrefix "/" }}" class="site-title">
             {{ if .Config.Logo }}
-            <img src="{{ .BaseURL }}/{{ .Config.Logo }}" alt="Logo" class="site-logo" width="35" height="35">
+            <img src="{{ relativize .BaseURL .RelativePrefix (printf "/%s" .Config.Logo) }}" alt="Logo" class="site-logo" width="35" height="35">
             {{ else }}
-            <img src="{{ .BaseURL }}/static/images/favicon.png" alt="" class="site-logo" width="35" height="35">
+            <img src="{{ relativize .BaseURL .RelativePrefix "/static/images/favicon.png" }}" alt="" class="site-logo" width="35" height="35">
             {{ end }}
             {{ .Config.Title }}
         </a>
+
 
         <nav>
             <!-- Desktop nav items (includes theme toggle at end) -->
             <div class="desktop-nav">
                 {{ range .Config.Menu }}
                 {{ if .URL }}
-                <a href="{{ if hasPrefix .URL "http" }}{{ .URL }}{{ else }}{{ $.BaseURL }}{{ .URL }}{{ end }}" {{ if
-                    .Target }}target="{{ .Target }}" {{ end }} {{ if .ID }}id="{{ .ID }}" {{ end }} {{ if .Class
-                    }}class="{{ .Class }}" {{ end }}>{{ .Name }}</a>
+                <a href="{{ if hasPrefix .URL "http" }}{{ .URL }}{{ else }}{{ relativize $.BaseURL $.RelativePrefix .URL }}{{ end }}" {{ if .Target }}target="{{ .Target }}" {{ end }} {{
+                    if .ID }}id="{{ .ID }}" {{ end }} {{ if .Class }}class="{{ .Class }}" {{ end }}>{{ .Name }}</a>
                 {{ else }}
+
                 <button {{ if .ID }}id="{{ .ID }}" {{ end }} {{ if .Class }}class="{{ .Class }}" {{ end }}
                     aria-label="{{ .Name }}">{{ .Name }}</button>
                 {{ end }}
                 {{ end }}
                 <button id="theme-toggle" aria-label="Toggle Theme">
-                    <span class="theme-icon-light">☀️</span> <span class="theme-icon-dark">🌙</span>
+                    <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
                 </button>
             </div>
-            
+
             <!-- Mobile: Search button always visible -->
             <button id="search-btn-mobile" class="nav-btn mobile-search-btn" aria-label="Search">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -123,12 +126,27 @@
                     <path d="m21 21-4.35-4.35"></path>
                 </svg>
             </button>
-            
+
             <!-- Mobile: Theme toggle -->
             <button id="theme-toggle-mobile" class="mobile-theme-toggle" aria-label="Toggle Theme">
-                <span class="theme-icon-light">☀️</span> <span class="theme-icon-dark">🌙</span>
+                <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
             </button>
-            
+
             <!-- Hamburger menu button (mobile only) -->
             <button id="menu-toggle" class="menu-toggle" aria-label="Toggle Menu" aria-expanded="false">
                 <span class="hamburger-line"></span>
@@ -152,16 +170,15 @@
         <div class="mobile-menu-content">
             {{ range .Config.Menu }}
             {{ if .URL }}
-            <a href="{{ if hasPrefix .URL "http" }}{{ .URL }}{{ else }}{{ $.BaseURL }}{{ .URL }}{{ end }}" 
-               {{ if .Target }}target="{{ .Target }}"{{ end }} 
-               {{ if .ID }}id="mobile-{{ .ID }}"{{ end }} 
-               {{ if .Class }}class="mobile-nav-link {{ .Class }}"{{ else }}class="mobile-nav-link"{{ end }}>
+            <a href="{{ if hasPrefix .URL "http" }}{{ .URL }}{{ else }}{{ relativize $.BaseURL $.RelativePrefix .URL }}{{ end }}" {{ if .Target }}target="{{ .Target }}" {{ end }} {{ if
+                .ID }}id="mobile-{{ .ID }}" {{ end }} {{ if .Class }}class="mobile-nav-link {{ .Class }}" {{ else
+                }}class="mobile-nav-link" {{ end }}>
                 {{ .Name }}
             </a>
             {{ else }}
-            <button {{ if .ID }}id="mobile-{{ .ID }}"{{ end }} 
-                    {{ if .Class }}class="mobile-nav-link {{ .Class }}"{{ else }}class="mobile-nav-link"{{ end }} 
-                    aria-label="{{ .Name }}">{{ .Name }}</button>
+
+            <button {{ if .ID }}id="mobile-{{ .ID }}" {{ end }} {{ if .Class }}class="mobile-nav-link {{ .Class }}" {{
+                else }}class="mobile-nav-link" {{ end }} aria-label="{{ .Name }}">{{ .Name }}</button>
             {{ end }}
             {{ end }}
         </div>
@@ -174,7 +191,7 @@
         <h1 class="center-text no-border">Topics</h1>
         <div class="tag-cloud center-flex">
             {{ range .AllTags }}
-            <a href="{{ .Link }}" class="tag-pill">
+            <a href="{{ relativize $.BaseURL $.RelativePrefix .Link }}" class="tag-pill">
                 #{{ .Name }}
                 <span class="tag-count">{{ .Count }}</span>
             </a>
@@ -186,7 +203,7 @@
         <ul class="post-list">
             {{ range .Posts }}
             <li>
-                <a href="{{ .Link }}" class="post-title">{{ .Title }}</a>
+                <a href="{{ relativize $.BaseURL $.RelativePrefix .Link }}" class="post-title">{{ .Title }}</a>
 
                 <div class="meta-info mb-small">
                     <span>{{ .DateObj.Format "Jan 02, 2006" }}</span>
@@ -199,13 +216,14 @@
                 {{ if .Tags }}
                 <div class="tag-row">
                     {{ range .Tags }}
-                    <span class="mini-tag">#{{ . }}</span>
+                    <a href="{{ relativize $.BaseURL $.RelativePrefix (printf "/tags/%s.html" (. | slugify)) }}" class="mini-tag">#{{ . }}</a>
                     {{ end }}
                 </div>
                 {{ end }}
             </li>
             {{ end }}
         </ul>
+
 
         {{ else }}
         <article>
@@ -223,13 +241,13 @@
                 {{ if .Meta.tags }}
                 <span class="meta-divider">|</span>
                 {{ range .Meta.tags }}
-                <a href="{{ $.BaseURL }}/tags/{{ . | lower }}.html" class="tag-pill small-pill">#{{ . }}</a>
+                <a href="{{ relativize $.BaseURL $.RelativePrefix (printf "/tags/%s.html" (. | slugify)) }}" class="tag-pill small-pill">#{{ . }}</a>
                 {{ end }}
                 {{ end }}
 
                 {{ if .Config.Features.RawMarkdown }}
                 <span class="meta-divider">|</span>
-                <a href="{{ .Permalink | replace ".html" ".md" }}" target="_blank" class="tag-pill small-pill">View Source</a>
+                <a href="{{ relativize $.BaseURL $.RelativePrefix (replace ".html" ".md" .Permalink) }}" target="_blank" class="tag-pill small-pill">View Source</a>
                 {{ end }}
             </div>
             {{ if .TOC }}
@@ -281,11 +299,11 @@
     {{/* KaTeX JS is no longer needed - using Server-Side Rendering (SSR) */}}
 
     {{ if len .Assets }}
-    <script defer src="{{ .BaseURL }}{{ index .Assets "/static/js/main.js" }}"></script>
-    <script defer src="{{ .BaseURL }}{{ index .Assets "/static/js/search.js" }}"></script>
+    <script defer src="{{ relativize .BaseURL .RelativePrefix (index .Assets "/static/js/main.js") }}"></script>
+    <script defer src="{{ relativize .BaseURL .RelativePrefix (index .Assets "/static/js/search.js") }}"></script>
     {{ else }}
-    <script defer src="{{ .BaseURL }}/static/js/main.js?v={{ .BuildVersion }}"></script>
-    <script defer src="{{ .BaseURL }}/static/js/search.js?v={{ .BuildVersion }}"></script>
+    <script defer src="{{ relativize .BaseURL .RelativePrefix "/static/js/main.js" }}?v={{ .BuildVersion }}"></script>
+    <script defer src="{{ relativize .BaseURL .RelativePrefix "/static/js/search.js" }}?v={{ .BuildVersion }}"></script>
     {{ end }}
 
 
@@ -340,7 +358,7 @@
                 // Production: PWA Service Worker Registration
                 if ('serviceWorker' in navigator) {
                     window.addEventListener('load', () => {
-                        const swPath = '{{ .BaseURL }}/sw.js';
+                        const swPath = '{{ relativize .BaseURL .RelativePrefix "/sw.js" }}';
                         navigator.serviceWorker.register(swPath)
                             .then(registration => {
                                 console.log('✅ ServiceWorker registration successful with scope: ', registration.scope);
