@@ -71,7 +71,7 @@
     <div id="graph-container"></div>
 
     <script>
-        window.GRAPH_BASE_URL = '{{ relativize .BaseURL .RelativePrefix "" }}';
+        window.GRAPH_BASE_URL = '{{ .BaseURL }}';
     </script>
 
     <!-- Search Modal -->
