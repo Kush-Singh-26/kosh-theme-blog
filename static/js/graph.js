@@ -104,10 +104,17 @@ async function loadGraph() {
     }
 }
 
-// Handle Window Resize
+// Handle Window Resize (Debounced / requestAnimationFrame)
+let resizeTicking = false;
 window.addEventListener('resize', () => {
-    Graph.width(window.innerWidth);
-    Graph.height(window.innerHeight);
+    if (!resizeTicking) {
+        window.requestAnimationFrame(() => {
+            Graph.width(window.innerWidth);
+            Graph.height(window.innerHeight);
+            resizeTicking = false;
+        });
+        resizeTicking = true;
+    }
 });
 
 // Handle Theme Switch

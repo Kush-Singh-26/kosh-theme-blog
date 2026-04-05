@@ -15,7 +15,10 @@
     flex-direction: column;
     justify-content: space-between;
     min-height: 260px;
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.2s ease,
+                background-color 0.15s ease,
+                border-color 0.15s ease;
     position: relative;
     overflow: hidden;
     text-decoration: none;
@@ -40,7 +43,10 @@
     background: var(--bg-card);
     border-radius: 12px;
     border: 1px solid var(--border);
-    transition: all 0.3s ease;
+    transition: transform 0.2s ease,
+                box-shadow 0.2s ease,
+                background-color 0.15s ease,
+                border-color 0.15s ease;
     position: relative;
     overflow: hidden;
 }
@@ -94,7 +100,9 @@
     align-items: center;
     white-space: nowrap;
     text-decoration: none;
-    transition: all 0.2s ease;
+    transition: background-color 0.15s ease,
+                border-color 0.15s ease,
+                color 0.15s ease;
 }
 
 .bento-tag:hover,
@@ -147,7 +155,10 @@
     margin-bottom: 1.5rem;
     border-radius: 12px;
     border: 1px solid var(--border);
-    transition: all 0.3s ease;
+    transition: transform 0.2s ease,
+                box-shadow 0.2s ease,
+                background-color 0.15s ease,
+                border-color 0.15s ease;
     background: var(--bg-card);
     position: relative;
     overflow: hidden;

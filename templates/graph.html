@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <script>
-        (function() {
+        (function () {
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme === 'light') {
                 document.documentElement.setAttribute('data-theme', 'light');
@@ -14,112 +15,139 @@
 
     <title>{{ .TabTitle }}</title>
     <meta name="theme-color" content="#111113">
-    <link rel="apple-touch-icon" href="{{ .BaseURL }}/static/images/icon-192.png">
-    <link rel="manifest" href="{{ .BaseURL }}/manifest.json">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self'; object-src 'none'; base-uri 'self'; worker-src 'self'; manifest-src 'self';">
-    
+    <link rel="apple-touch-icon" href="{{ relativize .BaseURL .RelativePrefix "/static/images/icon-192.png" }}">
+    <link rel="manifest" href="{{ relativize .BaseURL .RelativePrefix "/manifest.json" }}">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; img-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self'; object-src 'none'; base-uri 'self'; worker-src 'self'; manifest-src 'self';">
+
     {{ if .Assets }}
-    <link rel="stylesheet" href="{{ .BaseURL }}{{ index .Assets "/static/css/layout.css" }}">
-    <link rel="stylesheet" href="{{ .BaseURL }}{{ index .Assets "/static/css/theme.css" }}">
-    <link rel="stylesheet" href="{{ .BaseURL }}{{ index .Assets "/static/css/graph.css" }}">
-    <script src="{{ .BaseURL }}{{ index .Assets "/static/js/force-graph.js" }}"></script>
+    <link rel="stylesheet" href="{{ relativize .BaseURL .RelativePrefix (index .Assets "/static/css/layout.css") }}">
+    <link rel="stylesheet" href="{{ relativize .BaseURL .RelativePrefix (index .Assets "/static/css/theme.css") }}">
+    <link rel="stylesheet" href="{{ relativize .BaseURL .RelativePrefix (index .Assets "/static/css/graph.css") }}">
+    <script src="{{ relativize .BaseURL .RelativePrefix "/static/js/force-graph.js" }}?v={{ .BuildVersion }}"></script>
     {{ else }}
-    <link rel="stylesheet" href="{{ .BaseURL }}/static/css/graph.css">
-    <script src="{{ .BaseURL }}/static/js/force-graph.js"></script>
+    <link rel="stylesheet" href="{{ relativize .BaseURL .RelativePrefix "/static/css/graph.css" }}">
+    <script src="{{ relativize .BaseURL .RelativePrefix "/static/js/force-graph.js" }}?v={{ .BuildVersion }}"></script>
     {{ end }}
     {{ if .Config.Logo }}
-    <link rel="icon" type="image/png" href="{{ .BaseURL }}/{{ .Config.Logo }}">
+    <link rel="icon" type="image/png" href="{{ relativize .BaseURL .RelativePrefix (printf "/%s" .Config.Logo) }}">
     {{ else }}
-    <link rel="icon" href="{{ .BaseURL }}/static/images/favicon.png" width="35" height="35">
+    <link rel="icon" href="{{ relativize .BaseURL .RelativePrefix "/static/images/favicon.png" }}" width="35" height="35">
     {{ end }}
 </head>
 
 <body>
 
-<div id="loading" class="loading"></div>
+    <div id="loading" class="loading"></div>
 
-<div id="controls">
-    <div class="control-panel">
-        <div class="panel-header">
-            <span class="graph-icon">🕸️</span>
-            <h1>Knowledge Graph</h1>
+    <div id="controls">
+        <div class="control-panel">
+            <div class="panel-header">
+                <span class="graph-icon">🕸️</span>
+                <h1>Knowledge Graph</h1>
+            </div>
+            <a href="{{ relativize .BaseURL .RelativePrefix "/" }}" class="btn-home">
+                <span>←</span>
+                <span>Home</span>
+            </a>
         </div>
-        <a href="{{ .BaseURL }}/" class="btn-home">
-            <span>←</span>
-            <span>Home</span>
-        </a>
     </div>
-</div>
 
-<div class="stats-panel" id="stats" style="display: none;">
-    <div class="stat-item">
-        <span class="stat-label">Posts</span>
-        <span class="stat-value" id="postCount">0</span>
+    <div class="stats-panel" id="stats" style="display: none;">
+        <div class="stat-item">
+            <span class="stat-label">Posts</span>
+            <span class="stat-value" id="postCount">0</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Tags</span>
+            <span class="stat-value" id="tagCount">0</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Links</span>
+            <span class="stat-value" id="linkCount">0</span>
+        </div>
     </div>
-    <div class="stat-item">
-        <span class="stat-label">Tags</span>
-        <span class="stat-value" id="tagCount">0</span>
+
+    <div id="graph-container"></div>
+
+    <script>
+        window.GRAPH_BASE_URL = '{{ relativize .BaseURL .RelativePrefix "" }}';
+    </script>
+
+    <!-- Search Modal -->
+    <div id="search-modal" class="modal">
+        <div class="modal-content">
+            <div class="search-header">
+                <input type="text" id="search-input" placeholder="Search posts..."
+                    autocomplete="off">
+                <span class="close-search">&times;</span>
+            </div>
+            <div id="search-suggestions" class="search-suggestions"></div>
+            <div id="search-results"></div>
+            <div class="search-footer">
+                <div class="search-help">
+                    <span><kbd>+</kbd> required</span>
+                    <span><kbd>-</kbd> exclude</span>
+                    <span><kbd>"phrase"</kbd> exact</span>
+                </div>
+                <div class="search-controls">
+                    <kbd>Esc</kbd> close | <kbd>↑↓</kbd> navigate
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="stat-item">
-        <span class="stat-label">Links</span>
-        <span class="stat-value" id="linkCount">0</span>
-    </div>
-</div>
 
-<div id="graph-container"></div>
+    {{ if .Assets }}
+    <script src="{{ relativize .BaseURL .RelativePrefix (index .Assets "/static/js/graph.js") }}?v={{ .BuildVersion }}"></script>
+    <script defer src="{{ relativize .BaseURL .RelativePrefix (index .Assets "/static/js/main.js") }}"></script>
+    <script defer src="{{ relativize .BaseURL .RelativePrefix (index .Assets "/static/js/search.js") }}"></script>
+    {{ else }}
+    <script src="{{ relativize .BaseURL .RelativePrefix "/static/js/graph.js" }}?v={{ .BuildVersion }}"></script>
+    <script defer src="{{ relativize .BaseURL .RelativePrefix "/static/js/main.js" }}?v={{ .BuildVersion }}"></script>
+    <script defer src="{{ relativize .BaseURL .RelativePrefix "/static/js/search.js" }}?v={{ .BuildVersion }}"></script>
+    {{ end }}
+    <script>
+        (function () {
+            const hosts = ["localhost", "127.0.0.1", "0.0.0.0"];
 
-<script>
-    window.GRAPH_BASE_URL = '{{ .BaseURL }}';
-</script>
-
-{{ if .Assets }}
-<script src="{{ .BaseURL }}{{ index .Assets "/static/js/graph.js" }}"></script>
-{{ else }}
-<script src="{{ .BaseURL }}/static/js/graph.js"></script>
-{{ end }}
-
-<script>
-    (function() {
-        const hosts = ["localhost", "127.0.0.1", "0.0.0.0"];
-        
-        // DEV MODE: Aggressive cache clearing and SW nuking
-        if (hosts.includes(window.location.hostname)) {
-            // Immediately unregister any Service Workers
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.getRegistrations().then(registrations => {
-                    registrations.forEach(registration => {
-                        registration.unregister();
-                        console.log('🚧 Service Worker unregistered');
-                    });
-                });
-            }
-            
-            // Clear caches
-            if ('caches' in window) {
-                caches.keys().then(cacheNames => {
-                    cacheNames.forEach(cacheName => {
-                        caches.delete(cacheName);
-                        console.log('🗑️ Cache cleared:', cacheName);
-                    });
-                });
-            }
-        } else {
-            // Production: PWA Service Worker Registration
-            if ('serviceWorker' in navigator) {
-                window.addEventListener('load', () => {
-                    const swPath = '{{ .BaseURL }}/sw.js';
-                    navigator.serviceWorker.register(swPath)
-                        .then(registration => {
-                            console.log('✅ ServiceWorker registration successful with scope: ', registration.scope);
-                        })
-                        .catch(err => {
-                            console.error('❌ ServiceWorker registration failed: ', err);
+            // DEV MODE: Aggressive cache clearing and SW nuking
+            if (hosts.includes(window.location.hostname)) {
+                // Immediately unregister any Service Workers
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.getRegistrations().then(registrations => {
+                        registrations.forEach(registration => {
+                            registration.unregister();
+                            console.log('🚧 Service Worker unregistered');
                         });
-                });
+                    });
+                }
+
+                // Clear caches
+                if ('caches' in window) {
+                    caches.keys().then(cacheNames => {
+                        cacheNames.forEach(cacheName => {
+                            caches.delete(cacheName);
+                            console.log('🗑️ Cache cleared:', cacheName);
+                        });
+                    });
+                }
+            } else {
+                // Production: PWA Service Worker Registration
+                if ('serviceWorker' in navigator) {
+                    window.addEventListener('load', () => {
+                        const swPath = '{{ relativize .BaseURL .RelativePrefix "/sw.js" }}';
+                        navigator.serviceWorker.register(swPath)
+                            .then(registration => {
+                                console.log('✅ ServiceWorker registration successful with scope: ', registration.scope);
+                            })
+                            .catch(err => {
+                                console.error('❌ ServiceWorker registration failed: ', err);
+                            });
+                    });
+                }
             }
-        }
-    })();
-</script>
+        })();
+    </script>
 
 </body>
 

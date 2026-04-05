@@ -9,6 +9,7 @@
 @import "./components/modal.css";
 @import "./components/lightbox.css";
 @import "./components/syntax.css";
+@import "./components/admonitions.css";
 @import "./components/utils.css";
 
 /* --- LAYOUT & STRUCTURE --- */

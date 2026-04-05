@@ -1,6 +1,7 @@
 (function() {
     let wasmLoaded = false;
     let wasmPromise = null;
+    let wasmLoadedVersion = null;
 
     // Elements
     const searchBtn = document.getElementById('search-btn');
@@ -9,11 +10,16 @@
     const closeSearch = document.querySelector('.close-search');
     const searchInput = document.getElementById('search-input');
     const searchResults = document.getElementById('search-results');
+    const searchSuggestions = document.getElementById('search-suggestions');
     
     let selectedIndex = -1;
+    let selectedSuggestionIndex = -1;
+    let suggestionsActive = false;
+    let currentSuggestions = [];
 
     // Ensure siteBaseURL is set
     const baseURL = window.siteBaseURL || '';
+    const versionQuery = window.buildVersion ? `?v=${window.buildVersion}` : '';
 
     // Construct paths safely (avoiding double slashes except after protocol)
     // Optimized to reduce intermediate string allocations
@@ -29,44 +35,40 @@
 
     // Load WASM when needed
     async function loadWasm() {
+        const currentVersion = window.buildVersion || '';
+        if (wasmLoaded && wasmLoadedVersion === currentVersion) return;
+        if (wasmLoadedVersion && wasmLoadedVersion !== currentVersion) {
+            wasmLoaded = false;
+            wasmPromise = null;
+        }
         if (wasmLoaded) return;
         if (wasmPromise) return wasmPromise;
 
-        console.log("Initializing Search WASM...");
         wasmPromise = (async () => {
             try {
                 // 1. Load wasm_exec.js if Go is not defined
                 if (typeof Go === 'undefined') {
-                    console.log("Loading wasm_exec.js dynamically...");
                     const script = document.createElement('script');
-                    script.src = joinPath(baseURL, '/static/js/wasm_exec.js');
-                    console.log("Loading wasm_exec.js from:", script.src);
+                    script.src = joinPath(baseURL, '/static/js/wasm_exec.js') + versionQuery;
                     const scriptPromise = new Promise((resolve, reject) => {
                         script.onload = resolve;
                         script.onerror = (e) => reject(new Error(`Failed to load wasm_exec.js: ${e}`));
                     });
                     document.head.appendChild(script);
                     await scriptPromise;
-                    console.log("wasm_exec.js loaded successfully");
                 }
 
                 if (typeof Go === 'undefined') {
                     throw new Error("wasm_exec.js failed to load - Go is still undefined");
                 }
-                console.log("Creating Go instance...");
                 const go = new Go();
                 
-                const wasmPath = joinPath(baseURL, '/static/wasm/search.wasm');
-                console.log("Fetching WASM from:", wasmPath);
+                const wasmPath = joinPath(baseURL, '/static/wasm/search.wasm') + versionQuery;
                 const response = await fetch(wasmPath);
                 if (!response.ok) throw new Error(`Failed to fetch WASM: ${response.status} ${response.statusText}`);
-                console.log("WASM fetched successfully");
                 
-                console.log("Instantiating WASM...");
                 const result = await WebAssembly.instantiateStreaming(response, go.importObject);
-                console.log("WASM instantiated, running Go...");
                 go.run(result.instance);
-                console.log("Go runtime started");
                 
                 // Check if initSearch is available
                 if (typeof window.initSearch !== 'function') {
@@ -74,14 +76,12 @@
                 }
                 
                 // Initialize with the data index
-                const binPath = joinPath(baseURL, '/search.bin');
-                console.log("Initializing search with index from:", binPath);
+                const binPath = joinPath(baseURL, '/search.bin') + versionQuery;
                 
                 try {
-                    const initResult = await window.initSearch(binPath);
-                    console.log("Search initialized successfully with", initResult, "posts");
+                    await window.initSearch(binPath);
                     wasmLoaded = true;
-                    console.log("Search WASM Loaded and Initialized");
+                    wasmLoadedVersion = currentVersion;
                 } catch (initErr) {
                     console.error("initSearch failed:", initErr);
                     throw new Error(`Failed to initialize search index: ${initErr}`);
@@ -101,11 +101,14 @@
 
     function openModal() {
         if (!searchModal) return;
-        searchModal.style.display = 'block';
+        searchModal.style.display = 'flex';
         document.body.style.overflow = 'hidden'; // Prevent scrolling
         
         loadWasm().then(() => {
-            if (searchInput) searchInput.focus();
+            if (searchInput) {
+                searchInput.value = '';
+                searchInput.focus();
+            }
         }).catch(() => {});
     }
 
@@ -115,7 +118,14 @@
         document.body.style.overflow = '';
         if (searchInput) searchInput.value = '';
         if (searchResults) searchResults.innerHTML = '';
+        if (searchSuggestions) {
+            searchSuggestions.innerHTML = '';
+            searchSuggestions.style.display = 'none';
+        }
         selectedIndex = -1;
+        selectedSuggestionIndex = -1;
+        suggestionsActive = false;
+        currentSuggestions = [];
     }
 
     // Event Listeners
@@ -128,8 +138,8 @@
     });
 
     window.addEventListener('keydown', (e) => {
-        // Open with / or Ctrl+K
-        const isSearchOpen = searchModal && searchModal.style.display === 'block';
+        // Detect modal open state consistently (main.js sets flex, search.js used to set block)
+        const isSearchOpen = searchModal && (searchModal.style.display === 'flex' || searchModal.style.display === 'block');
         
         if (!isSearchOpen && (e.key === '/' || (e.ctrlKey && e.key === 'k'))) {
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) {
@@ -137,34 +147,74 @@
             }
             e.preventDefault();
             openModal();
+            return;
         }
         
         if (isSearchOpen) {
             if (e.key === 'Escape') {
                 closeModal();
-            } else if (e.key === 'ArrowDown') {
+                return;
+            }
+            
+            // Handle suggestions navigation
+            if (suggestionsActive && e.key === 'Tab') {
                 e.preventDefault();
-                const items = searchResults.querySelectorAll('.search-result-item');
+                const suggestionItems = searchSuggestions.querySelectorAll('.suggestion-item');
+                if (suggestionItems.length > 0) {
+                    selectedSuggestionIndex = (selectedSuggestionIndex + 1) % suggestionItems.length;
+                    updateSuggestionSelection(suggestionItems);
+                }
+                return;
+            }
+
+            if (suggestionsActive && e.key === 'Enter' && selectedSuggestionIndex >= 0) {
+                e.preventDefault();
+                const suggestionItems = searchSuggestions.querySelectorAll('.suggestion-item');
+                if (suggestionItems[selectedSuggestionIndex]) {
+                    suggestionItems[selectedSuggestionIndex].click();
+                }
+                return;
+            }
+
+            // Only handle nav keys if result items exist
+            const items = searchResults ? searchResults.querySelectorAll('.search-result-item') : [];
+            
+            if (e.key === 'ArrowDown' && items.length > 0) {
+                e.preventDefault();
                 selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
                 updateSelection(items);
-            } else if (e.key === 'ArrowUp') {
+            } else if (e.key === 'ArrowUp' && items.length > 0) {
                 e.preventDefault();
-                const items = searchResults.querySelectorAll('.search-result-item');
                 selectedIndex = Math.max(selectedIndex - 1, 0);
                 updateSelection(items);
             } else if (e.key === 'Enter' && selectedIndex >= 0) {
                 e.preventDefault();
-                const items = searchResults.querySelectorAll('.search-result-item');
                 if (items[selectedIndex]) items[selectedIndex].click();
             }
+            // Allow Backspace and other keys to function normally in the input
         }
     });
 
     function updateSelection(items) {
+        // If we select a result, deselect suggestions
+        if (selectedIndex >= 0) {
+            selectedSuggestionIndex = -1;
+            updateSuggestionSelection(searchSuggestions.querySelectorAll('.suggestion-item'));
+        }
         items.forEach((item, i) => {
             if (i === selectedIndex) {
                 item.classList.add('selected');
                 item.scrollIntoView({ block: 'nearest' });
+            } else {
+                item.classList.remove('selected');
+            }
+        });
+    }
+
+    function updateSuggestionSelection(items) {
+        items.forEach((item, i) => {
+            if (i === selectedSuggestionIndex) {
+                item.classList.add('selected');
             } else {
                 item.classList.remove('selected');
             }
@@ -177,9 +227,65 @@
             clearTimeout(debounceTimer);
             const query = e.target.value;
             debounceTimer = setTimeout(() => {
+                updateSuggestions(query);
                 performSearch(query);
             }, 100);
         });
+    }
+
+    function updateSuggestions(query) {
+        if (!wasmLoaded || !query || query.trim().length < 2) {
+            if (searchSuggestions) {
+                searchSuggestions.innerHTML = '';
+                searchSuggestions.style.display = 'none';
+                suggestionsActive = false;
+                currentSuggestions = [];
+                selectedSuggestionIndex = -1;
+            }
+            return;
+        }
+
+        try {
+            // Get last word for completion
+            const words = query.split(/\s+/);
+            const lastWord = words[words.length - 1];
+            if (lastWord.length < 2 || lastWord.startsWith('+') || lastWord.startsWith('-') || lastWord.startsWith('"')) {
+                searchSuggestions.style.display = 'none';
+                suggestionsActive = false;
+                return;
+            }
+
+            const suggestions = window.getSuggestions(lastWord);
+            if (!suggestions || suggestions.length === 0) {
+                searchSuggestions.style.display = 'none';
+                suggestionsActive = false;
+                return;
+            }
+
+            currentSuggestions = suggestions;
+            suggestionsActive = true;
+            searchSuggestions.innerHTML = '';
+            searchSuggestions.style.display = 'flex';
+
+            const fragment = document.createDocumentFragment();
+            suggestions.forEach((s, idx) => {
+                const item = document.createElement('span');
+                item.className = 'suggestion-item';
+                item.textContent = s;
+                item.onclick = () => {
+                    words[words.length - 1] = s;
+                    searchInput.value = words.join(' ') + ' ';
+                    searchInput.focus();
+                    updateSuggestions(searchInput.value);
+                    performSearch(searchInput.value);
+                };
+                fragment.appendChild(item);
+            });
+            searchSuggestions.appendChild(fragment);
+            selectedSuggestionIndex = -1;
+        } catch (err) {
+            console.error("Suggestions failed:", err);
+        }
     }
 
     function performSearch(query) {
@@ -196,6 +302,13 @@
         }
     }
 
+    // Warm search assets early in dev to reduce first-open races after rebuilds.
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname === '0.0.0.0') {
+        window.addEventListener('load', () => {
+            loadWasm().catch(() => {});
+        }, { once: true });
+    }
+
     function renderResults(results) {
         if (!searchResults) return;
         searchResults.innerHTML = '';
@@ -207,7 +320,8 @@
         }
 
         const fragment = document.createDocumentFragment();
-        results.forEach(res => {
+        const limitedResults = results.slice(0, 20);
+        limitedResults.forEach(res => {
             const item = document.createElement('a');
             const link = joinPath(baseURL, res.link);
             item.href = link;

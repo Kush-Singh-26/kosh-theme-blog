@@ -10,53 +10,76 @@
             });
         }
 
-        // 2. Copy Logic for Code Blocks (skip d2 diagrams)
-        document.querySelectorAll('pre').forEach(pre => {
-            if (pre.classList.contains('d2') || pre.querySelector('.copy-btn')) return;
+        // 2. Code Block Setup (Language Badges & Copy Buttons)
+        document.querySelectorAll('.code-wrapper').forEach(wrapper => {
+            // Language Badge
+            const lang = wrapper.getAttribute('data-lang');
+            if (lang && lang !== 'text' && !wrapper.querySelector('.code-badge')) {
+                const badge = document.createElement('span');
+                badge.className = 'code-badge';
+                badge.textContent = lang.toUpperCase();
+                wrapper.appendChild(badge);
+                wrapper.classList.add('has-badge');
+            }
 
-            const btn = document.createElement('button');
-            btn.className = 'copy-btn';
-            btn.textContent = 'Copy';
-
-            btn.addEventListener('click', () => {
-                const code = pre.querySelector('code');
-                if (!code) return;
-                const textToCopy = code.textContent.trimEnd();
-
-                navigator.clipboard.writeText(textToCopy).then(() => {
-                    btn.textContent = 'Copied!';
-                    btn.classList.add('copied');
-                    setTimeout(() => {
-                        btn.textContent = 'Copy';
-                        btn.classList.remove('copied');
-                    }, 2000);
-                }).catch(err => {
-                    console.error('Failed to copy:', err);
-                });
-            });
-
-            if (pre.parentElement && pre.parentElement.classList.contains('code-wrapper')) {
-                pre.parentElement.appendChild(btn);
-            } else {
-                pre.appendChild(btn);
+            // Copy Button (Event listener handled globally)
+            const pre = wrapper.querySelector('pre');
+            if (pre && !pre.classList.contains('d2') && !wrapper.querySelector('.copy-btn')) {
+                const btn = document.createElement('button');
+                btn.className = 'copy-btn';
+                btn.textContent = 'Copy';
+                wrapper.appendChild(btn);
             }
         });
 
-        // 4. Reading Progress Bar
-        if (!document.getElementById('progress-bar')) {
-            const progressBar = document.createElement('div');
+        // 3. Scroll UI Elements (Progress Bar & Back to Top)
+        let progressBar = document.getElementById('progress-bar');
+        if (!progressBar) {
+            progressBar = document.createElement('div');
             progressBar.id = 'progress-bar';
             document.body.appendChild(progressBar);
-
-            window.addEventListener('scroll', () => {
-                const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-                const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-                const scrolled = (scrollTop / scrollHeight) * 100;
-                progressBar.style.width = scrolled + "%";
-            });
         }
 
-        // 5. Theme Toggle Logic
+        let backToTopBtn = document.getElementById('back-to-top');
+        if (!backToTopBtn) {
+            backToTopBtn = document.createElement('button');
+            backToTopBtn.id = 'back-to-top';
+            backToTopBtn.innerHTML = '↑';
+            backToTopBtn.ariaLabel = 'Back to Top';
+            document.body.appendChild(backToTopBtn);
+        }
+
+        // Consolidated Scroll Listener with requestAnimationFrame for Performance
+        if (!window.__scrollInitialized) {
+            window.__scrollInitialized = true;
+            let ticking = false;
+            
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+                        const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                        
+                        // Update Progress Bar
+                        if (scrollHeight > 0) {
+                            progressBar.style.width = (scrollTop / scrollHeight) * 100 + "%";
+                        }
+                        
+                        // Update Back to Top Visibility
+                        if (scrollTop > 300) {
+                            backToTopBtn.classList.add('visible');
+                        } else {
+                            backToTopBtn.classList.remove('visible');
+                        }
+                        
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }, { passive: true });
+        }
+
+        // 4. Theme Toggle Logic
         const toggleBtn = document.getElementById('theme-toggle');
         const mobileToggleBtn = document.getElementById('theme-toggle-mobile');
         const htmlEl = document.documentElement;
@@ -74,18 +97,13 @@
             }
         }
 
-        // Use a global flag to prevent race conditions if init() is called multiple times
         if (!window.__themeToggleInitialized) {
             window.__themeToggleInitialized = true;
-            if (toggleBtn) {
-                toggleBtn.addEventListener('click', toggleTheme);
-            }
-            if (mobileToggleBtn) {
-                mobileToggleBtn.addEventListener('click', toggleTheme);
-            }
+            if (toggleBtn) toggleBtn.addEventListener('click', toggleTheme);
+            if (mobileToggleBtn) mobileToggleBtn.addEventListener('click', toggleTheme);
         }
 
-        // 6. Mobile Menu Logic
+        // 5. Mobile Menu Logic
         const menuToggle = document.getElementById('menu-toggle');
         const menuClose = document.getElementById('menu-close');
         const mobileMenu = document.getElementById('mobile-menu');
@@ -96,7 +114,7 @@
             mobileMenu.classList.add('open');
             mobileMenuBackdrop.classList.add('open');
             mobileMenu.setAttribute('aria-hidden', 'false');
-            menuToggle.setAttribute('aria-expanded', 'true');
+            menuToggle?.setAttribute('aria-expanded', 'true');
             document.body.classList.add('menu-open');
         }
 
@@ -105,47 +123,21 @@
             mobileMenu.classList.remove('open');
             mobileMenuBackdrop.classList.remove('open');
             mobileMenu.setAttribute('aria-hidden', 'true');
-            menuToggle.setAttribute('aria-expanded', 'false');
+            menuToggle?.setAttribute('aria-expanded', 'false');
             document.body.classList.remove('menu-open');
         }
 
         if (menuToggle) {
             menuToggle.addEventListener('click', () => {
-                if (mobileMenu.classList.contains('open')) {
-                    closeMobileMenu();
-                } else {
-                    openMobileMenu();
-                }
+                mobileMenu.classList.contains('open') ? closeMobileMenu() : openMobileMenu();
             });
         }
+        if (menuClose) menuClose.addEventListener('click', closeMobileMenu);
+        if (mobileMenuBackdrop) mobileMenuBackdrop.addEventListener('click', closeMobileMenu);
 
-        if (menuClose) {
-            menuClose.addEventListener('click', closeMobileMenu);
-        }
-
-        if (mobileMenuBackdrop) {
-            mobileMenuBackdrop.addEventListener('click', closeMobileMenu);
-        }
-
-        // Close menu on Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && mobileMenu && mobileMenu.classList.contains('open')) {
-                closeMobileMenu();
-            }
-        });
-
-        // Close menu when clicking a nav link (for same-page navigation)
-        document.querySelectorAll('.mobile-nav-link').forEach(link => {
-            link.addEventListener('click', () => {
-                closeMobileMenu();
-            });
-        });
-
-        // Mobile search button - trigger search modal
         const mobileSearchBtn = document.getElementById('search-btn-mobile');
         if (mobileSearchBtn) {
             mobileSearchBtn.addEventListener('click', () => {
-                // Trigger the search modal (handled by search.js)
                 const searchModal = document.getElementById('search-modal');
                 const searchInput = document.getElementById('search-input');
                 if (searchModal) {
@@ -155,7 +147,7 @@
             });
         }
 
-        // 7. Universal Lightbox (Event Delegation)
+        // 6. Universal Lightbox
         let lightbox = document.getElementById('lightbox');
         if (!lightbox) {
             lightbox = document.createElement('div');
@@ -167,7 +159,6 @@
                 </div>
             `;
             document.body.appendChild(lightbox);
-            lightbox.addEventListener('click', closeLightbox);
         }
 
         const lightboxImg = lightbox.querySelector('img');
@@ -182,7 +173,7 @@
                 lightboxSvgContainer.innerHTML = content;
                 lightboxImg.style.display = 'none';
                 lightboxSvgContainer.style.display = 'block';
-
+                
                 const svg = lightboxSvgContainer.querySelector('svg');
                 if (svg) {
                     svg.removeAttribute('width');
@@ -207,85 +198,72 @@
             }, 300);
         }
 
-        // Global Click Listener for Zoom (Event Delegation)
-        document.body.addEventListener('click', (e) => {
-            // Handle Images
-            const img = e.target.closest('article img, .content-body img');
-            if (img && !img.closest('a') && !img.classList.contains('site-logo')) {
-                openLightbox('img', img.src);
-                return;
-            }
-
-            // Handle D2 Diagrams (click on SVG or its container)
-            const d2Container = e.target.closest('.d2-container');
-            if (d2Container) {
-                const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-                const selector = isLight ? '.d2-light svg' : '.d2-dark svg';
-                const activeSvg = d2Container.querySelector(selector);
-
-                if (activeSvg) {
-                    openLightbox('svg', activeSvg.outerHTML);
+        // 7. Global Event Delegation (Clicks & Keys)
+        if (!window.__globalEventsInitialized) {
+            window.__globalEventsInitialized = true;
+            
+            document.body.addEventListener('click', (e) => {
+                // Handle Lightbox BG Click
+                if (e.target.id === 'lightbox' || e.target.classList.contains('lightbox-content')) {
+                    closeLightbox();
+                    return;
                 }
-            }
-        });
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && lightbox && lightbox.classList.contains('active')) {
-                closeLightbox();
-            }
-        });
+                // Handle Image Click
+                const img = e.target.closest('article img, .content-body img');
+                if (img && !img.closest('a') && !img.classList.contains('site-logo')) {
+                    openLightbox('img', img.src);
+                    return;
+                }
 
-        // 7. Back to Top Button
-        if (!document.getElementById('back-to-top')) {
-            const backToTopBtn = document.createElement('button');
-            backToTopBtn.id = 'back-to-top';
-            backToTopBtn.innerHTML = '↑';
-            backToTopBtn.ariaLabel = 'Back to Top';
-            document.body.appendChild(backToTopBtn);
+                // Handle D2 SVG Click
+                const d2Container = e.target.closest('.d2-container');
+                if (d2Container) {
+                    const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+                    const selector = isLight ? '.d2-light svg' : '.d2-dark svg';
+                    const activeSvg = d2Container.querySelector(selector);
+                    if (activeSvg) openLightbox('svg', activeSvg.outerHTML);
+                    return;
+                }
 
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 300) {
-                    backToTopBtn.classList.add('visible');
-                } else {
-                    backToTopBtn.classList.remove('visible');
+                // Handle Copy Button Click
+                const copyBtn = e.target.closest('.copy-btn');
+                if (copyBtn) {
+                    const wrapper = copyBtn.closest('.code-wrapper');
+                    const code = wrapper ? wrapper.querySelector('code') : null;
+                    if (code) {
+                        navigator.clipboard.writeText(code.textContent.trimEnd()).then(() => {
+                            copyBtn.textContent = 'Copied!';
+                            copyBtn.classList.add('copied');
+                            setTimeout(() => {
+                                copyBtn.textContent = 'Copy';
+                                copyBtn.classList.remove('copied');
+                            }, 2000);
+                        }).catch(err => console.error('Failed to copy:', err));
+                    }
+                    return;
+                }
+
+                // Handle Mobile Nav Link Click
+                if (e.target.closest('.mobile-nav-link')) {
+                    closeMobileMenu();
+                }
+
+                // Handle Back to Top Click
+                if (e.target.closest('#back-to-top')) {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
             });
 
-            backToTopBtn.addEventListener('click', () => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    if (lightbox && lightbox.classList.contains('active')) closeLightbox();
+                    if (mobileMenu && mobileMenu.classList.contains('open')) closeMobileMenu();
+                }
             });
         }
 
-        // 8. Code Block Language Badges
-        document.querySelectorAll('.code-wrapper').forEach(wrapper => {
-            const lang = wrapper.getAttribute('data-lang');
-            if (lang && lang !== 'text' && !wrapper.querySelector('.code-badge')) {
-                const badge = document.createElement('span');
-                badge.className = 'code-badge';
-                badge.textContent = lang.toUpperCase();
-                wrapper.appendChild(badge);
-                wrapper.classList.add('has-badge');
-            }
-        });
-
-        // 9. Smart Admonitions (Color-based Blockquotes)
-        document.querySelectorAll('blockquote').forEach(bq => {
-            if (bq.classList.contains('colored-quote')) return;
-            const p = bq.querySelector('p');
-            if (!p) return;
-            const text = p.innerHTML;
-            const match = text.match(/^([a-zA-Z]+):\s/);
-            if (match) {
-                const colorName = match[1];
-                bq.style.setProperty('--quote-color', colorName);
-                bq.style.backgroundColor = `color-mix(in srgb, ${colorName} 10%, transparent)`;
-                bq.style.borderLeftColor = colorName;
-                bq.classList.add('colored-quote');
-                p.innerHTML = text.replace(match[0], '');
-            }
-        });
-
-        // 10. Table of Contents ScrollSpy
+        // 8. Table of Contents ScrollSpy
         const tocLinks = document.querySelectorAll('.toc-container a');
         const sections = document.querySelectorAll('article h1, article h2, article h3, article h4, article h5, article h6');
 

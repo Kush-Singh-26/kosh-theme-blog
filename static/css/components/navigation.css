@@ -34,7 +34,9 @@ header {
     text-transform: uppercase;
     border: 1px solid var(--border);
     background-color: var(--bg-code);
-    transition: all 0.3s ease;
+    transition: border-color 0.15s ease,
+                box-shadow 0.15s ease,
+                transform 0.15s ease;
     text-decoration: none;
 }
 
@@ -66,7 +68,7 @@ nav button,
     border-radius: 99px;
     color: var(--text-muted);
     text-decoration: none;
-    transition: all 0.2s;
+    transition: background-color 0.2s ease, color 0.2s ease;
     font-size: 0.85rem;
     font-weight: 500;
     background: transparent;
@@ -94,7 +96,7 @@ nav button:hover,
     padding: 0.4rem;
     border-radius: 50%;
     margin-left: 0.5rem;
-    transition: all 0.3s ease;
+    transition: background-color 0.2s ease, transform 0.2s ease;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -159,7 +161,7 @@ nav button:hover,
         border-radius: 99px;
         color: var(--text-main);
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
         margin-left: 0;
     }
 
@@ -210,7 +212,7 @@ nav button:hover,
     cursor: pointer;
     padding: 0;
     margin-left: 0.5rem;
-    transition: all 0.3s ease;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
 .menu-toggle:hover {

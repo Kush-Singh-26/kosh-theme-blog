@@ -15,8 +15,8 @@
     <title>{{ .TabTitle }}</title>
     <meta name="description" content="Page not found">
     <meta name="theme-color" content="#111113">
-    <link rel="apple-touch-icon" href="{{ .BaseURL }}/static/images/icon-192.png">
-    <link rel="manifest" href="{{ .BaseURL }}/manifest.json">
+    <link rel="apple-touch-icon" href="{{ relativize .BaseURL .RelativePrefix "/static/images/icon-192.png" }}">
+    <link rel="manifest" href="{{ relativize .BaseURL .RelativePrefix "/manifest.json" }}">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self'; object-src 'none'; base-uri 'self'; worker-src 'self'; manifest-src 'self';">
     
     <meta property="og:type" content="website">
@@ -24,9 +24,9 @@
     <meta property="og:description" content="The page you're looking for doesn't exist.">
 
     {{ if len .Assets }}
-    <link rel="stylesheet" href="{{ .BaseURL }}{{ index .Assets "/static/css/layout.css" }}">
+    <link rel="stylesheet" href="{{ relativize .BaseURL .RelativePrefix (index .Assets "/static/css/layout.css") }}">
     {{ else }}
-    <link rel="stylesheet" href="{{ .BaseURL }}/static/css/layout.css">
+    <link rel="stylesheet" href="{{ relativize .BaseURL .RelativePrefix "/static/css/layout.css" }}">
     {{ end }}
 
 
@@ -183,28 +183,31 @@
         }
     </style>
     
-    <script>window.siteBaseURL = "{{ .BaseURL }}";</script>
+    <script>
+        window.siteBaseURL = "{{ .BaseURL }}";
+        window.buildVersion = "{{ .BuildVersion }}";
+    </script>
     {{ if .Config.Logo }}
-    <link rel="icon" type="image/png" href="{{ .BaseURL }}/{{ .Config.Logo }}">
+    <link rel="icon" type="image/png" href="{{ relativize .BaseURL .RelativePrefix (printf "/%s" .Config.Logo) }}">
     {{ else }}
-    <link rel="icon" href="{{ .BaseURL }}/static/images/favicon.png" width="35" height="35">
+    <link rel="icon" href="{{ relativize .BaseURL .RelativePrefix "/static/images/favicon.png" }}" width="35" height="35">
     {{ end }}
 </head>
 
 <body>
     <header>
-        <a href="{{ .BaseURL }}/" class="site-title">
+        <a href="{{ relativize .BaseURL .RelativePrefix "/" }}" class="site-title">
             {{ if .Config.Logo }}
-            <img src="{{ .BaseURL }}/{{ .Config.Logo }}" alt="Logo" class="site-logo" width="35" height="35">
+            <img src="{{ relativize .BaseURL .RelativePrefix (printf "/%s" .Config.Logo) }}" alt="Logo" class="site-logo" width="35" height="35">
             {{ else }}
-            <img src="{{ .BaseURL }}/static/images/favicon.png" alt="" class="site-logo" width="35" height="35">
+            <img src="{{ relativize .BaseURL .RelativePrefix "/static/images/favicon.png" }}" alt="" class="site-logo" width="35" height="35">
             {{ end }}
             {{ .Config.Title }}
         </a>
         <nav>
             {{ range .Config.Menu }}
                 {{ if .URL }}
-                    <a href="{{ if hasPrefix .URL "http" }}{{ .URL }}{{ else }}{{ $.BaseURL }}{{ .URL }}{{ end }}" 
+                    <a href="{{ if or (hasPrefix .URL "http") (hasPrefix .URL "/") }}{{ .URL }}{{ else }}{{ relativize $.BaseURL $.RelativePrefix .URL }}{{ end }}" 
                        {{ if .Target }}target="{{ .Target }}"{{ end }}
                        {{ if .ID }}id="{{ .ID }}"{{ end }}
                        {{ if .Class }}class="{{ .Class }}"{{ end }}>{{ .Name }}</a>
@@ -215,7 +218,8 @@
                 {{ end }}
             {{ end }}
             <button id="theme-toggle" aria-label="Toggle Theme">
-                <span class="theme-icon-light">☀️</span> <span class="theme-icon-dark">🌙</span>
+                <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
             </button>
         </nav>
     </header>
@@ -236,10 +240,10 @@
             </p>
             
             <div class="error-actions">
-                <a href="{{ .BaseURL }}/" class="btn btn-primary">
+                <a href="{{ relativize .BaseURL .RelativePrefix "/" }}" class="btn btn-primary">
                      Take Me Home
                 </a>
-                <a href="{{ .BaseURL }}/tags/index.html" class="btn btn-secondary">
+                <a href="{{ relativize .BaseURL .RelativePrefix "/tags/index.html" }}" class="btn btn-secondary">
                      Browse Topics
                 </a>
             </div>
@@ -247,7 +251,7 @@
             <div class="suggestions">
                 <h3> You might be interested in:</h3>
                 <ul>
-                    <li><a href="{{ .BaseURL }}/graph.html">Knowledge Graph</a></li>
+                    <li><a href="{{ relativize .BaseURL .RelativePrefix "/graph.html" }}">Knowledge Graph</a></li>
                     <li><a href="{{ .Config.Author.URL }}" target="_blank">{{ .Config.Author.Name }}'s Profile</a></li>
                 </ul>
             </div>
@@ -259,10 +263,35 @@
     </footer>
 
     
+    <!-- Search Modal -->
+    <div id="search-modal" class="modal">
+        <div class="modal-content">
+            <div class="search-header">
+                <input type="text" id="search-input" placeholder="Search posts..."
+                    autocomplete="off">
+                <span class="close-search">&times;</span>
+            </div>
+            <div id="search-suggestions" class="search-suggestions"></div>
+            <div id="search-results"></div>
+            <div class="search-footer">
+                <div class="search-help">
+                    <span><kbd>+</kbd> required</span>
+                    <span><kbd>-</kbd> exclude</span>
+                    <span><kbd>"phrase"</kbd> exact</span>
+                </div>
+                <div class="search-controls">
+                    <kbd>Esc</kbd> close | <kbd>↑↓</kbd> navigate
+                </div>
+            </div>
+        </div>
+    </div>
+
     {{ if .Assets }}
-    <script defer src="{{ .BaseURL }}{{ index .Assets "/static/js/main.js" }}"></script>
+    <script defer src="{{ relativize .BaseURL .RelativePrefix (index .Assets "/static/js/main.js") }}"></script>
+    <script defer src="{{ relativize .BaseURL .RelativePrefix (index .Assets "/static/js/search.js") }}"></script>
     {{ else }}
-    <script defer src="{{ .BaseURL }}/static/js/main.js?v={{ .BuildVersion }}"></script>
+    <script defer src="{{ relativize .BaseURL .RelativePrefix "/static/js/main.js" }}?v={{ .BuildVersion }}"></script>
+    <script defer src="{{ relativize .BaseURL .RelativePrefix "/static/js/search.js" }}?v={{ .BuildVersion }}"></script>
     {{ end }}
     <script>
         (function() {
@@ -293,7 +322,7 @@
                 // Production: PWA Service Worker Registration
                 if ('serviceWorker' in navigator) {
                     window.addEventListener('load', () => {
-                        const swPath = '{{ .BaseURL }}/sw.js';
+                        const swPath = '{{ relativize .BaseURL .RelativePrefix "/sw.js" }}';
                         navigator.serviceWorker.register(swPath)
                             .then(registration => {
                                 console.log('✅ ServiceWorker registration successful with scope: ', registration.scope);

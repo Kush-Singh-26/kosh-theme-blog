@@ -5,7 +5,7 @@
     border-radius: 12px;
     margin-bottom: 2rem;
     overflow: hidden;
-    transition: all 0.3s ease;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
     z-index: 10;
 }
 
@@ -22,7 +22,7 @@
     background: var(--bg-card);
     color: var(--text-main);
     user-select: none;
-    transition: all 0.2s;
+    transition: background-color 0.15s, color 0.15s;
 }
 
 .toc-toggle:hover {
@@ -123,7 +123,6 @@
         overflow-y: auto;
         scrollbar-width: thin;
     }
-}
 }
 
 @keyframes fadeIn {

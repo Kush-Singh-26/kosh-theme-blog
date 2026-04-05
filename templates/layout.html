@@ -285,13 +285,21 @@
     <div id="search-modal" class="modal">
         <div class="modal-content">
             <div class="search-header">
-                <input type="text" id="search-input" placeholder="Search posts... (use tag:name for filtering)"
+                <input type="text" id="search-input" placeholder="Search posts..."
                     autocomplete="off">
                 <span class="close-search">&times;</span>
             </div>
+            <div id="search-suggestions" class="search-suggestions"></div>
             <div id="search-results"></div>
             <div class="search-footer">
-                Search articles | <kbd>Esc</kbd> to close | <kbd>↑↓</kbd> to navigate
+                <div class="search-help">
+                    <span><kbd>+</kbd> required</span>
+                    <span><kbd>-</kbd> exclude</span>
+                    <span><kbd>"phrase"</kbd> exact</span>
+                </div>
+                <div class="search-controls">
+                    <kbd>Esc</kbd> close | <kbd>↑↓</kbd> navigate
+                </div>
             </div>
         </div>
     </div>
