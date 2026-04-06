@@ -19,8 +19,12 @@
     <title>{{ .TabTitle }}</title>
     <meta name="description" content="{{ .Description }}">
 
-    <!-- Interactive math simulations -->
-    <script src="{{ relativize .BaseURL .RelativePrefix "/static/js/wasm_engine.js" }}" defer></script>
+    {{ if .IsGraphPage }}
+    <style>html, body { overflow: hidden; margin: 0; padding: 0; max-width: none; }
+    main { padding: 0; margin: 0; max-width: none; }
+    header { max-width: 1024px; margin-left: auto; margin-right: auto; }
+    </style>
+    {{ end }}
 
     <meta name="google-site-verification" content="Xr0Ov0Imhz_enNxV6fyMfzSrJyICO_V5PZV49w4b2DM" />
 
@@ -48,8 +52,14 @@
 
     {{ if len .Assets }}
     <link rel="stylesheet" href="{{ relativize .BaseURL .RelativePrefix (index .Assets "/static/css/layout.css") }}">
+    {{ if .IsGraphPage }}
+    <link rel="stylesheet" href="{{ relativize .BaseURL .RelativePrefix (index .Assets "/static/css/graph.css") }}">
+    {{ end }}
     {{ else }}
     <link rel="stylesheet" href="{{ relativize .BaseURL .RelativePrefix "/static/css/layout.css" }}">
+    {{ if .IsGraphPage }}
+    <link rel="stylesheet" href="{{ relativize .BaseURL .RelativePrefix "/static/css/graph.css" }}">
+    {{ end }}
     {{ end }}
 
 
@@ -73,9 +83,11 @@
 
 <body>
     <!-- Reading Progress Bar -->
+    {{ if not .IsGraphPage }}
     <div id="progress-bar"></div>
+    {{ end }}
 
-        <header>
+    <header>
         <a href="{{ relativize .BaseURL .RelativePrefix "/" }}" class="site-title">
             {{ if .Config.Logo }}
             <img src="{{ relativize .BaseURL .RelativePrefix (printf "/%s" .Config.Logo) }}" alt="Logo" class="site-logo" width="35" height="35">
@@ -176,7 +188,6 @@
                 {{ .Name }}
             </a>
             {{ else }}
-
             <button {{ if .ID }}id="mobile-{{ .ID }}" {{ end }} {{ if .Class }}class="mobile-nav-link {{ .Class }}" {{
                 else }}class="mobile-nav-link" {{ end }} aria-label="{{ .Name }}">{{ .Name }}</button>
             {{ end }}
@@ -187,7 +198,40 @@
 
 
     <main>
-        {{ if .IsTagsIndex }}
+        {{ if .IsGraphPage }}
+        <div id="graph-app">
+            <canvas id="graph-canvas"></canvas>
+        </div>
+        <div class="graph-ui">
+            <div class="graph-bottom-left">
+                <div class="graph-stats">
+                    <div class="graph-node-count">Nodes: <span id="graph-count">—</span></div>
+                </div>
+                <div class="graph-legend">
+                    <div class="graph-legend-item"><span class="graph-legend-dot" style="background: var(--accent-primary)"></span>Hub</div>
+                    <div class="graph-legend-item"><span class="graph-legend-dot" style="background: var(--accent-link)"></span>Tag</div>
+                    <div class="graph-legend-item"><span class="graph-legend-dot" style="background: var(--accent-secondary)"></span>Article</div>
+                </div>
+            </div>
+            <div class="graph-controls">
+                <div class="graph-control-btn" id="graph-zi" title="Zoom In">+</div>
+                <div class="graph-control-btn" id="graph-zo" title="Zoom Out">−</div>
+                <div class="graph-control-btn" id="graph-re" title="Reset View">⌖</div>
+            </div>
+        </div>
+        <div id="graph-panel" class="graph-panel">
+            <div class="graph-panel-close" id="graph-panel-close">✕</div>
+            <div class="graph-panel-type" id="graph-p-type">Article</div>
+            <div class="graph-panel-title" id="graph-p-title">Node</div>
+            <div class="graph-panel-date" id="graph-p-date"></div>
+            <div class="graph-panel-desc" id="graph-p-desc"></div>
+            <div class="graph-panel-url" id="graph-p-url"></div>
+            <div class="graph-panel-divider"></div>
+            <div class="graph-panel-sub">Linked nodes</div>
+            <div class="graph-pills" id="graph-pills"></div>
+            <div class="graph-hint">Double-click to open • Click pills to navigate</div>
+        </div>
+        {{ else if .IsTagsIndex }}
         <h1 class="center-text no-border">Topics</h1>
         <div class="tag-cloud center-flex">
             {{ range .AllTags }}
@@ -275,10 +319,11 @@
         {{ end }}
     </main>
 
+    {{ if not .IsGraphPage }}
     <footer>
         <p style="text-align: center; margin: 0 auto;">&copy; {{ now.Year }} {{ .Config.Author.Name }}</p>
     </footer>
-
+    {{ end }}
 
 
     <!-- Search Modal -->
@@ -309,9 +354,15 @@
     {{ if len .Assets }}
     <script defer src="{{ relativize .BaseURL .RelativePrefix (index .Assets "/static/js/main.js") }}"></script>
     <script defer src="{{ relativize .BaseURL .RelativePrefix (index .Assets "/static/js/search.js") }}"></script>
+    {{ if .IsGraphPage }}
+    <script defer src="{{ relativize .BaseURL .RelativePrefix (index .Assets "/static/js/graph.js") }}"></script>
+    {{ end }}
     {{ else }}
     <script defer src="{{ relativize .BaseURL .RelativePrefix "/static/js/main.js" }}?v={{ .BuildVersion }}"></script>
     <script defer src="{{ relativize .BaseURL .RelativePrefix "/static/js/search.js" }}?v={{ .BuildVersion }}"></script>
+    {{ if .IsGraphPage }}
+    <script defer src="{{ relativize .BaseURL .RelativePrefix "/static/js/graph.js" }}?v={{ .BuildVersion }}"></script>
+    {{ end }}
     {{ end }}
 
 

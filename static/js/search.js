@@ -330,6 +330,28 @@
                 <div class="search-result-title">${res.title}</div>
                 <div class="search-result-snippet">${res.snippet}</div>
             `;
+
+            // Bridge to Graph
+            const absoluteLink = joinPath(baseURL, res.link);
+            const gBtn = document.createElement('div');
+            gBtn.className = 'search-graph-btn';
+            gBtn.textContent = 'Explore in Graph';
+            gBtn.onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                if (document.getElementById('graph-canvas')) {
+                    // Already on graph page, just focus
+                    window.dispatchEvent(new CustomEvent('kosh:graph-focus', { detail: { link: absoluteLink } }));
+                } else {
+                    // Navigate to graph page with focus param
+                    const graphUrl = joinPath(baseURL, '/graph.html');
+                    window.location.href = `${graphUrl}?focus=${encodeURIComponent(absoluteLink)}`;
+                }
+                closeModal();
+            };
+            item.appendChild(gBtn);
+
             fragment.appendChild(item);
         });
         searchResults.appendChild(fragment);
