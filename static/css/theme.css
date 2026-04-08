@@ -1,10 +1,10 @@
 /* ============================================
-   CLARITY IN MOTION - READING THEME
+   ZEN JOURNAL - THE MINIMALIST'S PARCHMENT
    ============================================ */
 
-/* --- DARK MODE (Default) --- */
+/* --- DARK MODE (Rich Ink) --- */
 :root {
-    /* Spacing System */
+    /* Spacing System - Generous Zen Spacing */
     --space-1: 0.25rem;
     --space-2: 0.5rem;
     --space-3: 0.75rem;
@@ -15,92 +15,107 @@
     --space-10: 4rem;
     --space-12: 6rem;
 
-    /* Backgrounds - Warm Dark */
-    --bg-body: #1a1816;
-    --bg-card: #23211e;
-    --bg-code: #2a2724;
-    --bg-quote: rgba(255, 255, 255, 0.03);
-    --bg-card-hover: #2e2b27;
-    --bg-tint: rgba(201, 168, 108, 0.1);
+    /* Backgrounds - Deep Inky Blacks */
+    --bg-body: #121212;
+    --bg-card: #1a1a1a;
+    --bg-code: #161616;
+    --bg-quote: rgba(255, 255, 255, 0.02);
+    --bg-card-hover: #1e1e1e;
+    --bg-tint: rgba(140, 123, 110, 0.08);
     --bg-gradient: none;
-    --bg-glass: rgba(26, 24, 22, 0.95);
-    --bg-hover: #2e2b27;
-    --bg-accent: #35322e;
+    --bg-glass: rgba(18, 18, 18, 0.85);
+    --bg-hover: #1e1e1e;
+    --bg-accent: #222222;
 
-    /* Typography */
-    --text-main: #e8e4df;
-    --text-secondary: #a8a4a0;
-    --text-muted: #787470;
-    --text-inverse: #1a1816;
+    /* Typography - High Contrast Slate */
+    --text-main: #e2e2e2;
+    --text-secondary: #c0c0c0;
+    --text-muted: #888888;
+    --text-inverse: #121212;
 
-    /* Heading Hierarchy - Bronze/Slate/Gold */
-    --h1-color: #e8e4df;
-    --h2-color: #c9a86c;
-    --h3-color: #e8e4df;
-    --h4-color: #8ab4c7;
-    --h5-color: #a8a4a0;
-    --h6-color: #787470;
+    /* Heading Hierarchy - Classic Serif */
+    --h1-color: #ffffff;
+    --h2-color: #f0f0f0;
+    --h3-color: #e5e5e5;
+    --h4-color: var(--accent-cool);
+    --h5-color: var(--accent-primary);
+    --h6-color: var(--text-muted);
 
-    /* Accent Colors - Luminous Warm */
-    --accent-primary: #c9a86c;
-    --accent-secondary: #e4c695;
-    --accent-cool: #8ab4c7;
-    --accent-warm: #e4c695;
-    --accent-highlight: #4a4540;
-    --accent-border: #3d3a36;
-    --accent-link: #8ab4c7;
-    --accent-link-hover: #c9a86c;
+    /* Accent Colors - Muted Earth Tones */
+    --accent-primary: #a39485; /* Increased from 8c7b6e */
+    --accent-secondary: #b4a896; /* Increased from a39485 */
+    --accent-cool: #9db4c0; /* Increased from 7d8a94 */
+    --accent-warm: #c5baac; /* Increased from b4a896 */
+    --accent-highlight: #2a2a2a;
+    --accent-border: #333333; /* Slightly darker for definition */
+    --accent-link: #9db4c0; /* Match cool accent for better contrast */
+    --accent-link-hover: #ffffff;
+
+    /* Editorial Accent Palette (New) */
+    --accent-sage: #8c948c;
+    --accent-clay: #a38c85;
+    --accent-indigo: #6c7e8c;
+    --accent-gold: #b4a896;
+    --accent-terracotta: #a38c85;
 
     /* Borders */
-    --border: rgba(255, 255, 255, 0.08);
-    --border-hover: #c9a86c;
+    --border: rgba(255, 255, 255, 0.05);
+    --border-hover: rgba(255, 255, 255, 0.1);
 
     /* Fonts */
-    --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-serif: "Iowan Old Style", "Palatino Linotype", "URW Palladio L", "P052", "Palatino", "Book Antiqua", serif;
+    --font-main: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     --font-mono: "SF Mono", "JetBrains Mono", monospace;
 }
 
-/* --- LIGHT MODE --- */
+/* --- LIGHT MODE (Fine Stationery) --- */
 [data-theme="light"] {
-    /* Backgrounds - Warm Cream */
-    --bg-body: #f5f2ed;
-    --bg-card: #faf8f5;
-    --bg-code: #f0ece6;
-    --bg-quote: #f0ece6;
-    --bg-card-hover: #ebe5dd;
-    --bg-tint: rgba(139, 111, 71, 0.08);
+    /* Backgrounds - Soft Paper White */
+    --bg-body: #fdfcfb;
+    --bg-card: #ffffff;
+    --bg-code: #f7f6f5;
+    --bg-quote: #f7f6f5;
+    --bg-card-hover: #f9f8f7;
+    --bg-tint: rgba(163, 148, 133, 0.06);
     --bg-gradient: none;
-    --bg-glass: rgba(245, 242, 237, 0.95);
-    --bg-hover: #ebe5dd;
-    --bg-accent: #e8e2d9;
+    --bg-glass: rgba(253, 252, 251, 0.9);
+    --bg-hover: #f9f8f7;
+    --bg-accent: #f2f1ef;
 
-    /* Typography */
-    --text-main: #3d3a35;
-    --text-secondary: #5c5852;
-    --text-muted: #8a8580;
-    --text-inverse: #f5f2ed;
+    /* Typography - Deep Charcoal */
+    --text-main: #1a1a1a;
+    --text-secondary: #4a4a4a;
+    --text-muted: #666666;
+    --text-inverse: #fdfcfb;
 
     /* Heading Hierarchy */
-    --h1-color: #3d3a35;
-    --h2-color: #7a6240;
-    --h3-color: #3d3a35;
-    --h4-color: #5d7d8d;
-    --h5-color: #5c5852;
-    --h6-color: #8a8580;
+    --h1-color: #000000;
+    --h2-color: #1a1a1a;
+    --h3-color: #2a2a2a;
+    --h4-color: var(--accent-cool);
+    --h5-color: var(--accent-primary);
+    --h6-color: var(--text-muted);
 
-    /* Accent Colors - Warm Muted */
-    --accent-primary: #7a6240;
-    --accent-secondary: #a6855c;
-    --accent-cool: #5d7d8d;
-    --accent-warm: #a6855c;
-    --accent-highlight: #e0cba8;
-    --accent-border: #d9d4cc;
-    --accent-link: #5d7d8d;
-    --accent-link-hover: #7a6240;
+    /* Accent Colors - Soft Bronze */
+    --accent-primary: #7a6a5e; /* Further darkened for contrast */
+    --accent-secondary: #665a50; /* Deep bronze */
+    --accent-cool: #4a5d6a; /* Darkened from 6c7e8c */
+    --accent-warm: #7a6a5e;
+    --accent-highlight: #e8e6e3;
+    --accent-border: #dcd9d4; /* Slightly more visible */
+    --accent-link: #4a5d6a; /* Darkened for better readability */
+    --accent-link-hover: #000000;
+
+    /* Editorial Accent Palette (New) */
+    --accent-sage: #5a6b5a;
+    --accent-clay: #7a5a52;
+    --accent-indigo: #4a5d6a;
+    --accent-gold: #8c7b6e;
+    --accent-terracotta: #7a5a52;
 
     /* Borders */
-    --border: rgba(0, 0, 0, 0.1);
-    --border-hover: #7a6240;
+    --border: rgba(0, 0, 0, 0.06);
+    --border-hover: rgba(0, 0, 0, 0.1);
 }
 
 /* Base Styles */
@@ -111,94 +126,85 @@ body {
     color: var(--text-main);
     font-family: var(--font-main);
     -webkit-font-smoothing: antialiased;
-    transition: background-color 0.15s ease, color 0.15s ease;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.3s ease, color 0.3s ease;
     min-height: 100vh;
     font-size: 1.125rem;
     line-height: 1.8;
 }
 
-/* Smooth theme transitions for major containers */
-header,
-footer,
-main,
-article,
-.bento-card,
-.pinned-card,
-.post-list li,
-.list-item {
-    transition: background-color 0.15s ease, 
-                color 0.15s ease, 
-                border-color 0.15s ease;
+/* Page Entrance Animation */
+main {
+    animation: fadeLift 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Links & Interactivity */
-a {
-    color: var(--accent-link);
-    text-decoration: none;
-    position: relative;
-    transition: color 0.2s ease;
+@keyframes fadeLift {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-a::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
+/* Texture Overlay */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
     left: 0;
-    width: 0;
-    height: 1px;
-    background: var(--accent-link-hover);
-    transition: width 0.3s ease;
+    width: 100vw;
+    height: 100vh;
+    opacity: 0.035;
+    pointer-events: none;
+    z-index: 9999;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
-a:hover {
-    color: var(--accent-link-hover);
-}
-
-a:hover::after {
-    width: 100%;
+[data-theme="light"] body::before {
+    opacity: 0.055;
+    filter: contrast(1.2);
 }
 
 /* Typography - Heading Hierarchy */
 h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-serif);
     font-weight: 600;
-    letter-spacing: -0.02em;
-    line-height: 1.3;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
 }
 
 h1 {
-    font-size: 2.75rem;
+    font-size: 3rem;
     color: var(--h1-color);
     font-weight: 700;
-    margin: 0 0 var(--space-4) 0;
-    padding-bottom: var(--space-3);
-    border-bottom: 3px solid;
-    border-image: linear-gradient(90deg, var(--accent-primary), var(--accent-warm)) 1;
-    line-height: 1.2;
+    margin: 0 0 var(--space-6) 0;
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--border);
+    line-height: 1.1;
     letter-spacing: -0.02em;
 }
 
 h2 {
-    font-size: 2rem;
+    font-size: 2.25rem;
     color: var(--h2-color);
     font-weight: 600;
     margin: var(--space-10) 0 var(--space-4) 0;
-    padding-left: var(--space-3);
-    border-left: 4px solid var(--accent-warm);
     letter-spacing: -0.01em;
 }
 
 h3 {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
     color: var(--h3-color);
     font-weight: 600;
     margin: var(--space-8) 0 var(--space-3) 0;
-    padding-bottom: var(--space-2);
-    border-bottom: 1px solid var(--accent-border);
     letter-spacing: -0.005em;
 }
 
 h4 {
-    font-size: 1.25rem;
+    font-size: 1.4rem;
     color: var(--h4-color);
     font-weight: 600;
     margin: var(--space-6) 0 var(--space-3) 0;
@@ -209,7 +215,7 @@ h5 {
     color: var(--h5-color);
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.1em;
     margin: var(--space-6) 0 var(--space-3) 0;
 }
 
@@ -240,13 +246,23 @@ p {
 
 .meta-info {
     font-size: 0.85rem;
-    color: var(--text-muted);
+    color: var(--accent-primary);
     font-family: var(--font-mono);
+    font-weight: 500;
 }
 
 .article-meta {
     margin-top: var(--space-4);
-    margin-bottom: var(--space-5);
+    margin-bottom: var(--space-6);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.meta-divider {
+    color: var(--border);
+    opacity: 0.6;
 }
 
 /* Horizontal Rules */

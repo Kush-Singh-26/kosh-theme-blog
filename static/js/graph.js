@@ -38,16 +38,33 @@
         if (!link) return;
         
         const nodes = Object.values(nmap);
-        const normalize = (u) => u ? u.replace(/\/$/, '').replace(/\/index\.html$/, '') : '';
-        const normLink = normalize(link);
         
-        // Match by absolute URL or ID
-        const found = nodes.find(n => 
-            normalize(n.url) === normLink || 
-            normalize(n.id) === normLink ||
-            (n.url && link.endsWith(n.url)) ||
-            (n.id && link.endsWith(n.id))
-        );
+        const getPath = (u) => {
+            if (!u) return '';
+            if (u.includes('://')) {
+                try {
+                    const url = new URL(u);
+                    return url.pathname;
+                } catch {
+                    return u.replace(/^https?:\/\/[^/]+/, '');
+                }
+            }
+            return u;
+        };
+        
+        const focusPath = getPath(link).replace(/\/$/, '').replace(/\/index\.html$/, '');
+        
+        const found = nodes.find(n => {
+            const nodePath = getPath(n.url || n.id).replace(/\/$/, '').replace(/\/index\.html$/, '');
+            
+            if (nodePath === focusPath) return true;
+            
+            const focusSeg = focusPath.split('/').pop();
+            const nodeSeg = nodePath.split('/').pop();
+            if (focusSeg && nodeSeg && focusSeg === nodeSeg) return true;
+            
+            return false;
+        });
 
         if (found) {
             openPanel(found);
@@ -195,12 +212,6 @@
     let pingNode = null, pingStart = 0;
     let following = null;
 
-    function getGraphColor(isRoot, isTag) {
-        if (isRoot) return getComputedStyle(document.documentElement).getPropertyValue('--accent-primary').trim() || '#c9a86c';
-        if (isTag) return getComputedStyle(document.documentElement).getPropertyValue('--accent-link').trim() || '#8ab4c7';
-        return getComputedStyle(document.documentElement).getPropertyValue('--accent-secondary').trim() || '#e4c695';
-    }
-
     function getGraphBgColor() {
         return getComputedStyle(document.documentElement).getPropertyValue('--bg-body').trim() || '#1a1816';
     }
@@ -210,17 +221,36 @@
     }
 
     function getCSSVars() {
+        const rootStyle = getComputedStyle(document.documentElement);
         return {
-            accentPrimary: getComputedStyle(document.documentElement).getPropertyValue('--accent-primary').trim() || '#c9a86c',
-            accentLink: getComputedStyle(document.documentElement).getPropertyValue('--accent-link').trim() || '#8ab4c7',
-            accentSecondary: getComputedStyle(document.documentElement).getPropertyValue('--accent-secondary').trim() || '#e4c695',
-            textMuted: getComputedStyle(document.documentElement).getPropertyValue('--text-muted').trim() || '#787470',
-            cardBg: getComputedStyle(document.documentElement).getPropertyValue('--bg-card').trim() || '#23221e'
+            accentPrimary: rootStyle.getPropertyValue('--accent-primary').trim() || '#c9a86c',
+            accentLink: rootStyle.getPropertyValue('--accent-link').trim() || '#8ab4c7',
+            accentSecondary: rootStyle.getPropertyValue('--accent-secondary').trim() || '#e4c695',
+            accentSage: rootStyle.getPropertyValue('--accent-sage').trim() || '#8c948c',
+            accentClay: rootStyle.getPropertyValue('--accent-clay').trim() || '#a38c85',
+            accentIndigo: rootStyle.getPropertyValue('--accent-indigo').trim() || '#6c7e8c',
+            accentGold: rootStyle.getPropertyValue('--accent-gold').trim() || '#b4a896',
+            accentTerracotta: rootStyle.getPropertyValue('--accent-terracotta').trim() || '#a38c85',
+            textMuted: rootStyle.getPropertyValue('--text-muted').trim() || '#787470',
+            cardBg: rootStyle.getPropertyValue('--bg-card').trim() || '#23221e'
         };
     }
 
+    function getGraphColor(n) {
+        const vars = getCSSVars();
+        if (!n || typeof n !== 'object') return vars.accentSecondary;
+        if (n.group === 0) return vars.accentGold; // Hub
+        if (n.group === 2) return vars.accentIndigo; // Tag
+        
+        // Articles get varied terracotta/clay colors based on their ID hash
+        const id = n.id || '';
+        const hash = id.split('').reduce((acc, char) => char.charCodeAt(0) + ((acc << 5) - acc), 0);
+        return hash % 2 === 0 ? vars.accentTerracotta : vars.accentClay;
+    }
+
     function draw() {
-        const { accentPrimary, accentLink, accentSecondary, textMuted, cardBg } = getCSSVars();
+        const vars = getCSSVars();
+        const { accentPrimary, accentSecondary, textMuted, cardBg } = vars;
 
         ctx.clearRect(0, 0, W, H);
 
@@ -237,11 +267,11 @@
         const focusSet = new Set();
         if (focus) { focusSet.add(focus); focus.conns.forEach(n => focusSet.add(n)); }
 
-        ctx.fillStyle = getGraphColor(false, false);
-        ctx.globalAlpha = 0.04;
-        const sp = 50 * zoom, ox = (W / 2 + camX) % sp, oy = (H / 2 + camY) % sp;
+        ctx.fillStyle = accentSecondary;
+        ctx.globalAlpha = 0.02;
+        const sp = 60 * zoom, ox = (W / 2 + camX) % sp, oy = (H / 2 + camY) % sp;
         for (let x = ox - sp; x < W + sp; x += sp)
-            for (let y = oy - sp; y < H + sp; y += sp) { ctx.beginPath(); ctx.arc(x, y, 1.2, 0, Math.PI * 2); ctx.fill(); }
+            for (let y = oy - sp; y < H + sp; y += sp) { ctx.beginPath(); ctx.arc(x, y, 1, 0, Math.PI * 2); ctx.fill(); }
 
         const nodes = Object.values(nmap);
         const rootNode = nodes.find(n => n.isRoot);
@@ -266,12 +296,36 @@
             const mx = (ax + bx) / 2, my = (ay + by) / 2;
             const dx = bx - ax, dy = by - ay;
             const len = Math.sqrt(dx * dx + dy * dy) || 1;
-            const perpX = -dy / len * len * 0.12, perpY = dx / len * len * 0.12;
+            const perpX = -dy / len * len * 0.15, perpY = dx / len * len * 0.15;
 
-            ctx.beginPath(); ctx.moveTo(ax, ay); ctx.quadraticCurveTo(mx + perpX, my + perpY, bx, by);
-            if (focused) { ctx.strokeStyle = l.isTag ? accentLink : accentSecondary; ctx.globalAlpha = 0.95; ctx.lineWidth = 2 * zoom; }
-            else if (l.a.isRoot || l.b.isRoot) { ctx.strokeStyle = accentPrimary; ctx.globalAlpha = faded ? 0.12 : 0.65; ctx.lineWidth = 1.6 * zoom; }
-            else { ctx.strokeStyle = textMuted; ctx.globalAlpha = faded ? 0.1 : 0.65; ctx.lineWidth = 1.4 * zoom; }
+            ctx.beginPath(); 
+            ctx.moveTo(ax, ay); 
+            ctx.quadraticCurveTo(mx + perpX, my + perpY, bx, by);
+            
+            if (focused) { 
+                const grad = ctx.createLinearGradient(ax, ay, bx, by);
+                grad.addColorStop(0, getGraphColor(l.a));
+                grad.addColorStop(1, getGraphColor(l.b));
+                ctx.strokeStyle = grad; 
+                ctx.globalAlpha = 1; 
+                ctx.lineWidth = 3 * zoom; 
+            }
+            else if (l.a.isRoot || l.b.isRoot) { 
+                ctx.strokeStyle = accentPrimary; 
+                ctx.globalAlpha = faded ? 0.05 : 0.4; 
+                ctx.lineWidth = 1.2 * zoom; 
+            }
+            else { 
+                ctx.strokeStyle = textMuted; 
+                ctx.globalAlpha = faded ? 0.04 : 0.35; 
+                ctx.lineWidth = 1 * zoom; 
+                
+                // Pulsing links (very subtle)
+                if (!focus) {
+                    const pulse = Math.sin(Date.now() / 1500 + l.weight) * 0.1;
+                    ctx.globalAlpha += pulse;
+                }
+            }
             ctx.stroke();
         });
 
@@ -291,7 +345,7 @@
             if (sx + r < 0 || sx - r > W || sy + r < 0 || sy - r > H) return;
             const isTag = n.group === 2;
             const isRoot = n.group === 0;
-            const color = getGraphColor(isRoot, isTag);
+            const color = getGraphColor(n);
             const isFocus = focus && focusSet.has(n);
             const isFaded = focus && !focusSet.has(n);
             const isActive = n === active || n === searchMatch;
@@ -299,28 +353,49 @@
             ctx.globalAlpha = isFaded ? 0.08 : 1;
             if (!isFaded) {
                 ctx.shadowColor = color;
-                ctx.shadowBlur = isActive ? 18 : (isFocus ? 14 : 6);
+                // High-end Bloom Effect
+                ctx.shadowBlur = isActive ? 32 : (isFocus ? 22 : (zoom > 0.8 ? 12 : 6));
             } else ctx.shadowBlur = 0;
 
             ctx.beginPath();
             if (isRoot) { ctx.arc(sx, sy, r, 0, Math.PI * 2); }
-            else if (isTag) { const s = r * 0.85; ctx.roundRect(sx - s, sy - s, s * 2, s * 2, 2); }
+            else if (isTag) { 
+                const s = r * 0.85; 
+                ctx.roundRect(sx - s, sy - s, s * 2, s * 2, 6); 
+            }
             else ctx.arc(sx, sy, r, 0, Math.PI * 2);
-            ctx.fillStyle = cardBg; ctx.fill();
-            ctx.lineWidth = isActive ? 2.5 : 1.5;
-            ctx.strokeStyle = color; ctx.stroke();
+            
+            ctx.fillStyle = cardBg; 
+            ctx.fill();
+            
+            ctx.lineWidth = isActive ? 3 : (isFocus ? 2 : 1.5);
+            ctx.strokeStyle = color; 
+            ctx.stroke();
+            
+            // Subtle center point
+            if (!isFaded && zoom > 0.4) {
+                ctx.beginPath();
+                ctx.arc(sx, sy, r * 0.25, 0, Math.PI * 2);
+                ctx.fillStyle = color;
+                ctx.globalAlpha = isActive ? 1 : 0.6;
+                ctx.fill();
+                ctx.globalAlpha = 1;
+            }
+            
             ctx.shadowBlur = 0;
 
             const showLabel = n === active || n === searchMatch || n === hover || n.isRoot ||
                 (!isFaded && zoom > 1.1) || (!isFaded && n.conns.length > 3 && zoom > 0.7);
             if (showLabel) {
                 const fs = Math.max(10, 11 * zoom);
-                ctx.font = `${isRoot ? '600' : '500'} ${fs}px -apple-system, system-ui, sans-serif`;
-                ctx.fillStyle = isRoot ? accentPrimary : (isTag ? accentLink : accentSecondary);
+                const weight = isRoot ? '700' : '500';
+                const fontStack = zoom > 1.2 ? 'var(--font-serif)' : 'var(--font-main)';
+                ctx.font = `${weight} ${fs}px ${fontStack}`;
+                ctx.fillStyle = getGraphColor(n);
                 ctx.textAlign = 'center';
                 ctx.globalAlpha = isFaded ? 0.12 : 1;
                 const lbl = n.label.length > 35 ? n.label.slice(0, 34) + '…' : n.label;
-                ctx.fillText(lbl, sx, sy + r + fs + 4);
+                ctx.fillText(lbl, sx, sy + r + fs + 8);
             }
         });
 
@@ -335,7 +410,7 @@
                 const r = (pingNode.r + (40 * t)) * zoom;
                 ctx.beginPath();
                 ctx.arc(sx, sy, r, 0, Math.PI * 2);
-                ctx.strokeStyle = getGraphColor(pingNode.isRoot, pingNode.isTag);
+                ctx.strokeStyle = getGraphColor(pingNode);
                 ctx.globalAlpha = (1 - t) * 0.8;
                 ctx.lineWidth = 3;
                 ctx.stroke();
@@ -366,7 +441,7 @@
         searchMatch = null;
         const typeEl = document.getElementById('graph-p-type');
         typeEl.textContent = n.group === 0 ? 'Hub' : (n.group === 2 ? 'Tag' : 'Article');
-        typeEl.style.color = getGraphColor(n.group === 0, n.group === 2);
+        typeEl.style.color = getGraphColor(n);
         document.getElementById('graph-p-title').textContent = n.label;
         
         const dateEl = document.getElementById('graph-p-date');
@@ -580,6 +655,7 @@
 
         if (next) {
             openPanel(next);
+            tZoom = Math.max(tZoom, 0.8);
             focusOn(next);
         }
     });

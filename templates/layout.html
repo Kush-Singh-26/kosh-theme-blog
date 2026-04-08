@@ -66,11 +66,11 @@
     <script>
         window.siteBaseURL = "{{ .BaseURL }}";
         window.buildVersion = "{{ .BuildVersion }}";
+        // DEBUG: {{ .AllTags | jsonify }}
+        window.blogTags = {{ .AllTags | jsonify }};
     </script>
     {{ if .Config.Logo }}
     <link rel="icon" type="image/png" href="{{ relativize .BaseURL .RelativePrefix (printf "/%s" .Config.Logo) }}">
-    {{ else }}
-    <link rel="icon" href="{{ relativize .BaseURL .RelativePrefix "/static/images/favicon.png" }}" width="35" height="35">
     {{ end }}
 
     <link rel="manifest" href="{{ relativize .BaseURL .RelativePrefix "/manifest.json" }}">
@@ -91,8 +91,6 @@
         <a href="{{ relativize .BaseURL .RelativePrefix "/" }}" class="site-title">
             {{ if .Config.Logo }}
             <img src="{{ relativize .BaseURL .RelativePrefix (printf "/%s" .Config.Logo) }}" alt="Logo" class="site-logo" width="35" height="35">
-            {{ else }}
-            <img src="{{ relativize .BaseURL .RelativePrefix "/static/images/favicon.png" }}" alt="" class="site-logo" width="35" height="35">
             {{ end }}
             {{ .Config.Title }}
         </a>
@@ -251,7 +249,7 @@
 
                 <div class="meta-info mb-small">
                     <span>{{ .DateObj.Format "Jan 02, 2006" }}</span>
-                    <span>•</span>
+                    <span class="meta-divider">•</span>
                     <span>{{ .ReadingTime }} min read</span>
                 </div>
 
@@ -275,10 +273,11 @@
 
             <div class="meta-info article-meta">
                 {{ if .Meta.date }}
-                <time datetime="{{ .Meta.date }}">📅 {{ .Meta.date }}</time>
+                <time datetime="{{ .Meta.date }}">📅 {{ .Meta.date | dateFormat "Jan 02, 2006" }}</time>
                 {{ end }}
 
                 {{ if .Meta.readingTime }}
+                <span class="meta-divider">|</span>
                 <span>⏱️ {{ .Meta.readingTime }} min read</span>
                 {{ end }}
 
@@ -294,6 +293,7 @@
                 <a href="{{ relativize $.BaseURL $.RelativePrefix (replace ".html" ".md" .Permalink) }}" target="_blank" class="tag-pill small-pill">View Source</a>
                 {{ end }}
             </div>
+
             {{ if .TOC }}
             <aside class="toc-container" id="toc-sidebar">
                 <div class="toc-toggle" onclick="this.parentElement.classList.toggle('expanded')">
@@ -312,6 +312,7 @@
                 </nav>
             </aside>
             {{ end }}
+
             <div class="content-body">
                 {{ .Content }}
             </div>
@@ -319,9 +320,56 @@
         {{ end }}
     </main>
 
+    {{ if .TOC }}
+    <!-- Floating TOC Button (Bottom Left) -->
+    <button id="floating-toc-btn" class="floating-btn" aria-label="Open Table of Contents">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+    </button>
+
+    <!-- Dedicated TOC Modal -->
+    <div id="toc-modal" class="toc-modal-overlay">
+        <div class="toc-modal-content">
+            <div class="toc-modal-header">
+                <span>Table of Contents</span>
+                <button id="toc-modal-close" class="toc-modal-close">&times;</button>
+            </div>
+            <nav class="toc-modal-nav">
+                <ul>
+                    {{ range .TOC }}
+                    <li class="toc-level-{{ .Level }}">
+                        <a href="#{{ .ID }}" class="toc-modal-link">{{ .Text }}</a>
+                    </li>
+                    {{ end }}
+                </ul>
+            </nav>
+        </div>
+    </div>
+    {{ end }}
+
     {{ if not .IsGraphPage }}
-    <footer>
-        <p style="text-align: center; margin: 0 auto;">&copy; {{ now.Year }} {{ .Config.Author.Name }}</p>
+    <footer class="colophon">
+        <div class="colophon-social">
+            <a href="https://github.com/Kush-Singh-26" target="_blank" rel="noopener">GitHub</a>
+            <span class="social-dot">&bull;</span>
+            <a href="{{ relativize .BaseURL .RelativePrefix "/rss.xml" }}" target="_blank">RSS Feed</a>
+            <span class="social-dot">&bull;</span>
+            <a href="https://linkedin.com/in/kush-singh-0a" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+        <div class="colophon-grid">
+            <div class="colophon-section">
+                <span class="colophon-title">{{ .Config.Title }}</span>
+                <span class="colophon-tagline">&copy; {{ now.Year }} &bull; Kush Blogs</span>
+            </div>
+            <div class="colophon-section">
+                <div class="colophon-meta">
+                    <a href="https://github.com/Kush-Singh-26/kosh" target="_blank" rel="noopener">Built with Kosh</a>
+                </div>
+            </div>
+        </div>
     </footer>
     {{ end }}
 

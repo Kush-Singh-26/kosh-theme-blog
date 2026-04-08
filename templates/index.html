@@ -48,11 +48,10 @@
     <script>
         window.siteBaseURL = "{{ .BaseURL }}";
         window.buildVersion = "{{ .BuildVersion }}";
+        window.blogTags = {{ .AllTags | jsonify }};
     </script>
     {{ if .Config.Logo }}
     <link rel="icon" type="image/png" href="{{ relativize .BaseURL .RelativePrefix (printf "/%s" .Config.Logo) }}">
-    {{ else }}
-    <link rel="icon" href="{{ relativize .BaseURL .RelativePrefix "/static/images/favicon.png" }}" width="35" height="35">
     {{ end }}
 </head>
 
@@ -61,8 +60,6 @@
         <a href="{{ relativize .BaseURL .RelativePrefix "/" }}" class="site-title">
             {{ if .Config.Logo }}
             <img src="{{ relativize .BaseURL .RelativePrefix (printf "/%s" .Config.Logo) }}" alt="Logo" class="site-logo" width="35" height="35">
-            {{ else }}
-            <img src="{{ relativize .BaseURL .RelativePrefix "/static/images/favicon.png" }}" alt="" class="site-logo" width="35" height="35">
             {{ end }}
             {{ .Config.Title }}
         </a>
@@ -147,8 +144,9 @@
             <p>{{ .Config.Description }}</p>
             <div class="hero-search-container">
                 <div class="hero-search" id="hero-search-trigger">
-                    <span>Search articles...</span>
-                    <kbd>/</kbd>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <span>Search knowledge...</span>
+                    <kbd>⌘K</kbd>
                 </div>
             </div>
         </div>
@@ -185,15 +183,12 @@
         <div class="latest-list">
             {{ range .Posts }}
             <a href="{{ relativize $.BaseURL $.RelativePrefix .Link }}" class="list-item">
-                <div class="list-date">
-                    <span class="month">{{ .DateObj.Format "Jan" }}</span>
-                    <span class="day">{{ .DateObj.Format "02" }}</span>
-                    <span class="year">{{ .DateObj.Format "2006" }}</span>
-                </div>
                 <div class="list-content">
                     <h3 class="list-title">{{ .Title }}</h3>
                     <p class="list-desc">{{ .Description }}</p>
                     <div class="list-meta">
+                        <span>{{ .DateObj.Format "Jan 02, 2006" }}</span>
+                        <span class="separator">•</span>
                         <span>{{ .ReadingTime }} min read</span>
                         {{ if .Tags }}
                         <span class="separator">•</span>
@@ -239,8 +234,25 @@
         {{ end }}
     </main>
 
-    <footer>
-        <p style="text-align: center; margin: 0 auto;">&copy; {{ now.Year }} {{ .Config.Author.Name }}</p>
+    <footer class="colophon">
+        <div class="colophon-social">
+            <a href="https://github.com/Kush-Singh-26" target="_blank" rel="noopener">GitHub</a>
+            <span class="social-dot">&bull;</span>
+            <a href="{{ relativize .BaseURL .RelativePrefix "/rss.xml" }}" target="_blank">RSS Feed</a>
+            <span class="social-dot">&bull;</span>
+            <a href="https://linkedin.com/in/kush-singh-0a" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+        <div class="colophon-grid">
+            <div class="colophon-section">
+                <span class="colophon-title">{{ .Config.Title }}</span>
+                <span class="colophon-tagline">&copy; {{ now.Year }} &bull; Kush Blogs</span>
+            </div>
+            <div class="colophon-section">
+                <div class="colophon-meta">
+                    <a href="https://github.com/Kush-Singh-26/kosh" target="_blank" rel="noopener">Built with Kosh</a>
+                </div>
+            </div>
+        </div>
     </footer>
 
     <!-- Search Modal -->

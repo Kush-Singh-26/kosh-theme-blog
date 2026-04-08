@@ -1,62 +1,30 @@
-/* Tags & Topics Structural Styles */
+/* Zen Tags & Topics */
 .tag-cloud {
     display: flex;
-    gap: 12px;
+    gap: 8px;
     flex-wrap: wrap;
     margin-top: 1.5rem;
 }
 
-/* Tags with Multiple Colors */
 .tag-pill {
     display: inline-flex;
     align-items: center;
-    padding: 0.4rem 1.2rem;
-    border-radius: 99px;
+    padding: 0.35rem 1rem;
+    border-radius: 4px; /* More architectural */
     text-decoration: none;
-    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
-    background: var(--bg-tint);
-    color: var(--accent-primary);
+    transition: all 0.2s ease;
+    background: var(--bg-card);
+    color: var(--text-secondary);
     border: 1px solid var(--border);
     font-size: 0.8rem;
     font-weight: 500;
 }
 
-.tag-pill:nth-child(3n) {
-    color: var(--accent-cool);
-    border-color: var(--accent-cool);
-}
-
-.tag-pill:nth-child(3n+1) {
-    color: var(--accent-pink);
-    border-color: var(--accent-pink);
-}
-
-.tag-pill:nth-child(3n+2) {
-    color: var(--accent-purple);
-    border-color: var(--accent-purple);
-}
-
 .tag-pill:hover {
-    border-color: currentColor;
-    background: rgba(41, 151, 255, 0.2);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(41, 151, 255, 0.3);
-}
-
-/* Specific hover colors for different tag types */
-.tag-pill:nth-child(3n):hover {
-    background: rgba(100, 210, 255, 0.2);
-    box-shadow: 0 4px 12px rgba(100, 210, 255, 0.3);
-}
-
-.tag-pill:nth-child(3n+1):hover {
-    background: rgba(255, 55, 95, 0.2);
-    box-shadow: 0 4px 12px rgba(255, 55, 95, 0.3);
-}
-
-.tag-pill:nth-child(3n+2):hover {
-    background: rgba(191, 90, 242, 0.2);
-    box-shadow: 0 4px 12px rgba(191, 90, 242, 0.3);
+    border-color: var(--accent-primary);
+    color: var(--h1-color);
+    background: var(--bg-card-hover);
+    transform: translateY(-1px);
 }
 
 .tag-count {
@@ -64,34 +32,31 @@
     align-items: center;
     justify-content: center;
     margin-left: 8px;
-    border-radius: 99px;
-    padding: 2px 8px;
-    background: var(--bg-code);
-    color: var(--text-main);
-    font-size: 0.75em;
+    border-radius: 2px;
+    padding: 1px 6px;
+    background: var(--bg-accent);
+    color: var(--text-muted);
+    font-size: 0.7em;
+    font-family: var(--font-mono);
 }
 
 .mini-tag {
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     font-family: var(--font-mono);
     color: var(--accent-primary);
     text-decoration: none;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
 }
 
-.mini-tag:nth-child(3n) {
-    color: var(--accent-cool);
-}
-
-.mini-tag:nth-child(3n+1) {
-    color: var(--accent-pink);
-}
-
-.mini-tag:nth-child(3n+2) {
-    color: var(--accent-purple);
+.mini-tag:hover {
+    opacity: 1;
+    text-decoration: underline;
 }
 
 .tag-row {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     flex-wrap: wrap;
+    margin-top: 0.5rem;
 }

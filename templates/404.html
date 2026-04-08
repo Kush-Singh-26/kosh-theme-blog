@@ -189,8 +189,6 @@
     </script>
     {{ if .Config.Logo }}
     <link rel="icon" type="image/png" href="{{ relativize .BaseURL .RelativePrefix (printf "/%s" .Config.Logo) }}">
-    {{ else }}
-    <link rel="icon" href="{{ relativize .BaseURL .RelativePrefix "/static/images/favicon.png" }}" width="35" height="35">
     {{ end }}
 </head>
 
@@ -199,8 +197,6 @@
         <a href="{{ relativize .BaseURL .RelativePrefix "/" }}" class="site-title">
             {{ if .Config.Logo }}
             <img src="{{ relativize .BaseURL .RelativePrefix (printf "/%s" .Config.Logo) }}" alt="Logo" class="site-logo" width="35" height="35">
-            {{ else }}
-            <img src="{{ relativize .BaseURL .RelativePrefix "/static/images/favicon.png" }}" alt="" class="site-logo" width="35" height="35">
             {{ end }}
             {{ .Config.Title }}
         </a>

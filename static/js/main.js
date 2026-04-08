@@ -49,6 +49,10 @@
             document.body.appendChild(backToTopBtn);
         }
 
+        const floatingTocBtn = document.getElementById('floating-toc-btn');
+        const tocModal = document.getElementById('toc-modal');
+        const tocModalClose = document.getElementById('toc-modal-close');
+
         // Consolidated Scroll Listener with requestAnimationFrame for Performance
         if (!window.__scrollInitialized) {
             window.__scrollInitialized = true;
@@ -71,12 +75,58 @@
                         } else {
                             backToTopBtn.classList.remove('visible');
                         }
+
+                        // Update Floating TOC Visibility
+                        if (floatingTocBtn) {
+                            if (scrollTop > 500) {
+                                floatingTocBtn.classList.add('visible');
+                            } else {
+                                floatingTocBtn.classList.remove('visible');
+                            }
+                        }
                         
                         ticking = false;
                     });
                     ticking = true;
                 }
             }, { passive: true });
+        }
+
+        // 4. Floating TOC Modal Logic
+        function closeTocModal() {
+            if (tocModal) {
+                tocModal.classList.remove('active');
+                setTimeout(() => {
+                    if (!tocModal.classList.contains('active')) {
+                        tocModal.style.display = 'none';
+                    }
+                }, 300);
+            }
+            document.body.style.overflow = '';
+        }
+
+        function openTocModal() {
+            if (tocModal) {
+                tocModal.style.display = 'flex';
+                // Trigger reflow for transition
+                tocModal.offsetHeight;
+                tocModal.classList.add('active');
+            }
+            document.body.style.overflow = 'hidden';
+        }
+
+        if (floatingTocBtn) {
+            floatingTocBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openTocModal();
+            });
+        }
+
+        if (tocModalClose) tocModalClose.addEventListener('click', closeTocModal);
+        if (tocModal) {
+            tocModal.addEventListener('click', (e) => {
+                if (e.target === tocModal) closeTocModal();
+            });
         }
 
         // 4. Theme Toggle Logic
@@ -264,42 +314,83 @@
         }
 
         // 8. Table of Contents ScrollSpy
-        const tocLinks = document.querySelectorAll('.toc-container a');
-        const sections = document.querySelectorAll('article h1, article h2, article h3, article h4, article h5, article h6');
+        const tocLinks = document.querySelectorAll('.toc-container a, .toc-modal-link');
+        const sections = Array.from(document.querySelectorAll('article h1, article h2, article h3, article h4, article h5, article h6'))
+            .filter(section => section.id);
 
         if (tocLinks.length > 0 && sections.length > 0) {
             const observerOptions = {
                 root: null,
-                rootMargin: '0px 0px -80% 0px',
+                rootMargin: '-100px 0px -70% 0px',
                 threshold: 0
             };
 
             const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const id = entry.target.id;
-                        if (id) {
-                            tocLinks.forEach(link => {
-                                link.classList.remove('active');
-                                if (link.getAttribute('href') === `#${id}`) {
-                                    link.classList.add('active');
-                                    const tocNav = link.closest('nav');
-                                    if (tocNav) {
-                                        const navRect = tocNav.getBoundingClientRect();
-                                        const linkRect = link.getBoundingClientRect();
-                                        if (linkRect.top < navRect.top || linkRect.bottom > navRect.bottom) {
-                                            link.scrollIntoView({ block: 'center', behavior: 'smooth' });
-                                        }
-                                    }
-                                }
-                            });
+                // Find the entry that is intersecting and closest to the top
+                const intersectingEntries = entries
+                    .filter(entry => entry.isIntersecting)
+                    .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+
+                if (intersectingEntries.length > 0) {
+                    const id = intersectingEntries[0].target.id;
+                    updateActiveTOC(id);
+                }
+            }, observerOptions);
+
+            function updateActiveTOC(id) {
+                tocLinks.forEach(link => {
+                    const isActive = link.getAttribute('href') === `#${id}`;
+                    link.classList.toggle('active', isActive);
+                    
+                    if (isActive) {
+                        const tocNav = link.closest('nav, .toc-modal-nav');
+                        const tocContainer = link.closest('.toc-container');
+                        const isModal = link.closest('.toc-modal-nav');
+                        
+                        // Only scroll the TOC itself if it's the floating sidebar or in the modal
+                        // This prevents the page from jumping when using the inline TOC at the top of a post
+                        const isFloatingSidebar = tocContainer && window.getComputedStyle(tocContainer).position === 'fixed';
+                        
+                        if (tocNav && (isFloatingSidebar || isModal)) {
+                            const navRect = tocNav.getBoundingClientRect();
+                            const linkRect = link.getBoundingClientRect();
+                            if (linkRect.top < navRect.top || linkRect.bottom > navRect.bottom) {
+                                link.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+                            }
                         }
                     }
                 });
-            }, observerOptions);
+            }
 
             sections.forEach(section => observer.observe(section));
+            
+            // Initial check in case we're already scrolled down
+            const initialSection = Array.from(sections).reverse().find(section => {
+                const rect = section.getBoundingClientRect();
+                return rect.top < window.innerHeight * 0.3;
+            });
+            if (initialSection) updateActiveTOC(initialSection.id);
         }
+
+        // 9. Smooth Scroll for TOC Links
+        tocLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const id = link.getAttribute('href').substring(1);
+                const target = document.getElementById(id);
+                if (target) {
+                    if (link.classList.contains('toc-modal-link')) {
+                        closeTocModal();
+                    }
+                    const headerHeight = document.querySelector('header')?.offsetHeight || 0;
+                    const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - headerHeight - 20;
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
     }
 
     if (document.readyState === "loading") {
