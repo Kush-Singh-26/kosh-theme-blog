@@ -34,20 +34,8 @@
 
         // 3. Scroll UI Elements (Progress Bar & Back to Top)
         let progressBar = document.getElementById('progress-bar');
-        if (!progressBar) {
-            progressBar = document.createElement('div');
-            progressBar.id = 'progress-bar';
-            document.body.appendChild(progressBar);
-        }
-
+        let ghostFill = document.getElementById('scroll-ghost-fill');
         let backToTopBtn = document.getElementById('back-to-top');
-        if (!backToTopBtn) {
-            backToTopBtn = document.createElement('button');
-            backToTopBtn.id = 'back-to-top';
-            backToTopBtn.innerHTML = '↑';
-            backToTopBtn.ariaLabel = 'Back to Top';
-            document.body.appendChild(backToTopBtn);
-        }
 
         const floatingTocBtn = document.getElementById('floating-toc-btn');
         const tocModal = document.getElementById('toc-modal');
@@ -66,14 +54,18 @@
                         
                         // Update Progress Bar
                         if (scrollHeight > 0) {
-                            progressBar.style.width = (scrollTop / scrollHeight) * 100 + "%";
+                            const progress = (scrollTop / scrollHeight) * 100;
+                            if (progressBar) progressBar.style.width = progress + "%";
+                            if (ghostFill) ghostFill.style.height = progress + "%";
                         }
                         
                         // Update Back to Top Visibility
-                        if (scrollTop > 300) {
-                            backToTopBtn.classList.add('visible');
-                        } else {
-                            backToTopBtn.classList.remove('visible');
+                        if (backToTopBtn) {
+                            if (scrollTop > 300) {
+                                backToTopBtn.classList.add('visible');
+                            } else {
+                                backToTopBtn.classList.remove('visible');
+                            }
                         }
 
                         // Update Floating TOC Visibility

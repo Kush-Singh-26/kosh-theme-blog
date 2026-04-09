@@ -223,9 +223,9 @@
     function getCSSVars() {
         const rootStyle = getComputedStyle(document.documentElement);
         return {
-            accentPrimary: rootStyle.getPropertyValue('--accent-primary').trim() || '#c9a86c',
-            accentLink: rootStyle.getPropertyValue('--accent-link').trim() || '#8ab4c7',
-            accentSecondary: rootStyle.getPropertyValue('--accent-secondary').trim() || '#e4c695',
+            accentPrimary: rootStyle.getPropertyValue('--accent-primary').trim() || '#8c948c', // Sage
+            accentLink: rootStyle.getPropertyValue('--accent-link').trim() || '#6c7e8c', // Indigo
+            accentSecondary: rootStyle.getPropertyValue('--accent-secondary').trim() || '#a38c85', // Clay
             accentSage: rootStyle.getPropertyValue('--accent-sage').trim() || '#8c948c',
             accentClay: rootStyle.getPropertyValue('--accent-clay').trim() || '#a38c85',
             accentIndigo: rootStyle.getPropertyValue('--accent-indigo').trim() || '#6c7e8c',
@@ -238,14 +238,14 @@
 
     function getGraphColor(n) {
         const vars = getCSSVars();
-        if (!n || typeof n !== 'object') return vars.accentSecondary;
-        if (n.group === 0) return vars.accentGold; // Hub
-        if (n.group === 2) return vars.accentIndigo; // Tag
+        if (!n || typeof n !== 'object') return vars.accentSage;
+        if (n.group === 0) return vars.accentGold; // Hub - Gold
+        if (n.group === 2) return vars.accentIndigo; // Tag - Indigo
         
         // Articles get varied terracotta/clay colors based on their ID hash
         const id = n.id || '';
         const hash = id.split('').reduce((acc, char) => char.charCodeAt(0) + ((acc << 5) - acc), 0);
-        return hash % 2 === 0 ? vars.accentTerracotta : vars.accentClay;
+        return hash % 2 === 0 ? vars.accentTerracotta : vars.accentSage; // Terracotta or Sage
     }
 
     function draw() {

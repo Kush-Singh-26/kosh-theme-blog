@@ -6,44 +6,154 @@
     padding: 0;
 }
 
+/* Reading Progress Bar (Organic Sage) */
+#progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background: var(--accent-sage);
+    z-index: 9999;
+    transition: width 0.2s var(--ease-calm), opacity 0.5s ease;
+    opacity: 0.8;
+}
+
+[data-theme="dark"] #progress-bar {
+    opacity: 0.6;
+}
+
 body {
     max-width: 900px;
     margin: 0 auto;
-    padding: 0 2rem 4rem 2rem;
+    padding: 0 2rem 6rem 2rem;
     min-height: 100vh;
 }
 
 main {
-    animation: fadeIn 0.6s ease-out;
+    animation: fadeIn 1.2s var(--ease-calm);
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from { 
+        opacity: 0; 
+        transform: translateY(15px); 
+        filter: blur(10px);
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+        filter: blur(0);
+    }
+}
+
+/* Scribe’s Marginalia & Inline Sidenotes */
+.sidenote {
+    font-family: var(--font-serif);
+    font-style: italic;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    padding: 1.25rem;
+    border-left: 1px solid var(--accent-sage);
+    margin: 2.5rem 0;
+    opacity: 0.85;
+    transition: opacity 0.4s var(--ease-calm);
+}
+
+.sidenote:hover {
+    opacity: 1;
+}
+
+@media (min-width: 1600px) {
+    .sidenote {
+        position: absolute;
+        right: -300px;
+        width: 260px;
+        border-left: none;
+        padding-left: 0;
+        margin: 0;
+        text-align: left;
+    }
+}
+
+/* Ghost Scroll Progress (Right Margin Line) */
+#scroll-ghost {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 1px;
+    height: 100vh;
+    background: var(--border);
+    opacity: 0.3;
+    z-index: 9998;
+    pointer-events: none;
+}
+
+#scroll-ghost-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 0%;
+    background: var(--accent-primary);
+    opacity: 0.6;
+    transition: height 0.1s ease-out;
 }
 
 img {
     max-width: 100%;
-    margin: 3rem auto;
+    margin: 4rem auto 1.5rem auto; /* Reduced bottom margin for caption adjacency */
     display: block;
-    border-radius: 8px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+    transition: transform 0.6s var(--ease-calm), box-shadow 0.6s var(--ease-calm);
+}
+
+/* Museum Label Image Captions */
+figure {
+    margin: 4rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+figcaption {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    text-align: center;
+    padding-top: 1rem;
+    position: relative;
+    max-width: 80%;
+    opacity: 0.7;
+    transition: opacity 0.4s var(--ease-calm);
+}
+
+figure:hover figcaption {
+    opacity: 1;
+}
+
+img:hover {
+    transform: scale(1.02);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.12);
 }
 
 [data-theme="dark"] img {
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
 }
 
-hr {
-    height: 1px;
-    margin: 4rem 0;
-    border: 0;
-    background: var(--border);
+/* Math Blocks (LaTeX) */
+.katex-display {
+    margin: 1.5rem 0 !important; /* Reduced from default */
+    padding: 0.5rem 0 !important;
 }
 
 .center-text { text-align: center; }
 .center-flex { display: flex; justify-content: center; }
-.mb-small { margin-bottom: 0.5rem; }
+.mb-small { margin-bottom: 0.75rem; }
 .no-border { border: none !important; }
 .small-pill { font-size: 0.8em; }
 
@@ -51,23 +161,32 @@ hr {
 @media (min-width: 1600px) {
     .article-meta {
         position: fixed;
-        top: 12rem;
-        left: calc(50% - 680px); /* Balance with TOC on the right */
-        width: 180px;
+        top: 14rem;
+        left: calc(50% - 720px); /* Balance with TOC on the right */
+        width: 220px;
         display: flex !important;
         flex-direction: column;
         align-items: flex-end;
         text-align: right;
-        gap: 1.5rem;
+        gap: 2rem;
         margin: 0 !important;
-        padding-right: 2rem;
+        padding-right: 2.5rem;
         border-right: 1px solid var(--border);
+        opacity: 0.8;
+        transition: opacity 0.4s var(--ease-calm);
+    }
+
+    .article-meta:hover {
+        opacity: 1;
     }
 
     .article-meta span, 
     .article-meta time {
         display: block;
         width: 100%;
+        font-size: 0.8rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
     }
 
     .article-meta .meta-divider {
@@ -75,7 +194,9 @@ hr {
     }
 
     .article-meta .tag-pill {
-        margin: 0.25rem 0;
+        margin: 0.35rem 0;
+        padding: 0.35rem 0.85rem;
+        font-size: 0.7rem;
     }
 }
 

@@ -75,11 +75,11 @@
     transition: all 0.2s ease;
     display: block;
     padding: 0.25rem 0;
-    border-left: 1px solid transparent;
 }
 
 .toc-container a:hover {
     color: var(--accent-primary);
+    text-decoration: underline;
 }
 
 .toc-container a.active {
@@ -115,20 +115,46 @@
     }
 
     .toc-container a {
-        padding: 0.4rem 0 0.4rem 1.25rem;
-        border-left: 1px solid var(--border);
-        transition: all 0.3s ease;
+        padding: 0.6rem 0;
+        border: none;
+        transition: all 0.4s var(--ease-calm);
+        font-size: 0.825rem;
+        opacity: 0.7;
+        position: relative;
     }
 
-    .toc-container a:hover {
-        border-left-color: var(--text-secondary);
-        padding-left: 1.5rem;
+    /* The "Active Path" Line */
+    .toc-container a::before {
+        content: "";
+        position: absolute;
+        left: -1px;
+        top: 0;
+        width: 1px;
+        height: 0%;
+        background: var(--accent-sage);
+        transition: height 0.4s var(--ease-calm);
     }
 
     .toc-container a.active {
-        border-left-color: var(--accent-primary);
-        padding-left: 1.5rem;
-        color: var(--accent-primary);
+        padding-left: 0;
+        border: none;
+        color: var(--accent-sage);
+        opacity: 1;
+        font-weight: 500;
+        letter-spacing: 0.01em;
+    }
+
+    .toc-container a.active::before {
+        height: 100%;
+    }
+
+    .toc-container a:hover {
+        opacity: 1;
+        text-decoration: underline;
+    }
+
+    .toc-container a.active::before {
+        display: none;
     }
 }
 
@@ -252,20 +278,18 @@
     text-decoration: none;
     font-size: 0.95rem;
     transition: all 0.2s ease;
-    display: block;
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
+    display: inline;
+    padding: 0;
 }
 
 .toc-modal-link:hover {
     color: var(--accent-primary);
-    background: var(--bg-tint);
+    text-decoration: underline;
 }
 
 .toc-modal-link.active {
     color: var(--accent-primary);
     font-weight: 600;
-    background: var(--bg-tint);
 }
 
 /* Level padding for modal */

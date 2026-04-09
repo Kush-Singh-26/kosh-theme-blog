@@ -39,153 +39,125 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 60vh;
+            min-height: 70vh;
             text-align: center;
             padding: 3rem 1rem;
+            max-width: 800px;
+            margin: 0 auto;
         }
         
         .error-code {
-            font-size: 8rem;
-            font-weight: 900;
-            line-height: 1;
-            margin: 0;
-            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 50%, var(--accent-cool) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -0.05em;
-            animation: glitch 3s infinite;
-        }
-        
-        @keyframes glitch {
-            0%, 100% { transform: translateX(0); }
-            20% { transform: translateX(-2px); }
-            40% { transform: translateX(2px); }
-            60% { transform: translateX(-2px); }
-            80% { transform: translateX(2px); }
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--accent-tertiary); /* Gold */
+            margin-bottom: 2rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
         }
         
         .error-title {
-            font-size: 2rem;
-            margin: 1.5rem 0 1rem;
+            font-family: var(--font-serif);
+            font-size: 3rem;
+            margin: 0 0 2rem;
             color: var(--text-main);
+            font-weight: 400;
+            line-height: 1.2;
         }
         
         .error-message {
+            font-family: var(--font-sans);
             font-size: 1.1rem;
             color: var(--text-muted);
-            margin-bottom: 2.5rem;
+            margin-bottom: 3rem;
             max-width: 500px;
+            line-height: 1.8;
+            font-style: italic;
         }
         
         .error-actions {
             display: flex;
-            gap: 1rem;
+            gap: 2rem;
             flex-wrap: wrap;
             justify-content: center;
         }
         
         .btn {
-            padding: 0.8rem 1.8rem;
-            border-radius: 8px;
-            font-weight: 600;
+            padding: 0.6rem 2rem;
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
             text-decoration: none;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            border: 1px solid var(--border);
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            color: var(--bg-body);
-            border: none;
+            background: transparent;
+            color: var(--text-main);
         }
         
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(251, 113, 133, 0.3);
-            color: var(--bg-body);
+            border-color: var(--accent-tertiary);
+            color: var(--accent-tertiary);
+            box-shadow: 0 0 20px rgba(180, 168, 150, 0.1);
         }
         
         .btn-secondary {
-            background: var(--bg-card);
-            color: var(--text-main);
-            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-muted);
         }
         
         .btn-secondary:hover {
             border-color: var(--accent-primary);
-            background: var(--bg-card-hover);
-            transform: translateY(-2px);
             color: var(--accent-primary);
         }
         
         .suggestions {
-            margin-top: 3rem;
-            padding: 2rem;
-            background: var(--bg-card);
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
+            margin-top: 5rem;
+            padding: 2rem 0;
+            border-top: 1px solid var(--border-subtle);
+            width: 100%;
         }
         
         .suggestions h3 {
-            margin-top: 0;
-            margin-bottom: 1.5rem;
-            color: var(--accent-primary);
-            font-size: 1.3rem;
+            font-family: var(--font-serif);
+            margin-bottom: 2rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            font-weight: 400;
         }
         
         .suggestions ul {
             list-style: none;
             padding: 0;
             margin: 0;
-        }
-        
-        .suggestions li {
-            margin-bottom: 0.8rem;
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
         }
         
         .suggestions a {
             color: var(--text-main);
             text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem;
-            border-radius: 6px;
-            transition: all 0.3s ease;
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
         }
         
         .suggestions a:hover {
-            background: var(--bg-tint);
-            color: var(--accent-primary);
-            transform: translateX(8px);
-        }
-        
-        .suggestions a::before {
-            content: '→';
-            color: var(--accent-primary);
-            font-weight: bold;
-        }
-        
-        .ascii-art {
-            font-family: var(--font-mono);
-            font-size: 0.7rem;
-            line-height: 1.2;
-            color: var(--text-muted);
-            margin: 2rem 0;
-            opacity: 0.6;
-            white-space: pre;
+            color: var(--accent-tertiary);
         }
     </style>
     
     <script>
         window.siteBaseURL = "{{ .BaseURL }}";
         window.buildVersion = "{{ .BuildVersion }}";
+        window.blogTags = {{ .AllTags | jsonify }};
     </script>
     {{ if .Config.Logo }}
     <link rel="icon" type="image/png" href="{{ relativize .BaseURL .RelativePrefix (printf "/%s" .Config.Logo) }}">
@@ -202,15 +174,22 @@
         </a>
         <nav>
             {{ range .Config.Menu }}
-                {{ if .URL }}
-                    <a href="{{ if or (hasPrefix .URL "http") (hasPrefix .URL "/") }}{{ .URL }}{{ else }}{{ relativize $.BaseURL $.RelativePrefix .URL }}{{ end }}" 
-                       {{ if .Target }}target="{{ .Target }}"{{ end }}
-                       {{ if .ID }}id="{{ .ID }}"{{ end }}
-                       {{ if .Class }}class="{{ .Class }}"{{ end }}>{{ .Name }}</a>
+                {{ if eq .Name "Search" }}
+                <button {{ if .ID }}id="{{ .ID }}"{{ end }} {{ if .Class }}class="{{ .Class }}"{{ end }} aria-label="{{ .Name }}" title="{{ .Name }}">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </button>
                 {{ else }}
-                    <button {{ if .ID }}id="{{ .ID }}"{{ end }} 
-                            {{ if .Class }}class="{{ .Class }}"{{ end }} 
-                            aria-label="{{ .Name }}">{{ .Name }}</button>
+                <a href="{{ if hasPrefix .URL "http" }}{{ .URL }}{{ else }}{{ relativize $.BaseURL $.RelativePrefix .URL }}{{ end }}" {{ if .Target }}target="{{ .Target }}"{{ end }} {{ if .ID }}id="{{ .ID }}"{{ end }} {{ if .Class }}class="{{ .Class }}"{{ end }} aria-label="{{ .Name }}" title="{{ .Name }}">
+                    {{ if eq .Name "Tags" }}
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+                    {{ else if eq .Name "Graph" }}
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                    {{ else if eq .Name "Home" }}
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                    {{ else }}
+                    {{ .Name }}
+                    {{ end }}
+                </a>
                 {{ end }}
             {{ end }}
             <button id="theme-toggle" aria-label="Toggle Theme">
@@ -223,39 +202,60 @@
 
     <main>
         <div class="error-container">
-            <h1 class="error-code">404</h1>
+            <span class="error-code">Entrance Forbidden</span>
             
-            <div class="ascii-art">
-    ¯\_(ツ)_/¯
-            </div>
+            <h1 class="error-title">The Path Ends Here</h1>
             
-            <h2 class="error-title">Page Not Found</h2>
             <p class="error-message">
-                Oops! The page you're looking for seems to have wandered off into the digital void. 
-                Perhaps it's exploring other dimensions of the internet.
+                "Not all those who wander are lost, but this scroll appears to have been misplaced by the archivists."
             </p>
             
             <div class="error-actions">
                 <a href="{{ relativize .BaseURL .RelativePrefix "/" }}" class="btn btn-primary">
-                     Take Me Home
+                     Return to Path
                 </a>
                 <a href="{{ relativize .BaseURL .RelativePrefix "/tags/index.html" }}" class="btn btn-secondary">
-                     Browse Topics
+                     Consult Index
                 </a>
             </div>
             
             <div class="suggestions">
-                <h3> You might be interested in:</h3>
+                <h3>Seek Knowledge Elsewhere</h3>
                 <ul>
                     <li><a href="{{ relativize .BaseURL .RelativePrefix "/graph.html" }}">Knowledge Graph</a></li>
-                    <li><a href="{{ .Config.Author.URL }}" target="_blank">{{ .Config.Author.Name }}'s Profile</a></li>
+                    <li><a href="https://kush-singh-26.github.io/" target="_blank" rel="noopener">The Author</a></li>
                 </ul>
             </div>
         </div>
     </main>
 
-    <footer>
-        <p style="text-align: center; margin: 0 auto;">&copy; {{ now.Year }} {{ .Config.Author.Name }}</p>
+    <footer class="colophon">
+        <div class="colophon-grid">
+            <div class="colophon-left">
+                <span class="colophon-title">{{ .Config.Title }}</span>
+                <span class="colophon-tagline">&copy; {{ now.Year }} &bull; Kush Blogs</span>
+            </div>
+            <!-- Scholar's Seal -->
+            <div class="colophon-center">
+                <div class="scholar-seal">
+                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="2" y="2" width="36" height="36" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M10 10 L30 10 M10 20 L30 20 M10 30 L30 30 M20 10 L20 30" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="colophon-right">
+                <div class="colophon-social">
+                    {{ range $index, $item := .Config.FooterMenu }}
+                    {{ if $index }}<span class="social-dot">&bull;</span>{{ end }}
+                    <a href="{{ if hasPrefix $item.URL "http" }}{{ $item.URL }}{{ else }}{{ relativize $.BaseURL $.RelativePrefix $item.URL }}{{ end }}" {{ if $item.Target }}target="{{ $item.Target }}"{{ end }} rel="noopener">{{ $item.Name }}</a>
+                    {{ end }}
+                </div>
+                <div class="colophon-meta">
+                    <a href="https://github.com/Kush-Singh-26/kosh" target="_blank" rel="noopener">Built with Kosh</a>
+                </div>
+            </div>
+        </div>
     </footer>
 
     

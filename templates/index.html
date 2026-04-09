@@ -68,14 +68,13 @@
             <div class="desktop-nav">
                 {{ range .Config.Menu }}
                 {{ if .URL }}
-                <a href="{{ if hasPrefix .URL "http" }}{{ .URL }}{{ else }}{{ relativize $.BaseURL $.RelativePrefix .URL }}{{ end }}" 
-                   {{ if .Target }}target="{{ .Target }}"{{ end }}
-                   {{ if .ID }}id="{{ .ID }}"{{ end }}
-                   {{ if .Class }}class="{{ .Class }}"{{ end }}>{{ .Name }}</a>
+                <a href="{{ if hasPrefix .URL "http" }}{{ .URL }}{{ else }}{{ relativize $.BaseURL $.RelativePrefix .URL }}{{ end }}" {{ if .Target }}target="{{ .Target }}"{{ end }} {{ if .ID }}id="{{ .ID }}"{{ end }} {{ if .Class }}class="{{ .Class }}"{{ end }} aria-label="{{ .Name }}" title="{{ .Name }}">
+                    {{ .Name }}
+                </a>
                 {{ else }}
-                <button {{ if .ID }}id="{{ .ID }}"{{ end }} 
-                        {{ if .Class }}class="{{ .Class }}"{{ end }} 
-                        aria-label="{{ .Name }}">{{ .Name }}</button>
+                <button {{ if .ID }}id="{{ .ID }}"{{ end }} {{ if .Class }}class="{{ .Class }}"{{ end }} aria-label="{{ .Name }}" title="{{ .Name }}">
+                    {{ .Name }}
+                </button>
                 {{ end }}
                 {{ end }}
                 <button id="theme-toggle" aria-label="Toggle Theme">
@@ -145,7 +144,7 @@
             <div class="hero-search-container">
                 <div class="hero-search" id="hero-search-trigger">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                    <span>Search knowledge...</span>
+                    <span>Search...</span>
                     <kbd>⌘K</kbd>
                 </div>
             </div>
@@ -235,25 +234,40 @@
     </main>
 
     <footer class="colophon">
-        <div class="colophon-social">
-            <a href="https://github.com/Kush-Singh-26" target="_blank" rel="noopener">GitHub</a>
-            <span class="social-dot">&bull;</span>
-            <a href="{{ relativize .BaseURL .RelativePrefix "/rss.xml" }}" target="_blank">RSS Feed</a>
-            <span class="social-dot">&bull;</span>
-            <a href="https://linkedin.com/in/kush-singh-0a" target="_blank" rel="noopener">LinkedIn</a>
-        </div>
         <div class="colophon-grid">
-            <div class="colophon-section">
+            <div class="colophon-left">
                 <span class="colophon-title">{{ .Config.Title }}</span>
                 <span class="colophon-tagline">&copy; {{ now.Year }} &bull; Kush Blogs</span>
             </div>
-            <div class="colophon-section">
+            <!-- Scholar's Seal -->
+            <div class="colophon-center">
+                <div class="scholar-seal">
+                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="2" y="2" width="36" height="36" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M10 10 L30 10 M10 20 L30 20 M10 30 L30 30 M20 10 L20 30" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="colophon-right">
+                <div class="colophon-social">
+                    {{ range $index, $item := .Config.FooterMenu }}
+                    {{ if $index }}<span class="social-dot">&bull;</span>{{ end }}
+                    <a href="{{ if hasPrefix $item.URL "http" }}{{ $item.URL }}{{ else }}{{ relativize $.BaseURL $.RelativePrefix $item.URL }}{{ end }}" {{ if $item.Target }}target="{{ $item.Target }}"{{ end }} rel="noopener">{{ $item.Name }}</a>
+                    {{ end }}
+                </div>
                 <div class="colophon-meta">
                     <a href="https://github.com/Kush-Singh-26/kosh" target="_blank" rel="noopener">Built with Kosh</a>
                 </div>
             </div>
         </div>
     </footer>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" class="back-to-top" aria-label="Back to Top">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="18 15 12 9 6 15"></polyline>
+        </svg>
+    </button>
 
     <!-- Search Modal -->
     <div id="search-modal" class="modal">

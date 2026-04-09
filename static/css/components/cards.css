@@ -2,8 +2,24 @@
 .bento-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-    margin: 2.5rem 0 5rem 0;
+    gap: 2.5rem 2rem; /* Airy horizontal, generous vertical */
+    margin: 4rem 0 6rem 0;
+}
+
+@media (min-width: 1024px) {
+    /* Wabi-Sabi: Subtle Asymmetry */
+    .bento-grid .bento-card:nth-child(even) {
+        transform: translateY(1.5rem);
+    }
+    
+    .bento-grid .bento-card:nth-child(3n+1) {
+        margin-top: -0.75rem;
+    }
+
+    .bento-grid .bento-card:hover {
+        transform: translateY(-8px) scale(1.015);
+        z-index: 10;
+    }
 }
 
 @media (max-width: 768px) {
@@ -16,83 +32,147 @@
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: 12px;
-    padding: 2rem;
+    padding: 2.25rem;
     text-decoration: none;
-    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transition: all 0.6s var(--ease-calm);
     position: relative;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+    will-change: transform, box-shadow, padding; /* Promote to GPU layer */
 }
 
 .bento-card:hover {
-    transform: translateY(-6px);
+    transform: translateY(-10px) scale(1.02);
     border-color: var(--accent-primary);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    padding: 2.75rem; /* More pronounced padding growth */
+    box-shadow: var(--glow-hover), 0 40px 80px -12px rgba(0, 0, 0, 0.1);
     background: var(--bg-card-hover);
 }
 
 [data-theme="dark"] .bento-card:hover {
-    box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.45);
+    box-shadow: var(--glow-hover), 0 40px 80px -12px rgba(0, 0, 0, 0.5);
+}
+
+.post-list li:hover {
+    transform: translateX(15px);
+    padding: 4.5rem 2.5rem; /* More horizontal padding */
+    background: var(--bg-tint);
+    border-radius: 16px;
+    box-shadow: var(--glow-hover);
+}
+
+.list-item:hover {
+    transform: translateX(15px);
+    padding: 4rem 2.5rem; /* More horizontal padding */
+    background: var(--bg-tint);
+    border-radius: 16px;
+    box-shadow: var(--glow-hover);
+}
+
+[data-theme="dark"] .bento-card:hover {
+    box-shadow: var(--glow-hover), 0 30px 60px -12px rgba(0, 0, 0, 0.4);
+}
+
+.post-list li {
+    padding: 4.5rem 0;
+    border-bottom: 1px solid var(--border);
+    transition: all 0.5s var(--ease-calm);
+    position: relative;
+    will-change: transform, padding, box-shadow;
+}
+
+.post-list li:hover {
+    transform: translateX(12px);
+    padding: 4.5rem 1.5rem; /* Add horizontal padding on hover */
+    background: var(--bg-tint);
+    border-radius: 12px;
+    box-shadow: var(--glow-hover);
+}
+
+.list-item {
+    display: flex;
+    gap: 3rem;
+    padding: 4rem 0;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    transition: all 0.5s var(--ease-calm);
+    position: relative;
+    will-change: transform, padding, box-shadow;
+}
+
+.list-item:hover {
+    transform: translateX(12px);
+    padding: 4rem 1.5rem; /* Add horizontal padding on hover */
+    background: var(--bg-tint);
+    border-radius: 12px;
+    box-shadow: var(--glow-hover);
+}
+
+[data-theme="dark"] .bento-card:hover {
+    box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.4), 0 18px 36px -18px rgba(0, 0, 0, 0.5);
 }
 
 .bento-card h2 {
-    font-size: 1.5rem;
+    font-size: 1.65rem;
     margin: 1rem 0;
     color: var(--h1-color);
-    line-height: 1.2;
+    line-height: 1.15;
     border-bottom: none;
+    font-weight: 500;
 }
 
 .card-desc {
     color: var(--text-secondary);
     font-size: 0.95rem;
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
     flex-grow: 1;
+    line-height: 1.6;
 }
 
 .card-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 600;
     color: var(--accent-primary);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.1em;
 }
 
 .arrow-icon {
-    transition: transform 0.3s ease;
+    transition: transform 0.4s var(--ease-calm);
 }
 
 .bento-card:hover .arrow-icon {
-    transform: translateX(4px);
+    transform: translateX(6px);
 }
 
 /* Featured Badge & Tags */
 .meta-badge {
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.15em;
-    padding: 0.2rem 0.5rem;
+    letter-spacing: 0.2em;
+    padding: 0.25rem 0.65rem;
     border-radius: 2px;
     background: var(--bg-accent);
     color: var(--text-muted);
     display: inline-block;
-    margin-bottom: 0.75rem;
+    margin-bottom: 1rem;
     border: 1px solid var(--border);
 }
 
 .bento-tag {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     font-family: var(--font-mono);
     color: var(--accent-primary);
     text-decoration: none;
     margin-left: 0.5rem;
-    opacity: 0.8;
-    transition: all 0.2s ease;
+    opacity: 0.6;
+    transition: all 0.4s var(--ease-calm);
 }
 
 .bento-card:hover .bento-tag {
@@ -108,21 +188,37 @@
 
 /* Latest Post List (Zen version) */
 .latest-list {
-    margin: 3rem 0;
+    margin: 4rem 0;
 }
 
 .list-item {
     display: flex;
     gap: 3rem;
-    padding: 3.5rem 0;
+    padding: 4rem 0;
     border-bottom: 1px solid var(--border);
     text-decoration: none;
-    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transition: all 0.5s var(--ease-calm);
+    position: relative;
+}
+
+.list-item::after {
+    content: "";
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 0%;
+    height: 1px;
+    background: var(--accent-primary);
+    transition: width 0.5s var(--ease-calm);
+    opacity: 0.6;
 }
 
 .list-item:hover {
-    transform: translateX(8px);
-    border-bottom-color: var(--accent-primary);
+    transform: translateX(12px);
+}
+
+.list-item:hover::after {
+    width: 100%;
 }
 
 .list-item:hover .list-title {
@@ -131,11 +227,11 @@
 
 .list-item:hover .chevron {
     color: var(--accent-primary);
-    transform: translateX(4px);
+    transform: translateX(8px);
 }
 
 .list-action .chevron {
-    transition: all 0.3s ease;
+    transition: all 0.4s var(--ease-calm);
 }
 
 .list-date {
@@ -144,33 +240,37 @@
     text-align: center;
     font-family: var(--font-mono);
     color: var(--text-muted);
+    transition: transform 0.4s var(--ease-calm);
 }
 
-.list-date .month { font-size: 0.75rem; text-transform: uppercase; display: block; }
-.list-date .day { font-size: 1.5rem; font-weight: 700; display: block; line-height: 1; margin: 0.25rem 0; color: var(--text-main); }
-.list-date .year { font-size: 0.75rem; display: block; }
+.list-item:hover .list-date {
+    transform: scale(1.1);
+}
+
+.list-date .month { font-size: 0.7rem; text-transform: uppercase; display: block; letter-spacing: 0.1em; }
+.list-date .day { font-size: 1.6rem; font-weight: 500; display: block; line-height: 1; margin: 0.25rem 0; color: var(--text-main); }
+.list-date .year { font-size: 0.7rem; display: block; opacity: 0.6; }
 
 .list-content {
     flex-grow: 1;
 }
 
 .list-title {
-    font-size: 1.5rem;
-    margin: 0 0 0.5rem 0;
+    font-size: 1.75rem;
+    margin: 0 0 0.75rem 0;
     color: var(--h1-color);
     font-family: var(--font-serif);
-    transition: color 0.2s ease;
+    transition: color 0.3s ease;
     border-bottom: none;
-}
-
-.list-item:hover .list-title {
-    color: var(--accent-primary);
+    font-weight: 500;
+    line-height: 1.2;
 }
 
 .list-desc {
     color: var(--text-secondary);
-    font-size: 1rem;
-    margin-bottom: 0.75rem;
+    font-size: 1.05rem;
+    margin-bottom: 1rem;
+    line-height: 1.6;
 }
 
 .list-meta {
@@ -179,16 +279,17 @@
     font-family: var(--font-mono);
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
     flex-wrap: wrap;
+    opacity: 0.8;
 }
 
 .list-tag {
     color: var(--accent-primary);
     text-decoration: none;
-    transition: all 0.2s ease;
-    padding: 2px 8px;
-    background: var(--bg-accent);
+    transition: all 0.3s var(--ease-calm);
+    padding: 3px 10px;
+    background: var(--bg-tint);
     border-radius: 4px;
     font-size: 0.75rem;
 }
@@ -196,6 +297,7 @@
 .list-tag:hover {
     background: var(--accent-primary);
     color: var(--text-inverse);
+    transform: translateY(-1px);
 }
 
 .separator {
@@ -217,28 +319,46 @@
 .post-list {
     list-style: none;
     padding: 0;
-    margin: 3rem 0;
+    margin: 4rem 0;
 }
 
 .post-list li {
-    padding: 3.5rem 0;
+    padding: 4.5rem 0;
     border-bottom: 1px solid var(--border);
-    transition: transform 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transition: transform 0.5s var(--ease-calm);
+    position: relative;
+}
+
+.post-list li::after {
+    content: "";
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--accent-primary);
+    transition: width 0.5s var(--ease-calm);
+    opacity: 0.5;
 }
 
 .post-list li:hover {
-    transform: translateX(6px);
+    transform: translateX(12px);
+}
+
+.post-list li:hover::after {
+    width: 100%;
 }
 
 .post-title {
     display: block;
-    font-size: 2.25rem;
+    font-size: 2.5rem;
     font-family: var(--font-serif);
     color: var(--h1-color);
-    margin-bottom: 0.75rem;
+    margin-bottom: 1rem;
     text-decoration: none;
-    transition: color 0.2s ease;
-    line-height: 1.2;
+    transition: color 0.3s ease;
+    line-height: 1.15;
+    font-weight: 500;
 }
 
 .post-title:hover {
@@ -248,7 +368,7 @@
 .post-desc {
     color: var(--text-secondary);
     font-size: 1.15rem;
-    line-height: 1.65;
+    line-height: 1.7;
     margin-bottom: 1.5rem;
     max-width: 750px;
 }
@@ -259,15 +379,16 @@
     font-family: var(--font-mono);
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-bottom: 1rem;
+    gap: 12px;
+    margin-bottom: 1.5rem;
+    opacity: 0.8;
 }
 
 .tag-row {
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
 }
 
 .list-action {

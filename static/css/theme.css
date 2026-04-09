@@ -57,6 +57,7 @@
     --accent-indigo: #6c7e8c;
     --accent-gold: #b4a896;
     --accent-terracotta: #a38c85;
+    --accent-tertiary: #b4a896; /* Gold - Scholar's Sanctum */
 
     /* Borders */
     --border: rgba(255, 255, 255, 0.05);
@@ -66,10 +67,23 @@
     --font-serif: "Iowan Old Style", "Palatino Linotype", "URW Palladio L", "P052", "Palatino", "Book Antiqua", serif;
     --font-main: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     --font-mono: "SF Mono", "JetBrains Mono", monospace;
+
+    /* Glows */
+    --glow-sage: 0 0 15px rgba(140, 148, 140, 0.3);
+    --glow-gold: 0 0 15px rgba(180, 168, 150, 0.3);
+    --glow-hover: 0 0 20px rgba(140, 148, 140, 0.4);
+
+    /* Motion */
+    --ease-calm: cubic-bezier(0.23, 1, 0.32, 1);
+    --transition-slow: 0.8s var(--ease-calm);
+    --transition-base: 0.4s var(--ease-calm);
 }
 
 /* --- LIGHT MODE (Fine Stationery) --- */
 [data-theme="light"] {
+    /* Glows */
+    --glow-hover: 0 0 20px rgba(180, 168, 150, 0.4);
+
     /* Backgrounds - Soft Paper White */
     --bg-body: #fdfcfb;
     --bg-card: #ffffff;
@@ -112,6 +126,7 @@
     --accent-indigo: #4a5d6a;
     --accent-gold: #8c7b6e;
     --accent-terracotta: #7a5a52;
+    --accent-tertiary: #8c7b6e; /* Deep Gold - Scholar's Sanctum */
 
     /* Borders */
     --border: rgba(0, 0, 0, 0.06);
@@ -121,27 +136,65 @@
 /* Base Styles */
 body {
     background-color: var(--bg-body);
-    background-image: var(--bg-gradient);
+    background-image: radial-gradient(circle at center, transparent, rgba(0, 0, 0, 0.02));
     background-attachment: fixed;
     color: var(--text-main);
     font-family: var(--font-main);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    font-optical-sizing: auto;
+    font-variant-ligatures: common-ligatures;
+    transition: background-color 0.4s var(--ease-calm), color 0.4s var(--ease-calm);
     min-height: 100vh;
     font-size: 1.125rem;
     line-height: 1.8;
 }
 
+[data-theme="dark"] body {
+    background-image: radial-gradient(circle at center, rgba(255, 255, 255, 0.015), transparent);
+}
+
+/* D2 Diagram Theme Switching */
+.d2-container .d2-light { display: none; }
+.d2-container .d2-dark { display: block; }
+
+[data-theme="light"] .d2-container .d2-light { display: block; }
+[data-theme="light"] .d2-container .d2-dark { display: none; }
+
+.d2-container {
+    margin: 1.5rem 0;
+    max-width: 100%;
+    text-align: center;
+}
+.d2-container svg {
+    max-width: 100%;
+    height: auto;
+    max-height: 400px;
+}
+
+.zoom-hint {
+    display: block;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+.zoom-hint:hover {
+    opacity: 1;
+}
+
 /* Page Entrance Animation */
 main {
-    animation: fadeLift 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: fadeLift 0.8s var(--ease-calm);
 }
 
 @keyframes fadeLift {
     from {
         opacity: 0;
-        transform: translateY(15px);
+        transform: translateY(20px);
     }
     to {
         opacity: 1;
@@ -149,7 +202,7 @@ main {
     }
 }
 
-/* Texture Overlay */
+/* Texture Overlay (Optimized: Static for Performance) */
 body::before {
     content: "";
     position: fixed;
@@ -157,50 +210,105 @@ body::before {
     left: 0;
     width: 100vw;
     height: 100vh;
-    opacity: 0.035;
+    opacity: 0.015;
     pointer-events: none;
     z-index: 9999;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    will-change: transform; /* Promote to GPU layer */
 }
 
 [data-theme="light"] body::before {
-    opacity: 0.055;
-    filter: contrast(1.2);
+    opacity: 0.03;
+    filter: contrast(1.05);
+}
+
+/* Link Aesthetics (Organic Ink-Bleed) */
+article a:not(.tag-pill):not(.mini-tag):not(.bento-tag),
+.post-list a,
+.latest-list a {
+    color: var(--accent-link);
+    text-decoration: none;
+    position: relative;
+    transition: color 0.3s var(--ease-calm);
+}
+
+article a:not(.tag-pill):not(.mini-tag):not(.bento-tag)::after,
+.post-list a:not(.mini-tag)::after,
+.latest-list a:not(.list-tag)::after {
+    content: "";
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.4s var(--ease-calm);
+    opacity: 0.4;
+}
+
+article a:not(.tag-pill):not(.mini-tag):not(.bento-tag):hover::after,
+.post-list a:not(.mini-tag):hover::after,
+.latest-list a:not(.list-tag):hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+article a:not(.tag-pill):not(.mini-tag):not(.bento-tag):hover {
+    color: var(--accent-link-hover);
 }
 
 /* Typography - Heading Hierarchy */
+article {
+    padding-top: var(--space-4);
+}
+
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-serif);
-    font-weight: 600;
-    letter-spacing: -0.01em;
+    font-weight: 500;
+    letter-spacing: -0.015em;
     line-height: 1.25;
 }
 
 h1 {
-    font-size: 3rem;
+    font-size: 3.5rem;
     color: var(--h1-color);
-    font-weight: 700;
-    margin: 0 0 var(--space-6) 0;
+    font-weight: 500;
+    margin: 0 0 var(--space-8) 0;
     padding-bottom: var(--space-4);
     border-bottom: 1px solid var(--border);
-    line-height: 1.1;
-    letter-spacing: -0.02em;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
 }
 
 h2 {
-    font-size: 2.25rem;
+    font-size: 2.5rem;
     color: var(--h2-color);
-    font-weight: 600;
-    margin: var(--space-10) 0 var(--space-4) 0;
-    letter-spacing: -0.01em;
+    font-weight: 500;
+    margin: var(--space-12) 0 var(--space-6) 0;
+    letter-spacing: -0.02em;
+    position: relative;
+}
+
+/* Luminous Overlines for Section Headers */
+h2::before {
+    content: "";
+    position: absolute;
+    top: -2.5rem;
+    left: 0;
+    width: 40px;
+    height: 1px;
+    background: var(--accent-primary);
+    opacity: 0.3;
 }
 
 h3 {
-    font-size: 1.75rem;
+    font-size: 1.85rem;
     color: var(--h3-color);
-    font-weight: 600;
-    margin: var(--space-8) 0 var(--space-3) 0;
-    letter-spacing: -0.005em;
+    font-weight: 500;
+    margin: var(--space-10) 0 var(--space-4) 0;
+    letter-spacing: -0.01em;
 }
 
 h4 {
@@ -240,15 +348,60 @@ h6:first-child {
 p {
     font-size: 1.125rem;
     color: var(--text-main);
+    line-height: 1.85;
+    margin-bottom: clamp(1.25rem, 3.5vh, 2.25rem); /* "Breathing" White-Space */
+    text-wrap: pretty;
+    hanging-punctuation: first last;
+}
+
+/* Scholarship Details - Whispering Margins */
+.content-body blockquote {
+    margin: var(--space-10) 0;
+    padding: var(--space-2) 0 var(--space-2) var(--space-8);
+    border-left: 1px solid var(--accent-border);
+    background: transparent;
+    font-style: italic;
+    font-family: var(--font-serif);
+    color: var(--text-secondary);
+    font-size: 1.25rem;
     line-height: 1.8;
-    margin-bottom: var(--space-5);
+    position: relative;
+    opacity: 0.95;
+    transition: border-color 0.6s var(--ease-calm);
+}
+
+.content-body blockquote:hover {
+    border-left-color: var(--accent-sage);
+}
+
+.content-body blockquote p:last-child {
+    margin-bottom: 0;
+}
+
+/* Subtle Annotation Mark */
+.content-body blockquote::before {
+    content: "•";
+    position: absolute;
+    top: 50%;
+    left: -0.35rem;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
+    color: var(--accent-sage);
+    opacity: 0.4;
+    transition: opacity 0.6s var(--ease-calm);
+}
+
+.content-body blockquote:hover::before {
+    opacity: 1;
 }
 
 .meta-info {
-    font-size: 0.85rem;
+    font-size: 0.825rem;
     color: var(--accent-primary);
     font-family: var(--font-mono);
     font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
 }
 
 .article-meta {
@@ -265,46 +418,85 @@ p {
     opacity: 0.6;
 }
 
-/* Horizontal Rules */
+/* Horizontal Rules (The Scholar's Divide) */
 hr {
     border: 0;
-    height: 2px;
+    height: 1px;
     background: linear-gradient(90deg, 
         transparent, 
-        var(--accent-border) 20%, 
-        var(--accent-warm) 50%, 
-        var(--accent-border) 80%, 
+        var(--accent-border) 15%, 
+        var(--accent-border) 85%, 
         transparent
     );
-    margin: var(--space-10) 0;
+    margin: var(--space-12) 0;
+    position: relative;
+    overflow: visible;
+    opacity: 0.8;
+}
+
+hr::after {
+    content: "✦";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--bg-body);
+    padding: 0 1rem;
+    color: var(--accent-primary);
+    font-size: 0.8rem;
     opacity: 0.6;
+    transition: transform 0.6s var(--ease-calm);
+}
+
+hr:hover::after {
+    transform: translate(-50%, -50%) rotate(180deg);
+    opacity: 1;
+}
+
+/* Scrollbar (The Ink Line) */
+::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--accent-border);
+    border-radius: 10px;
+    transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-primary);
 }
 
 /* Selection */
 ::selection {
-    background: var(--accent-primary);
-    color: var(--text-inverse);
+    background: var(--bg-tint);
+    color: var(--accent-primary);
     text-shadow: none;
 }
 
-/* Scrollbar */
-::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+/* Accessibility (The Soft Glow) */
+:focus-visible {
+    outline: none;
+    box-shadow: var(--glow-hover);
+    border-radius: 4px;
+    transition: box-shadow 0.3s var(--ease-calm);
 }
 
-::-webkit-scrollbar-track {
-    background: var(--bg-body);
-}
-
-::-webkit-scrollbar-thumb {
-    background: var(--accent-primary);
-    border-radius: 5px;
-    border: 2px solid var(--bg-body);
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: var(--accent-secondary);
+/* Global Hover Glow Logic */
+a:hover, 
+button:hover,
+.bento-card:hover,
+.post-list li:hover,
+.list-item:hover,
+.tag-pill:hover,
+.mini-tag:hover {
+    transition: all 0.4s var(--ease-calm);
 }
 
 /* Reduced Motion */
