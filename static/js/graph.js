@@ -75,7 +75,17 @@
         }
     }
 
-    fetch('/graph.json')
+    const baseURL = window.siteBaseURL || '';
+    const joinPath = (base, path) => {
+        if (!base) return path;
+        const needsSlash = !base.endsWith('/') && !path.startsWith('/');
+        const hasDoubleSlash = base.endsWith('/') && path.startsWith('/');
+        if (hasDoubleSlash) return base + path.slice(1);
+        if (needsSlash) return base + '/' + path;
+        return base + path;
+    };
+
+    fetch(joinPath(baseURL, '/graph.json'))
         .then(res => { if (!res.ok) throw new Error('Failed to load graph'); return res.json(); })
         .then(data => {
             initNodes(data);

@@ -15,7 +15,7 @@
     height: 3px;
     background: var(--accent-sage);
     z-index: 9999;
-    transition: width 0.2s var(--ease-calm), opacity 0.5s ease;
+    transition: width var(--transition-base), opacity var(--transition-base);
     opacity: 0.8;
 }
 
@@ -24,10 +24,15 @@
 }
 
 body {
-    max-width: 900px;
+    max-width: var(--container-max);
     margin: 0 auto;
-    padding: 0 2rem 6rem 2rem;
+    padding: 0 var(--space-6) var(--space-12) var(--space-6);
     min-height: 100vh;
+}
+
+article {
+    max-width: var(--measure);
+    margin: 0 auto;
 }
 
 main {
@@ -37,13 +42,11 @@ main {
 @keyframes fadeIn {
     from { 
         opacity: 0; 
-        transform: translateY(15px); 
-        filter: blur(10px);
+        transform: translateY(var(--space-4)); 
     }
     to { 
         opacity: 1; 
         transform: translateY(0); 
-        filter: blur(0);
     }
 }
 
@@ -52,13 +55,13 @@ main {
     font-family: var(--font-serif);
     font-style: italic;
     color: var(--text-secondary);
-    font-size: 0.95rem;
-    line-height: 1.6;
-    padding: 1.25rem;
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+    padding: var(--space-5);
     border-left: 1px solid var(--accent-sage);
-    margin: 2.5rem 0;
+    margin: var(--space-8) 0;
     opacity: 0.85;
-    transition: opacity 0.4s var(--ease-calm);
+    transition: opacity var(--transition-base);
 }
 
 .sidenote:hover {
@@ -96,14 +99,14 @@ main {
     left: 0;
     width: 1px;
     height: 0%;
-    background: var(--accent-primary);
+    background: var(--accent-gold);
     opacity: 0.6;
-    transition: height 0.1s ease-out;
+    transition: height 0.1s var(--ease-calm);
 }
 
 img {
     max-width: 100%;
-    margin: 4rem auto 1.5rem auto; /* Reduced bottom margin for caption adjacency */
+    margin: var(--space-10) auto var(--space-5) auto; /* Reduced bottom margin for caption adjacency */
     display: block;
     border-radius: 12px;
     box-shadow: 0 20px 40px rgba(0,0,0,0.08);
@@ -112,7 +115,7 @@ img {
 
 /* Museum Label Image Captions */
 figure {
-    margin: 4rem 0;
+    margin: var(--space-10) 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -120,60 +123,46 @@ figure {
 
 figcaption {
     font-family: var(--font-mono);
-    font-size: 0.75rem;
+    font-size: var(--text-xs);
     color: var(--text-muted);
     text-transform: uppercase;
-    letter-spacing: 0.15em;
+    letter-spacing: var(--tracking-xxwide);
     text-align: center;
-    padding-top: 1rem;
+    padding-top: var(--space-4);
     position: relative;
     max-width: 80%;
     opacity: 0.7;
-    transition: opacity 0.4s var(--ease-calm);
+    transition: opacity var(--transition-base);
 }
 
-figure:hover figcaption {
-    opacity: 1;
-}
-
-img:hover {
-    transform: scale(1.02);
-    box-shadow: 0 30px 60px rgba(0,0,0,0.12);
-}
-
-[data-theme="dark"] img {
-    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-}
-
-/* Math Blocks (LaTeX) */
 .katex-display {
-    margin: 1.5rem 0 !important; /* Reduced from default */
-    padding: 0.5rem 0 !important;
+    margin: var(--space-6) 0 !important; /* Reduced from default */
+    padding: var(--space-2) 0 !important;
 }
 
 .center-text { text-align: center; }
 .center-flex { display: flex; justify-content: center; }
-.mb-small { margin-bottom: 0.75rem; }
+.mb-small { margin-bottom: var(--space-3); }
 .no-border { border: none !important; }
-.small-pill { font-size: 0.8em; }
+.small-pill { font-size: var(--text-xs); }
 
 /* Wide-Canvas Marginalia (Editorial Polish) */
 @media (min-width: 1600px) {
     .article-meta {
         position: fixed;
-        top: 14rem;
+        top: var(--space-16);
         left: calc(50% - 720px); /* Balance with TOC on the right */
         width: 220px;
         display: flex !important;
         flex-direction: column;
         align-items: flex-end;
         text-align: right;
-        gap: 2rem;
+        gap: var(--space-7);
         margin: 0 !important;
-        padding-right: 2.5rem;
+        padding-right: var(--space-6);
         border-right: 1px solid var(--border);
         opacity: 0.8;
-        transition: opacity 0.4s var(--ease-calm);
+        transition: opacity var(--transition-base);
     }
 
     .article-meta:hover {
@@ -184,8 +173,8 @@ img:hover {
     .article-meta time {
         display: block;
         width: 100%;
-        font-size: 0.8rem;
-        letter-spacing: 0.05em;
+        font-size: var(--text-sm);
+        letter-spacing: var(--tracking-wide);
         text-transform: uppercase;
     }
 
@@ -194,9 +183,21 @@ img:hover {
     }
 
     .article-meta .tag-pill {
-        margin: 0.35rem 0;
-        padding: 0.35rem 0.85rem;
-        font-size: 0.7rem;
+        margin: var(--space-1) 0;
+        padding: var(--space-1) var(--space-3);
+        font-size: var(--text-xs);
     }
 }
 
+figure:hover figcaption {
+    opacity: 1;
+}
+
+img:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.12);
+}
+
+[data-theme="dark"] img {
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}

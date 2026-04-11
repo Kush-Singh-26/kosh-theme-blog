@@ -20,8 +20,11 @@
     <link rel="canonical" href="{{ .Permalink }}">
     <link rel="alternate" type="application/rss+xml" title="{{ .Title }} RSS Feed" href="{{ relativize .BaseURL .RelativePrefix "/rss.xml" }}" />
     <meta name="theme-color" content="#111113">
+
+    {{ if and .Config.GetFeatures.Generators.IsPWAEnabled (not .Config.IsDevMode) }}
     <link rel="apple-touch-icon" href="{{ relativize .BaseURL .RelativePrefix "/static/images/icon-192.png" }}">
     <link rel="manifest" href="{{ relativize .BaseURL .RelativePrefix "/manifest.json" }}">
+    {{ end }}
 
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ .Permalink }}">
@@ -330,8 +333,8 @@
                 let reloadTimeout;
                 const source = new EventSource("/events");
                 source.onmessage = function (event) {
-                    if (event.data === "reload") {
-                        console.log("♻️ File change detected. Waiting for build to complete...");
+                    if (event.data === "site" || event.data === "all" || event.data === "reload") {
+                        console.log("♻️ Site change detected. Waiting for build to complete...");
                         // Clear any pending reload
                         if (reloadTimeout) clearTimeout(reloadTimeout);
                         // Wait 500ms for build to complete, then reload

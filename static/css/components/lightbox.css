@@ -14,7 +14,7 @@
     z-index: 9999;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+    transition: opacity var(--transition-base), visibility var(--transition-base);
 }
 
 #lightbox.active {
@@ -24,16 +24,16 @@
 
 #lightbox.active img,
 #lightbox.active .lightbox-svg-container {
-    transform: scale(1);
+    transform: translateY(0);
 }
 
 #lightbox img,
 .lightbox-svg-container {
     max-width: 90%;
     max-height: 90%;
-    border-radius: 8px;
-    transform: scale(0.9);
-    transition: transform 0.3s ease;
+    border-radius: var(--space-2);
+    transform: translateY(20px);
+    transition: transform var(--transition-base);
 }
 
 .lightbox-svg-container {

@@ -1,10 +1,10 @@
 /* Header & Nav Layout */
 header {
     position: sticky;
-    top: 1.5rem;
+    top: var(--space-6);
     z-index: 1000;
-    padding: 0.6rem 1.25rem;
-    margin-bottom: 3.5rem;
+    padding: var(--space-2) var(--space-5);
+    margin-bottom: var(--space-10);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -32,11 +32,11 @@ header {
 .site-title {
     display: inline-flex;
     align-items: center;
-    gap: 12px;
-    font-weight: 600;
-    font-size: 0.95rem;
+    gap: var(--space-3);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--text-sm);
     color: var(--h1-color);
-    letter-spacing: 0.08em;
+    letter-spacing: var(--tracking-xxwide);
     text-transform: uppercase;
     text-decoration: none;
     transition: all 0.4s var(--ease-calm);
@@ -44,12 +44,12 @@ header {
 }
 
 .site-title:hover {
-    transform: translateX(2px);
+    transform: translateX(calc(var(--space-1) / 2));
     opacity: 1;
 }
 
 .site-logo {
-    height: 24px;
+    height: var(--space-6);
     width: auto;
     margin: 0;
     border-radius: 4px;
@@ -57,20 +57,20 @@ header {
 }
 
 .site-logo:hover {
-    transform: rotate(15deg) scale(1.1);
+    transform: rotate(15deg) translateY(-2px);
 }
 
 header nav a,
 header nav button,
 .nav-btn {
-    margin-left: 0.5rem;
-    padding: 0.5rem 1rem;
+    margin-left: var(--space-2);
+    padding: var(--space-2) var(--space-4);
     border-radius: 99px;
     color: var(--text-secondary);
     text-decoration: none;
     transition: all 0.4s var(--ease-calm);
-    font-size: 0.85rem;
-    font-weight: 600;
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-semibold);
     background: transparent;
     border: 1px solid transparent;
     cursor: pointer;
@@ -78,24 +78,41 @@ header nav button,
     display: inline-flex;
     align-items: center;
     position: relative;
-    letter-spacing: 0.05em;
+    letter-spacing: var(--tracking-xwide);
     text-transform: uppercase;
 }
 
+/* Theme Toggle (Meditative Crossfade) */
+#theme-toggle {
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: var(--space-2);
+    border-radius: 50%;
+    margin-left: var(--space-2);
+    transition: all 0.8s var(--ease-calm); /* Slower crossfade */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border: 1px solid transparent; /* Align with nav buttons */
+}
+
+
 header nav a.active,
 header nav button.active {
-    color: var(--accent-primary);
-    background: var(--bg-tint);
-    border-color: var(--accent-border);
+    color: var(--accent-gold);
+    background: color-mix(in srgb, var(--bg-tint), var(--accent-gold) 15%);
+    border-color: color-mix(in srgb, var(--accent-border), var(--accent-gold) 30%);
 }
 
 header nav a:hover,
 header nav button:hover,
 .nav-btn:hover {
     color: var(--h1-color);
-    background: var(--bg-card);
-    border-color: var(--accent-primary);
-    box-shadow: var(--glow-hover);
+    background: color-mix(in srgb, var(--bg-card), var(--accent-gold) 10%);
+    border-color: var(--accent-gold);
+    box-shadow: var(--glow-gold);
     transform: translateY(-1px);
 }
 
@@ -119,7 +136,7 @@ header nav button:hover,
     color: var(--accent-primary);
     background: var(--bg-card);
     border-color: var(--accent-primary);
-    transform: rotate(25deg) scale(1.1);
+    transform: rotate(25deg) translateY(-2px);
     box-shadow: var(--glow-hover);
 }
 
@@ -131,23 +148,19 @@ header nav button:hover,
     display: block; 
     opacity: 0;
     position: absolute;
-    transform: scale(0.5);
 }
 #theme-toggle .theme-icon-light { 
     display: block; 
     opacity: 1;
-    transform: scale(1);
 }
 
 [data-theme="light"] #theme-toggle .theme-icon-dark { 
     opacity: 1; 
     position: relative;
-    transform: scale(1);
 }
 [data-theme="light"] #theme-toggle .theme-icon-light { 
     opacity: 0; 
     position: absolute;
-    transform: scale(0.5);
 }
 
 /* Nav Button Soft Glow */
@@ -162,7 +175,7 @@ header nav button:hover,
 #theme-toggle:hover {
     color: var(--accent-primary);
     background: var(--bg-accent);
-    transform: rotate(25deg) scale(1.1);
+    transform: rotate(25deg) translateY(-2px);
 }
 
 #theme-toggle .theme-icon-dark { display: none; }
@@ -173,9 +186,9 @@ header nav button:hover,
 /* Mobile adjustments */
 @media (max-width: 768px) {
     header {
-        top: 1rem;
-        margin-bottom: 3.5rem;
-        padding: 0.6rem 1rem;
+        top: var(--space-4);
+        margin-bottom: var(--space-10);
+        padding: var(--space-2) var(--space-4);
     }
 
     .site-title span {
@@ -195,25 +208,25 @@ header nav button:hover,
 
 @media (max-width: 768px) {
     header {
-        padding: 0.6rem 0.8rem;
+        padding: var(--space-2) var(--space-3);
         border-radius: 24px;
         height: auto;
     }
 
     .site-title {
-        font-size: 0.85rem;
-        padding: 3px 10px 3px 3px;
+        font-size: var(--text-sm);
+        padding: var(--space-1) var(--space-2) var(--space-1) var(--space-1);
     }
 
     .site-logo {
-        height: 20px;
+        height: var(--space-5);
     }
 
     nav {
         display: flex;
         flex-wrap: nowrap;
         align-items: center;
-        gap: 0.3rem;
+        gap: var(--space-1);
     }
 
     /* Hide desktop theme toggle on mobile */
@@ -229,21 +242,22 @@ header nav button:hover,
         justify-content: center;
         background: var(--bg-card);
         border: 1px solid var(--border);
-        width: 36px;
-        height: 36px;
+        width: 44px; /* Increased for mobile tap targets */
+        height: 44px;
         padding: 0;
-        font-size: 1rem;
+        font-size: var(--text-base);
         border-radius: 99px;
         color: var(--text-main);
         cursor: pointer;
-        transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+        transition: all var(--transition-base);
         margin-left: 0;
     }
 
     .mobile-search-btn:hover,
     .mobile-theme-toggle:hover {
-        background: var(--bg-card-hover);
+        background: color-mix(in srgb, var(--bg-card-hover), var(--accent-sage) 5%);
         border-color: var(--accent-primary);
+        transform: translateY(-2px);
     }
 
     .mobile-search-btn svg {
@@ -264,7 +278,7 @@ header nav button:hover,
 .desktop-nav {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: var(--space-2);
 }
 
 @media (max-width: 768px) {
@@ -279,22 +293,27 @@ header nav button:hover,
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 40px;
-    height: 40px;
+    width: var(--space-8);
+    height: var(--space-8);
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: 99px;
     cursor: pointer;
     padding: 0;
-    margin-left: 0.5rem;
-    transition: background-color 0.15s ease, border-color 0.15s ease;
+    margin-left: var(--space-2);
+    transition: all var(--transition-base);
 }
 
 .menu-toggle:hover {
-    background: var(--bg-card-hover);
+    background: color-mix(in srgb, var(--bg-card-hover), var(--accent-sage) 5%);
     border-color: var(--accent-primary);
     box-shadow: var(--glow-hover);
-    transform: scale(1.05);
+}
+
+@media (hover: hover) {
+    .menu-toggle:hover {
+        transform: translateY(-2px);
+    }
 }
 
 .hamburger-line {
@@ -303,7 +322,7 @@ header nav button:hover,
     height: 2px;
     background: var(--text-main);
     margin: 2px 0;
-    transition: all 0.3s ease;
+    transition: all var(--transition-base);
     border-radius: 1px;
 }
 
@@ -338,7 +357,7 @@ header nav button:hover,
     border-left: 1px solid var(--border);
     z-index: 1001;
     transform: translateX(100%);
-    transition: transform 0.3s ease;
+    transition: transform var(--transition-base);
     display: flex;
     flex-direction: column;
     overflow-y: auto;
@@ -352,14 +371,14 @@ header nav button:hover,
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 1.5rem;
+    padding: var(--space-4) var(--space-6);
     border-bottom: 1px solid var(--border);
     background: var(--bg-card);
 }
 
 .mobile-menu-title {
-    font-size: 1.1rem;
-    font-weight: 600;
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-semibold);
     color: var(--text-main);
 }
 
@@ -368,11 +387,11 @@ header nav button:hover,
     border: none;
     color: var(--text-muted);
     cursor: pointer;
-    padding: 0.5rem;
+    padding: var(--space-2);
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: color 0.2s ease;
+    transition: color var(--transition-base);
 }
 
 .menu-close:hover {
@@ -380,31 +399,35 @@ header nav button:hover,
 }
 
 .mobile-menu-content {
-    padding: 1rem 0;
+    padding: var(--space-4) 0;
     flex: 1;
 }
 
 .mobile-nav-link {
     display: block;
     width: 100%;
-    padding: 1rem 1.5rem;
+    padding: var(--space-4) var(--space-6);
     color: var(--text-main);
     text-decoration: none;
-    font-size: 1rem;
-    font-weight: 500;
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
     background: none;
     border: none;
     text-align: left;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all var(--transition-base);
     border-bottom: 1px solid transparent;
 }
 
 .mobile-nav-link:hover {
-    background: var(--bg-card-hover);
+    background: color-mix(in srgb, var(--bg-card-hover), var(--accent-sage) 5%);
     color: var(--accent-primary);
-    padding-left: 1.75rem;
-    border-bottom-color: var(--border);
+}
+
+@media (hover: hover) {
+    .mobile-nav-link:hover {
+        padding-left: 1.75rem;
+    }
 }
 
 /* Mobile Menu Backdrop */
@@ -418,7 +441,7 @@ header nav button:hover,
     z-index: 1000;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+    transition: opacity var(--transition-base), visibility var(--transition-base);
 }
 
 .mobile-menu-backdrop.open {

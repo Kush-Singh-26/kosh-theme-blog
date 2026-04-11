@@ -4,16 +4,23 @@
 
 /* --- DARK MODE (Rich Ink) --- */
 :root {
-    /* Spacing System - Generous Zen Spacing */
+    /* Spacing System - 1.25 Modular Scale */
     --space-1: 0.25rem;
     --space-2: 0.5rem;
-    --space-3: 0.75rem;
+    --space-3: 0.8rem;
     --space-4: 1rem;
-    --space-5: 1.5rem;
-    --space-6: 2rem;
-    --space-8: 3rem;
-    --space-10: 4rem;
-    --space-12: 6rem;
+    --space-5: 1.25rem;
+    --space-6: 1.5625rem;
+    --space-7: 1.953125rem;
+    --space-8: 2.44140625rem;
+    --space-9: 3.0517578125rem;
+    --space-10: 3.814697265625rem;
+    --space-11: 4.76837158203125rem;
+    --space-12: 5.9604644775390625rem;
+    --space-13: 7.450580596923828rem;
+    --space-14: 9.313225746154785rem;
+    --space-15: 11.641532182693481rem;
+    --space-16: 14.551915228366852rem;
 
     /* Backgrounds - Deep Inky Blacks */
     --bg-body: #121212;
@@ -41,102 +48,140 @@
     --h5-color: var(--accent-primary);
     --h6-color: var(--text-muted);
 
-    /* Accent Colors - Muted Earth Tones */
-    --accent-primary: #a39485; /* Increased from 8c7b6e */
-    --accent-secondary: #b4a896; /* Increased from a39485 */
-    --accent-cool: #9db4c0; /* Increased from 7d8a94 */
-    --accent-warm: #c5baac; /* Increased from b4a896 */
-    --accent-highlight: #2a2a2a;
-    --accent-border: #333333; /* Slightly darker for definition */
-    --accent-link: #9db4c0; /* Match cool accent for better contrast */
+    /* Accent Colors - Aged Earth Tones */
+    --accent-primary: #96887a; /* Desaturated from a39485 */
+    --accent-secondary: #a69a88; /* Desaturated from b4a896 */
+    --accent-cool: #8fa2ad; /* Desaturated from 9db4c0 */
+    --accent-warm: #b8aea0; /* Desaturated from c5baac */
+    --accent-highlight: #222222;
+    --accent-border: #2a2a2a; /* Muted border */
+    --accent-link: #8fa2ad; 
     --accent-link-hover: #ffffff;
 
-    /* Editorial Accent Palette (New) */
-    --accent-sage: #8c948c;
-    --accent-clay: #a38c85;
-    --accent-indigo: #6c7e8c;
-    --accent-gold: #b4a896;
-    --accent-terracotta: #a38c85;
-    --accent-tertiary: #b4a896; /* Gold - Scholar's Sanctum */
+    /* Editorial Accent Palette - Aged */
+    --accent-sage: #7d857d; /* Desaturated from 8c948c */
+    --accent-clay: #947d78; /* Desaturated from a38c85 */
+    --accent-indigo: #5f6e7a;
+    --accent-gold: #a69a88;
+    --accent-terracotta: #947d78;
+    --accent-tertiary: #a69a88;
 
     /* Borders */
-    --border: rgba(255, 255, 255, 0.05);
-    --border-hover: rgba(255, 255, 255, 0.1);
+    --border: rgba(255, 255, 255, 0.04);
+    --border-hover: rgba(255, 255, 255, 0.08);
+
+    /* Typography Scale (1.25 ratio) */
+    --text-xs: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-lg: 1.25rem;
+    --text-xl: 1.5625rem;
+    --text-2xl: 1.953125rem;
+    --text-3xl: 2.44140625rem;
+    --text-4xl: 3.0517578125rem;
+    --text-5xl: clamp(2.5rem, 8vw, 4.5rem); /* Slightly reduced max scale */
+    --text-6xl: clamp(3rem, 8vw, 5.5rem);
+
+    /* Type Weights */
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 600; /* Reduced from 700 for subtler hierarchy */
+
+    /* Letter Spacing */
+    --tracking-tight: -0.02em;
+    --tracking-normal: 0;
+    --tracking-wide: 0.02em;
+    --tracking-xwide: 0.05em;
+    --tracking-xxwide: 0.1em;
+
+    /* Line Heights */
+    --leading-tight: 1.05;
+    --leading-snug: 1.15;
+    --leading-normal: 1.4;
+    --leading-relaxed: 1.6;
+    --leading-loose: 1.8;
+
+    /* Measure */
+    --measure: 65ch;
+    --container-max: 900px;
 
     /* Fonts */
-    --font-serif: "Iowan Old Style", "Palatino Linotype", "URW Palladio L", "P052", "Palatino", "Book Antiqua", serif;
+    --font-serif: "Crimson Pro", "Iowan Old Style", "Palatino Linotype", "URW Palladio L", "P052", "Palatino", "Book Antiqua", serif;
     --font-main: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    --font-mono: "SF Mono", "JetBrains Mono", monospace;
+    --font-mono: "JetBrains Mono", "SF Mono", monospace;
 
-    /* Glows */
-    --glow-sage: 0 0 15px rgba(140, 148, 140, 0.3);
-    --glow-gold: 0 0 15px rgba(180, 168, 150, 0.3);
-    --glow-hover: 0 0 20px rgba(140, 148, 140, 0.4);
+    /* Glows - Subtler, Depth-Oriented */
+    --glow-sage: 0 8px 24px rgba(125, 133, 125, 0.15);
+    --glow-gold: 0 8px 24px rgba(166, 154, 136, 0.15);
+    --glow-hover: 0 12px 32px rgba(0, 0, 0, 0.2);
 
-    /* Motion */
-    --ease-calm: cubic-bezier(0.23, 1, 0.32, 1);
-    --transition-slow: 0.8s var(--ease-calm);
-    --transition-base: 0.4s var(--ease-calm);
+    /* Motion - Snappy Mechanical */
+    --ease-calm: cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-slow: 0.6s var(--ease-calm);
+    --transition-base: 0.45s var(--ease-calm);
 }
 
 /* --- LIGHT MODE (Fine Stationery) --- */
 [data-theme="light"] {
-    /* Glows */
-    --glow-hover: 0 0 20px rgba(180, 168, 150, 0.4);
+    /* Glows - Depth over Light */
+    --glow-hover: 0 12px 32px rgba(163, 148, 133, 0.15);
 
-    /* Backgrounds - Soft Paper White */
-    --bg-body: #fdfcfb;
+    /* Backgrounds - Aged Parchment */
+    --bg-body: #faf9f7; /* Slightly more aged from fdfcfb */
     --bg-card: #ffffff;
-    --bg-code: #f7f6f5;
-    --bg-quote: #f7f6f5;
-    --bg-card-hover: #f9f8f7;
-    --bg-tint: rgba(163, 148, 133, 0.06);
+    --bg-code: #f5f4f2;
+    --bg-quote: #f5f4f2;
+    --bg-card-hover: #fcfbf9;
+    --bg-tint: rgba(150, 136, 122, 0.05); /* Desaturated tint */
     --bg-gradient: none;
-    --bg-glass: rgba(253, 252, 251, 0.9);
-    --bg-hover: #f9f8f7;
-    --bg-accent: #f2f1ef;
+    --bg-glass: rgba(250, 249, 247, 0.9);
+    --bg-hover: #fcfbf9;
+    --bg-accent: #efeeeb;
 
-    /* Typography - Deep Charcoal */
-    --text-main: #1a1a1a;
-    --text-secondary: #4a4a4a;
-    --text-muted: #666666;
-    --text-inverse: #fdfcfb;
+    /* Typography - Deep Aged Ink */
+    --text-main: #1e1e1e;
+    --text-secondary: #4f4f4f;
+    --text-muted: #767676;
+    --text-inverse: #faf9f7;
 
-    /* Heading Hierarchy */
-    --h1-color: #000000;
+    /* Heading Hierarchy - Deep Aged Ink */
+    --h1-color: #0a0a0a;
     --h2-color: #1a1a1a;
     --h3-color: #2a2a2a;
     --h4-color: var(--accent-cool);
     --h5-color: var(--accent-primary);
     --h6-color: var(--text-muted);
 
-    /* Accent Colors - Soft Bronze */
-    --accent-primary: #7a6a5e; /* Further darkened for contrast */
-    --accent-secondary: #665a50; /* Deep bronze */
-    --accent-cool: #4a5d6a; /* Darkened from 6c7e8c */
-    --accent-warm: #7a6a5e;
-    --accent-highlight: #e8e6e3;
-    --accent-border: #dcd9d4; /* Slightly more visible */
-    --accent-link: #4a5d6a; /* Darkened for better readability */
+    /* Accent Colors - Aged Bronze */
+    --accent-primary: #6b5d52; /* Desaturated from 7a6a5e */
+    --accent-secondary: #594f46; 
+    --accent-cool: #3f4e59; 
+    --accent-warm: #6b5d52;
+    --accent-highlight: #e3e1de;
+    --accent-border: #d2cfca;
+    --accent-link: #3f4e59;
     --accent-link-hover: #000000;
 
-    /* Editorial Accent Palette (New) */
-    --accent-sage: #5a6b5a;
-    --accent-clay: #7a5a52;
-    --accent-indigo: #4a5d6a;
-    --accent-gold: #8c7b6e;
-    --accent-terracotta: #7a5a52;
-    --accent-tertiary: #8c7b6e; /* Deep Gold - Scholar's Sanctum */
+    /* Editorial Accent Palette - Light Aged */
+    --accent-sage: #505e50;
+    --accent-clay: #6b4e47;
+    --accent-indigo: #3f4e59;
+    --accent-gold: #7a6a5e;
+    --accent-terracotta: #6b4e47;
+    --accent-tertiary: #7a6a5e;
 
     /* Borders */
-    --border: rgba(0, 0, 0, 0.06);
-    --border-hover: rgba(0, 0, 0, 0.1);
+    --border: rgba(0, 0, 0, 0.05);
+    --border-hover: rgba(0, 0, 0, 0.08);
+
+    /* Typography - same scale for light */
 }
 
 /* Base Styles */
 body {
     background-color: var(--bg-body);
-    background-image: radial-gradient(circle at center, transparent, rgba(0, 0, 0, 0.02));
+    background-image: radial-gradient(circle at center, transparent, rgba(0, 0, 0, 0.01));
     background-attachment: fixed;
     color: var(--text-main);
     font-family: var(--font-main);
@@ -146,12 +191,12 @@ body {
     font-variant-ligatures: common-ligatures;
     transition: background-color 0.4s var(--ease-calm), color 0.4s var(--ease-calm);
     min-height: 100vh;
-    font-size: 1.125rem;
-    line-height: 1.8;
+    font-size: var(--text-lg);
+    line-height: var(--leading-loose);
 }
 
 [data-theme="dark"] body {
-    background-image: radial-gradient(circle at center, rgba(255, 255, 255, 0.015), transparent);
+    background-image: radial-gradient(circle at center, rgba(255, 255, 255, 0.01), transparent);
 }
 
 /* D2 Diagram Theme Switching */
@@ -162,7 +207,7 @@ body {
 [data-theme="light"] .d2-container .d2-dark { display: none; }
 
 .d2-container {
-    margin: 1.5rem 0;
+    margin: var(--space-5) 0;
     max-width: 100%;
     text-align: center;
 }
@@ -175,26 +220,23 @@ body {
 .zoom-hint {
     display: block;
     text-align: center;
-    font-size: 0.8rem;
+    font-size: var(--text-sm);
     color: var(--text-muted);
-    margin-top: 0.5rem;
+    margin-top: var(--space-2);
     cursor: pointer;
     opacity: 0.7;
     transition: opacity 0.2s;
 }
-.zoom-hint:hover {
-    opacity: 1;
-}
 
-/* Page Entrance Animation */
+/* Page Entrance Animation - Snappier */
 main {
-    animation: fadeLift 0.8s var(--ease-calm);
+    animation: fadeLift 0.5s var(--ease-calm);
 }
 
 @keyframes fadeLift {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(var(--space-4));
     }
     to {
         opacity: 1;
@@ -202,7 +244,7 @@ main {
     }
 }
 
-/* Texture Overlay (Optimized: Static for Performance) */
+/* Texture Overlay - Whisper Grain */
 body::before {
     content: "";
     position: fixed;
@@ -210,16 +252,16 @@ body::before {
     left: 0;
     width: 100vw;
     height: 100vh;
-    opacity: 0.015;
+    opacity: 0.008; /* Subtler grain for dark */
     pointer-events: none;
     z-index: 9999;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-    will-change: transform; /* Promote to GPU layer */
+    will-change: transform;
 }
 
 [data-theme="light"] body::before {
-    opacity: 0.03;
-    filter: contrast(1.05);
+    opacity: 0.012; /* Subtler grain for light */
+    filter: contrast(1.02);
 }
 
 /* Link Aesthetics (Organic Ink-Bleed) */
@@ -244,7 +286,7 @@ article a:not(.tag-pill):not(.mini-tag):not(.bento-tag)::after,
     background: currentColor;
     transform: scaleX(0);
     transform-origin: right;
-    transition: transform 0.4s var(--ease-calm);
+    transition: transform 0.45s var(--ease-calm);
     opacity: 0.4;
 }
 
@@ -266,71 +308,71 @@ article {
 
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-serif);
-    font-weight: 500;
-    letter-spacing: -0.015em;
-    line-height: 1.25;
+    font-weight: var(--font-weight-medium);
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-tight); /* Tighter leading for premium serif */
 }
 
 h1 {
-    font-size: 3.5rem;
+    font-size: var(--text-4xl);
     color: var(--h1-color);
-    font-weight: 500;
     margin: 0 0 var(--space-8) 0;
     padding-bottom: var(--space-4);
     border-bottom: 1px solid var(--border);
-    line-height: 1.05;
-    letter-spacing: -0.025em;
+    letter-spacing: var(--tracking-tight);
 }
 
 h2 {
-    font-size: 2.5rem;
+    font-size: var(--text-3xl);
     color: var(--h2-color);
-    font-weight: 500;
     margin: var(--space-12) 0 var(--space-6) 0;
-    letter-spacing: -0.02em;
+    letter-spacing: var(--tracking-tight);
     position: relative;
 }
 
-/* Luminous Overlines for Section Headers */
+/* Section Anchor Markers (Visible but Refined) */
 h2::before {
     content: "";
     position: absolute;
-    top: -2.5rem;
+    top: calc(var(--space-8) * -1);
     left: 0;
-    width: 40px;
+    width: var(--space-12); /* Slightly wider marker */
     height: 1px;
     background: var(--accent-primary);
-    opacity: 0.3;
+    opacity: 0.2; /* Increased visibility from 0.03/none */
+}
+
+[data-theme="light"] h2::before {
+    opacity: 0.1;
 }
 
 h3 {
-    font-size: 1.85rem;
+    font-size: var(--text-2xl);
     color: var(--h3-color);
-    font-weight: 500;
     margin: var(--space-10) 0 var(--space-4) 0;
-    letter-spacing: -0.01em;
+    letter-spacing: var(--tracking-tight);
 }
 
 h4 {
-    font-size: 1.4rem;
+    font-size: var(--text-xl);
     color: var(--h4-color);
-    font-weight: 600;
+    font-weight: var(--font-weight-semibold);
     margin: var(--space-6) 0 var(--space-3) 0;
 }
 
 h5 {
-    font-size: 1.1rem;
+    font-size: var(--text-lg);
     color: var(--h5-color);
-    font-weight: 600;
+    font-weight: var(--font-weight-semibold);
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: var(--tracking-xxwide);
     margin: var(--space-6) 0 var(--space-3) 0;
 }
 
 h6 {
-    font-size: 1rem;
+    font-size: var(--text-base);
     color: var(--h6-color);
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
     font-style: italic;
     margin: var(--space-5) 0 var(--space-3) 0;
 }
@@ -346,12 +388,13 @@ h6:first-child {
 }
 
 p {
-    font-size: 1.125rem;
+    font-size: var(--text-lg);
     color: var(--text-main);
-    line-height: 1.85;
+    line-height: var(--leading-loose);
     margin-bottom: clamp(1.25rem, 3.5vh, 2.25rem); /* "Breathing" White-Space */
     text-wrap: pretty;
     hanging-punctuation: first last;
+    max-width: var(--measure); /* Enforce measure for readability */
 }
 
 /* Scholarship Details - Whispering Margins */
@@ -363,8 +406,8 @@ p {
     font-style: italic;
     font-family: var(--font-serif);
     color: var(--text-secondary);
-    font-size: 1.25rem;
-    line-height: 1.8;
+    font-size: var(--text-lg);
+    line-height: var(--leading-loose);
     position: relative;
     opacity: 0.95;
     transition: border-color 0.6s var(--ease-calm);
@@ -385,7 +428,7 @@ p {
     top: 50%;
     left: -0.35rem;
     transform: translateY(-50%);
-    font-size: 1.2rem;
+    font-size: var(--text-lg);
     color: var(--accent-sage);
     opacity: 0.4;
     transition: opacity 0.6s var(--ease-calm);
@@ -396,11 +439,11 @@ p {
 }
 
 .meta-info {
-    font-size: 0.825rem;
+    font-size: var(--text-sm);
     color: var(--accent-primary);
     font-family: var(--font-mono);
-    font-weight: 500;
-    letter-spacing: 0.05em;
+    font-weight: var(--font-weight-medium);
+    letter-spacing: var(--tracking-xwide);
     text-transform: uppercase;
 }
 
@@ -410,7 +453,7 @@ p {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 0.75rem;
+    gap: var(--space-3);
 }
 
 .meta-divider {
@@ -441,54 +484,32 @@ hr::after {
     left: 50%;
     transform: translate(-50%, -50%);
     background: var(--bg-body);
-    padding: 0 1rem;
+    padding: 0 var(--space-4);
     color: var(--accent-primary);
-    font-size: 0.8rem;
+    font-size: var(--text-sm);
     opacity: 0.6;
     transition: transform 0.6s var(--ease-calm);
 }
-
-hr:hover::after {
-    transform: translate(-50%, -50%) rotate(180deg);
+.zoom-hint:hover {
     opacity: 1;
-}
-
-/* Scrollbar (The Ink Line) */
-::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
-}
-
-::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-    background: var(--accent-border);
-    border-radius: 10px;
-    transition: background 0.3s ease;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: var(--accent-primary);
 }
 
 /* Selection */
 ::selection {
-    background: var(--bg-tint);
-    color: var(--accent-primary);
+    background: color-mix(in srgb, var(--bg-tint), var(--accent-gold) 20%);
+    color: var(--accent-gold);
     text-shadow: none;
 }
 
 /* Accessibility (The Soft Glow) */
 :focus-visible {
     outline: none;
-    box-shadow: var(--glow-hover);
+    box-shadow: 0 0 0 2px var(--bg-body), 0 0 0 4px var(--accent-gold);
     border-radius: 4px;
     transition: box-shadow 0.3s var(--ease-calm);
 }
 
-/* Global Hover Glow Logic */
+/* Global Hover Logic - Snappy Precision */
 a:hover, 
 button:hover,
 .bento-card:hover,
@@ -496,7 +517,7 @@ button:hover,
 .list-item:hover,
 .tag-pill:hover,
 .mini-tag:hover {
-    transition: all 0.4s var(--ease-calm);
+    transition: all 0.45s var(--ease-calm);
 }
 
 /* Reduced Motion */
@@ -508,3 +529,4 @@ button:hover,
         animation: none !important;
     }
 }
+

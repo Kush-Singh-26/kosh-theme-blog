@@ -31,7 +31,11 @@
     <link rel="canonical" href="{{ .Permalink }}">
     <link rel="alternate" type="application/rss+xml" title="{{ .Title }} RSS Feed" href="{{ relativize .BaseURL .RelativePrefix "/rss.xml" }}" />
     <meta name="theme-color" content="#111113">
+
+    {{ if and .Config.GetFeatures.Generators.IsPWAEnabled (not .Config.IsDevMode) }}
     <link rel="apple-touch-icon" href="{{ relativize .BaseURL .RelativePrefix "/static/images/icon-192.png" }}">
+    <link rel="manifest" href="{{ relativize .BaseURL .RelativePrefix "/manifest.json" }}">
+    {{ end }}
 
     <meta property="og:type" content="article">
 
@@ -72,9 +76,6 @@
     {{ if .Config.Logo }}
     <link rel="icon" type="image/png" href="{{ relativize .BaseURL .RelativePrefix (printf "/%s" .Config.Logo) }}">
     {{ end }}
-
-    <link rel="manifest" href="{{ relativize .BaseURL .RelativePrefix "/manifest.json" }}">
-
 
     {{ if not .IsIndex }}
     <script type="application/ld+json">{{ .JSONLD }}</script>
@@ -290,7 +291,7 @@
                 {{ end }}
                 {{ end }}
 
-                {{ if .Config.Features.RawMarkdown }}
+                {{ if .Config.Features.UseRawMarkdown }}
                 <span class="meta-divider">|</span>
                 <a href="{{ relativize $.BaseURL $.RelativePrefix (replace ".html" ".md" .Permalink) }}" target="_blank" class="tag-pill small-pill">View Source</a>
                 {{ end }}
@@ -464,8 +465,8 @@
                 let reloadTimeout;
                 const source = new EventSource("/events");
                 source.onmessage = function (event) {
-                    if (event.data === "reload") {
-                        console.log("♻️ File change detected. Waiting for build to complete...");
+                    if (event.data === "site" || event.data === "root" || event.data === "all" || event.data === "reload") {
+                        console.log("♻️ Change detected: " + event.data + ". Waiting for build to complete...");
                         // Clear any pending reload
                         if (reloadTimeout) clearTimeout(reloadTimeout);
                         // Wait 250ms for build to complete (faster with asset-only rebuilds), then reload

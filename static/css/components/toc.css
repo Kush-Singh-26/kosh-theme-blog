@@ -3,35 +3,36 @@
 .toc-container {
     background: var(--bg-card);
     border: 1px solid var(--border);
-    border-radius: 8px;
-    margin-bottom: 3rem;
+    border-radius: var(--space-2);
+    margin-bottom: var(--space-9);
     overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transition: all var(--transition-base);
     z-index: 100;
 }
 
 .toc-toggle {
-    padding: 1rem 1.5rem;
+    padding: var(--space-4) var(--space-6);
     cursor: pointer;
-    font-weight: 600;
-    font-size: 0.8rem;
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--text-xs);
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: var(--tracking-xxwide);
     display: flex;
     justify-content: space-between;
     align-items: center;
     color: var(--text-secondary);
     user-select: none;
-    transition: all 0.2s ease;
+    transition: all var(--transition-base);
 }
 
 .toc-toggle:hover {
     color: var(--h1-color);
+    background: color-mix(in srgb, var(--bg-card), var(--accent-sage) 2%);
 }
 
 .toc-icon::after {
     content: "↓";
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform var(--transition-base);
     display: inline-block;
 }
 
@@ -41,7 +42,7 @@
 
 .toc-container nav {
     display: none;
-    padding: 1rem 1.5rem;
+    padding: var(--space-4) var(--space-6);
     border-top: 1px solid var(--border);
     max-height: 60vh;
     overflow-y: auto;
@@ -49,11 +50,11 @@
 
 .toc-container.expanded nav {
     display: block;
-    animation: slideDown 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    animation: slideDown var(--transition-base);
 }
 
 @keyframes slideDown {
-    from { opacity: 0; transform: translateY(-10px); }
+    from { opacity: 0; transform: translateY(calc(var(--space-2) * -1.2)); }
     to { opacity: 1; transform: translateY(0); }
 }
 
@@ -64,22 +65,23 @@
 }
 
 .toc-container li {
-    margin-bottom: 0.5rem;
-    line-height: 1.4;
+    margin-bottom: var(--space-2);
+    line-height: var(--leading-tight);
 }
 
 .toc-container a {
     color: var(--text-muted);
-    font-size: 0.85rem;
+    font-size: var(--text-sm);
     text-decoration: none;
-    transition: all 0.2s ease;
+    transition: all var(--transition-base);
     display: block;
-    padding: 0.25rem 0;
+    padding: var(--space-1) 0;
 }
 
 .toc-container a:hover {
     color: var(--accent-primary);
     text-decoration: underline;
+    transform: translateX(4px);
 }
 
 .toc-container a.active {
@@ -88,15 +90,15 @@
 }
 
 /* TOC Level Indentation */
-.toc-level-2 { padding-left: 0.5rem; }
-.toc-level-3 { padding-left: 1.25rem; }
-.toc-level-4 { padding-left: 2rem; }
+.toc-level-2 { padding-left: var(--space-2); }
+.toc-level-3 { padding-left: var(--space-5); }
+.toc-level-4 { padding-left: var(--space-7); }
 
 /* Desktop Floating Sidebar TOC (Zen Style) */
 @media (min-width: 1450px) {
     .toc-container {
         position: fixed;
-        top: 12rem;
+        top: var(--space-16);
         left: calc(50% + 480px);
         width: 250px;
         background: transparent;
@@ -115,10 +117,10 @@
     }
 
     .toc-container a {
-        padding: 0.6rem 0;
+        padding: var(--space-2) 0;
         border: none;
-        transition: all 0.4s var(--ease-calm);
-        font-size: 0.825rem;
+        transition: all var(--transition-base);
+        font-size: var(--text-sm);
         opacity: 0.7;
         position: relative;
     }
@@ -132,7 +134,7 @@
         width: 1px;
         height: 0%;
         background: var(--accent-sage);
-        transition: height 0.4s var(--ease-calm);
+        transition: height var(--transition-base);
     }
 
     .toc-container a.active {
@@ -140,8 +142,8 @@
         border: none;
         color: var(--accent-sage);
         opacity: 1;
-        font-weight: 500;
-        letter-spacing: 0.01em;
+        font-weight: var(--font-weight-medium);
+        letter-spacing: var(--tracking-normal);
     }
 
     .toc-container a.active::before {
@@ -151,6 +153,7 @@
     .toc-container a:hover {
         opacity: 1;
         text-decoration: underline;
+        transform: none; /* No shift in sidebar */
     }
 
     .toc-container a.active::before {
@@ -161,20 +164,20 @@
 /* --- Floating TOC Button (Bottom Left) --- */
 #floating-toc-btn {
     position: fixed;
-    bottom: 2rem;
-    left: 2rem;
+    bottom: var(--space-6);
+    left: var(--space-6);
     background: var(--bg-card);
     border: 1px solid var(--border);
     color: var(--accent-primary);
-    width: 45px;
-    height: 45px;
+    width: var(--space-9);
+    height: var(--space-9);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     opacity: 0;
     visibility: hidden;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all var(--transition-base);
     z-index: 998;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     cursor: pointer;
@@ -186,9 +189,9 @@
 }
 
 #floating-toc-btn:hover {
-    background: var(--bg-card-hover);
+    background: color-mix(in srgb, var(--bg-card-hover), var(--accent-sage) 5%);
     border-color: var(--accent-primary);
-    transform: scale(1.05);
+    transform: translateY(-2px);
 }
 
 /* --- TOC Modal Overlay --- */
@@ -205,7 +208,7 @@
     align-items: center;
     justify-content: center;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity var(--transition-base);
 }
 
 .toc-modal-overlay.active {
@@ -218,28 +221,28 @@
     width: 340px;
     max-width: 90vw;
     max-height: 70vh;
-    border-radius: 12px;
+    border-radius: var(--space-3);
     border: 1px solid var(--border);
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    transform: scale(0.95);
-    transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transform: translateY(10px);
+    transition: transform var(--transition-base);
 }
 
 .toc-modal-overlay.active .toc-modal-content {
-    transform: scale(1);
+    transform: translateY(0);
 }
 
 .toc-modal-header {
-    padding: 1rem 1.5rem;
+    padding: var(--space-4) var(--space-6);
     border-bottom: 1px solid var(--border);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-weight: 600;
-    font-size: 0.9rem;
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--text-sm);
     color: var(--text-secondary);
 }
 
@@ -247,10 +250,10 @@
     background: none;
     border: none;
     color: var(--text-muted);
-    font-size: 1.5rem;
+    font-size: var(--text-xl);
     cursor: pointer;
     line-height: 1;
-    transition: color 0.2s ease;
+    transition: color var(--transition-base);
 }
 
 .toc-modal-close:hover {
@@ -258,7 +261,7 @@
 }
 
 .toc-modal-nav {
-    padding: 1rem 1.5rem;
+    padding: var(--space-4) var(--space-6);
     overflow-y: auto;
     flex: 1;
 }
@@ -270,14 +273,14 @@
 }
 
 .toc-modal-nav li {
-    margin-bottom: 0.75rem;
+    margin-bottom: var(--space-3);
 }
 
 .toc-modal-link {
     color: var(--text-main);
     text-decoration: none;
-    font-size: 0.95rem;
-    transition: all 0.2s ease;
+    font-size: var(--text-sm);
+    transition: all var(--transition-base);
     display: inline;
     padding: 0;
 }
@@ -293,9 +296,9 @@
 }
 
 /* Level padding for modal */
-.toc-modal-nav .toc-level-2 { padding-left: 0.5rem; }
-.toc-level-3 { padding-left: 1.5rem; }
-.toc-level-4 { padding-left: 2.5rem; }
+.toc-modal-nav .toc-level-2 { padding-left: var(--space-2); }
+.toc-level-3 { padding-left: var(--space-6); }
+.toc-level-4 { padding-left: var(--space-8); }
 
 /* Hide floating button on extreme wide screens */
 @media (min-width: 1450px) {

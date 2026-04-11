@@ -1,3 +1,4 @@
+@import "./fonts.css";
 @import "./theme.css";
 @import "./katex.min.css";
 @import "./core.css";
@@ -10,6 +11,7 @@
 @import "./components/lightbox.css";
 @import "./components/syntax.css";
 @import "./components/admonitions.css";
+@import "./components/latex-copy.css";
 @import "./components/utils.css";
 
 /* --- LAYOUT & STRUCTURE --- */

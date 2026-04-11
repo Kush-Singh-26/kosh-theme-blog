@@ -286,6 +286,25 @@
                     return;
                 }
 
+                // Handle LaTeX Copy Button Click
+                const katexCopyBtn = e.target.closest('.katex-copy-btn');
+                if (katexCopyBtn) {
+                    const container = katexCopyBtn.closest('[data-latex]');
+                    const latex = container ? container.getAttribute('data-latex') : null;
+                    if (latex) {
+                        navigator.clipboard.writeText(latex).then(() => {
+                            const originalText = katexCopyBtn.textContent;
+                            katexCopyBtn.textContent = 'Copied!';
+                            katexCopyBtn.classList.add('copied');
+                            setTimeout(() => {
+                                katexCopyBtn.textContent = originalText;
+                                katexCopyBtn.classList.remove('copied');
+                            }, 2000);
+                        }).catch(err => console.error('Failed to copy LaTeX:', err));
+                    }
+                    return;
+                }
+
                 // Handle Mobile Nav Link Click
                 if (e.target.closest('.mobile-nav-link')) {
                     closeMobileMenu();

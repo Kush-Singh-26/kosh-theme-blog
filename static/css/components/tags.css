@@ -1,33 +1,32 @@
 /* Zen Tags & Topics */
 .tag-cloud {
     display: flex;
-    gap: 8px;
+    gap: var(--space-2);
     flex-wrap: wrap;
-    margin-top: 1.5rem;
+    margin-top: var(--space-6);
 }
 
 .tag-pill {
     display: inline-flex;
     align-items: center;
-    padding: 0.45rem 1.15rem;
-    border-radius: 6px;
+    padding: var(--space-2) var(--space-5);
+    border-radius: var(--space-1);
     text-decoration: none;
     transition: all 0.4s var(--ease-calm);
     background: var(--bg-card);
     color: var(--text-secondary);
     border: 1px solid var(--border);
-    font-size: 0.8rem;
-    font-weight: 500;
-    letter-spacing: 0.02em;
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: var(--tracking-wide);
 }
 
-.tag-pill:nth-child(3n+1):hover { border-color: var(--accent-sage); color: var(--accent-sage); }
-.tag-pill:nth-child(3n+2):hover { border-color: var(--accent-indigo); color: var(--accent-indigo); }
-.tag-pill:nth-child(3n+3):hover { border-color: var(--accent-clay); color: var(--accent-clay); }
+.tag-pill:nth-child(3n+1):hover { border-color: var(--accent-sage); color: var(--accent-sage); background: color-mix(in srgb, var(--bg-card-hover), var(--accent-sage) 5%); }
+.tag-pill:nth-child(3n+2):hover { border-color: var(--accent-indigo); color: var(--accent-indigo); background: color-mix(in srgb, var(--bg-card-hover), var(--accent-indigo) 5%); }
+.tag-pill:nth-child(3n+3):hover { border-color: var(--accent-clay); color: var(--accent-clay); background: color-mix(in srgb, var(--bg-card-hover), var(--accent-clay) 5%); }
 
 .tag-pill:hover {
-    background: var(--bg-card-hover);
-    transform: translateY(-2px);
+    transform: translateY(calc(var(--space-1) * -0.5));
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
 }
 
@@ -39,24 +38,24 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    margin-left: 10px;
-    border-radius: 4px;
-    padding: 2px 8px;
+    margin-left: var(--space-2);
+    border-radius: var(--space-1);
+    padding: calc(var(--space-1) / 2) var(--space-2);
     background: var(--bg-accent);
     color: var(--text-muted);
-    font-size: 0.75em;
+    font-size: var(--text-xs);
     font-family: var(--font-mono);
     opacity: 0.8;
 }
 
 .mini-tag {
-    font-size: 0.75rem;
+    font-size: var(--text-xs);
     font-family: var(--font-mono);
     color: var(--accent-primary);
     text-decoration: none;
     opacity: 0.6;
     transition: all 0.3s var(--ease-calm);
-    letter-spacing: 0.02em;
+    letter-spacing: var(--tracking-wide);
 }
 
 .mini-tag:hover {
@@ -67,7 +66,7 @@
 
 .tag-row {
     display: flex;
-    gap: 12px;
+    gap: var(--space-3);
     flex-wrap: wrap;
-    margin-top: 1rem;
+    margin-top: var(--space-4);
 }

@@ -13,9 +13,9 @@
 .chroma .line { display: flex; }
 
 /* Editorial Palette Mapping */
-.chroma .k, .chroma .kc, .chroma .kd, .chroma .kn, .chroma .kp, .chroma .kr, .chroma .kt { color: var(--accent-indigo); font-weight: 500; } /* Keywords */
+.chroma .k, .chroma .kc, .chroma .kd, .chroma .kn, .chroma .kp, .chroma .kr, .chroma .kt { color: var(--accent-indigo); font-weight: var(--font-weight-medium); } /* Keywords */
 .chroma .na, .chroma .nb, .chroma .nc, .chroma .no, .chroma .nd, .chroma .ni, .chroma .ne { color: var(--accent-sage); } /* Names/Classes */
-.chroma .nf, .chroma .nl, .chroma .nn, .chroma .nt { color: var(--accent-sage); font-weight: 500; } /* Functions/Tags */
+.chroma .nf, .chroma .nl, .chroma .nn, .chroma .nt { color: var(--accent-sage); font-weight: var(--font-weight-medium); } /* Functions/Tags */
 .chroma .s, .chroma .sa, .chroma .sb, .chroma .sc, .chroma .dl, .chroma .s2, .chroma .se, .chroma .sh, .chroma .si, .chroma .sx, .chroma .sr, .chroma .s1, .chroma .ss { color: var(--accent-clay); } /* Strings */
 .chroma .m, .chroma .mb, .chroma .mf, .chroma .mh, .chroma .mi, .chroma .il, .chroma .mo { color: var(--accent-gold); } /* Numbers */
 .chroma .o, .chroma .ow { color: var(--accent-indigo); opacity: 0.8; } /* Operators */
@@ -25,14 +25,14 @@
 /* Code Block Containers */
 .code-block-container {
     margin: var(--space-8) 0;
-    border-radius: 12px;
+    border-radius: var(--space-3);
     overflow: hidden;
     position: relative;
 }
 
 pre {
     background: var(--bg-code) !important;
-    border-radius: 12px;
+    border-radius: var(--space-3);
     border: 1px solid var(--border);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
     margin: var(--space-8) 0;
@@ -53,34 +53,34 @@ pre::before {
 
 [data-theme="dark"] pre { box-shadow: 0 15px 45px rgba(0, 0, 0, 0.3); }
 
-code { font-family: var(--font-mono); font-size: 0.925em; line-height: 1.6; }
+code { font-family: var(--font-mono); font-size: var(--text-sm); line-height: 1.6; }
 
 p code, li code, td code {
     background: var(--bg-tint);
     color: var(--accent-primary);
-    padding: 0.15rem 0.4rem;
-    border-radius: 6px;
-    font-size: 0.9em;
+    padding: calc(var(--space-1) * 0.6) var(--space-2);
+    border-radius: var(--space-1);
+    font-size: var(--text-sm);
     border: 1px solid var(--border);
 }
 
 /* Copy Button Refinement */
 .copy-btn {
     position: absolute;
-    top: 12px; right: 12px;
+    top: var(--space-3); right: var(--space-3);
     background: var(--bg-glass);
     backdrop-filter: blur(8px);
     color: var(--text-muted);
     border: 1px solid var(--border);
     border-radius: 99px;
-    font-size: 0.7rem;
-    padding: 4px 12px;
+    font-size: var(--text-xs);
+    padding: var(--space-1) var(--space-3);
     cursor: pointer;
     opacity: 0;
     transition: all 0.3s var(--ease-calm);
     z-index: 10;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: var(--tracking-xwide);
 }
 
 pre:hover .copy-btn { opacity: 1; }

@@ -2,91 +2,113 @@
 /* Redesigned to feel like curated margin notes or sticky annotations */
 
 .admonition {
-    margin: clamp(2.5rem, 6vh, 4rem) 0;
-    padding: var(--space-5) var(--space-6);
+    margin: clamp(var(--space-8), 6vh, var(--space-10)) 0;
+    padding: var(--space-6) var(--space-7);
     background-color: var(--bg-tint);
-    border-radius: 4px 12px 12px 4px;
+    border-radius: var(--space-2);
     position: relative;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
-    border-left: 3px solid var(--accent-primary);
-    transition: transform 0.4s var(--ease-calm), box-shadow 0.4s var(--ease-calm);
+    border: 1px solid var(--border);
+    transition: all var(--transition-base);
+    overflow: hidden;
 }
 
 .admonition:hover {
-    transform: translateX(4px);
+    transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+    border-color: var(--accent-primary);
 }
 
 .adm-title {
     font-family: var(--font-mono);
-    font-weight: 700;
-    font-size: 0.75rem;
+    font-weight: var(--font-weight-bold);
+    font-size: var(--text-xs);
     margin-bottom: var(--space-3);
     text-transform: uppercase;
-    letter-spacing: 0.15em;
+    letter-spacing: var(--tracking-xxwide);
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: var(--space-3);
     color: var(--text-muted);
 }
 
 .adm-title::before {
-    font-size: 1.1em;
+    font-size: var(--text-base);
     line-height: 1;
-    opacity: 0.6;
+    opacity: 0.8;
 }
 
 .adm-body {
-    font-size: 1.1rem;
+    font-size: var(--text-lg);
     color: var(--text-main);
-    line-height: 1.7;
+    line-height: var(--leading-relaxed);
 }
 
 /* --- Specific Note Archetypes (Using Editorial Palette) --- */
 
-/* Note & Info - Indigo (Matching Original Blue) */
+/* Note & Info - Indigo */
 .adm-note, .adm-info {
-    border-left-color: var(--accent-indigo);
-    background-color: rgba(108, 126, 140, 0.1);
+    border-color: color-mix(in srgb, var(--accent-indigo), transparent 80%);
+    background-color: color-mix(in srgb, var(--bg-card), var(--accent-indigo) 8%);
 }
 .adm-note .adm-title, .adm-info .adm-title { color: var(--accent-indigo); }
 .adm-note .adm-title::before { content: "§"; }
 
-/* Tip & Success - Sage (Matching Original Green) */
+.adm-note:hover, .adm-info:hover {
+    border-color: var(--accent-indigo);
+}
+
+/* Tip & Success - Sage */
 .adm-tip, .adm-hint, .adm-success {
-    border-left-color: var(--accent-sage);
-    background-color: rgba(140, 148, 140, 0.1);
+    border-color: color-mix(in srgb, var(--accent-sage), transparent 80%);
+    background-color: color-mix(in srgb, var(--bg-card), var(--accent-sage) 8%);
 }
 .adm-tip .adm-title, .adm-success .adm-title { color: var(--accent-sage); }
 .adm-tip .adm-title::before { content: "✧"; }
 
-/* Warning & Caution - Gold (Matching Original Yellow) */
+.adm-tip:hover, .adm-success:hover {
+    border-color: var(--accent-sage);
+}
+
+/* Warning & Caution - Gold */
 .adm-warning, .adm-caution {
-    border-left-color: var(--accent-gold);
-    background-color: rgba(180, 168, 150, 0.1);
+    border-color: color-mix(in srgb, var(--accent-gold), transparent 80%);
+    background-color: color-mix(in srgb, var(--bg-card), var(--accent-gold) 8%);
 }
 .adm-warning .adm-title, .adm-caution .adm-title { color: var(--accent-gold); }
 .adm-warning .adm-title::before { content: "!"; }
 
-/* Danger & Error - Terracotta (Matching Original Red) */
+.adm-warning:hover, .adm-caution:hover {
+    border-color: var(--accent-gold);
+}
+
+/* Danger & Error - Terracotta */
 .adm-danger, .adm-error, .adm-bug {
-    border-left-color: var(--accent-terracotta);
-    background-color: rgba(163, 140, 133, 0.12);
+    border-color: color-mix(in srgb, var(--accent-terracotta), transparent 80%);
+    background-color: color-mix(in srgb, var(--bg-card), var(--accent-terracotta) 10%);
 }
 .adm-danger .adm-title, .adm-error .adm-title { color: var(--accent-terracotta); }
 .adm-danger .adm-title::before { content: "※"; }
 
-/* Abstract & Summary - Clay (Muted/Organic) */
+.adm-danger:hover, .adm-error:hover {
+    border-color: var(--accent-terracotta);
+}
+
+/* Abstract & Summary - Clay */
 .adm-abstract, .adm-summary, .adm-quote {
-    border-left-color: var(--accent-clay);
-    background-color: rgba(163, 140, 133, 0.1);
+    border-color: color-mix(in srgb, var(--accent-clay), transparent 80%);
+    background-color: color-mix(in srgb, var(--bg-card), var(--accent-clay) 8%);
     font-family: var(--font-serif);
 }
 .adm-abstract .adm-title, .adm-summary .adm-title, .adm-quote .adm-title { color: var(--accent-clay); }
 .adm-abstract .adm-title::before, .adm-summary .adm-title::before, .adm-quote .adm-title::before { content: "¶"; }
 
+.adm-abstract:hover, .adm-summary:hover {
+    border-color: var(--accent-clay);
+}
+
 @media (max-width: 768px) {
     .admonition { padding: var(--space-4) var(--space-5); margin: var(--space-6) 0; }
-    .adm-title { font-size: 0.7rem; }
-    .adm-body { font-size: 1rem; }
+    .adm-title { font-size: var(--text-xs); }
+    .adm-body { font-size: var(--text-base); }
 }

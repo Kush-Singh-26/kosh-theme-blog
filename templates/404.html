@@ -15,8 +15,12 @@
     <title>{{ .TabTitle }}</title>
     <meta name="description" content="Page not found">
     <meta name="theme-color" content="#111113">
+
+    {{ if and .Config.GetFeatures.Generators.IsPWAEnabled (not .Config.IsDevMode) }}
     <link rel="apple-touch-icon" href="{{ relativize .BaseURL .RelativePrefix "/static/images/icon-192.png" }}">
     <link rel="manifest" href="{{ relativize .BaseURL .RelativePrefix "/manifest.json" }}">
+    {{ end }}
+
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self'; object-src 'none'; base-uri 'self'; worker-src 'self'; manifest-src 'self';">
     
     <meta property="og:type" content="website">
