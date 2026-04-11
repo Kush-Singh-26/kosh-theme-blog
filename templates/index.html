@@ -41,6 +41,8 @@
     <meta name="twitter:description" content="{{ .Description }}">
     <meta name="twitter:image" content="{{ .Image }}"> 
     
+    <link rel="preconnect" href="https://github-contributions-api.jogruber.de">
+
     {{ if .Assets }}
     <link rel="stylesheet" href="{{ relativize .BaseURL .RelativePrefix (index .Assets "/static/css/layout.css") }}">
     {{ else }}
