@@ -1,0 +1,156 @@
+/* --- Kosh Shortcodes --- */
+
+/* --- Callouts (Replaces Legacy Admonitions) --- */
+
+.shortcode-callout {
+    margin: clamp(var(--space-8), 6vh, var(--space-10)) 0;
+    padding: var(--space-6) var(--space-7);
+    background-color: var(--bg-tint);
+    border-radius: var(--space-2);
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+    border: 1px solid var(--border);
+    transition: all var(--transition-base);
+    overflow: hidden;
+}
+
+.shortcode-callout:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+    border-color: var(--accent-primary);
+}
+
+.callout-title {
+    font-family: var(--font-mono);
+    font-weight: var(--font-weight-bold);
+    font-size: var(--text-xs);
+    margin-bottom: var(--space-3);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-xxwide);
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    color: var(--text-muted);
+}
+
+.callout-title::before {
+    font-size: var(--text-base);
+    line-height: 1;
+    opacity: 0.8;
+}
+
+.callout-content {
+    font-size: var(--text-lg);
+    color: var(--text-main);
+    line-height: var(--leading-relaxed);
+}
+
+/* Callout Types */
+
+.callout-note, .callout-info {
+    border-color: color-mix(in srgb, var(--accent-indigo), transparent 80%);
+    background-color: color-mix(in srgb, var(--bg-card), var(--accent-indigo) 8%);
+}
+.callout-note .callout-title, .callout-info .callout-title { color: var(--accent-indigo); }
+.callout-note .callout-title::before { content: "§"; }
+
+.callout-tip, .callout-success {
+    border-color: color-mix(in srgb, var(--accent-sage), transparent 80%);
+    background-color: color-mix(in srgb, var(--bg-card), var(--accent-sage) 8%);
+}
+.callout-tip .callout-title, .callout-success .callout-title { color: var(--accent-sage); }
+.callout-tip .callout-title::before { content: "✧"; }
+
+.callout-warning, .callout-caution {
+    border-color: color-mix(in srgb, var(--accent-gold), transparent 80%);
+    background-color: color-mix(in srgb, var(--bg-card), var(--accent-gold) 8%);
+}
+.callout-warning .callout-title, .callout-caution .callout-title { color: var(--accent-gold); }
+.callout-warning .callout-title::before { content: "!"; }
+
+.callout-danger, .callout-error {
+    border-color: color-mix(in srgb, var(--accent-terracotta), transparent 80%);
+    background-color: color-mix(in srgb, var(--bg-card), var(--accent-terracotta) 10%);
+}
+.callout-danger .callout-title, .callout-error .callout-title { color: var(--accent-terracotta); }
+.callout-danger .callout-title::before { content: "※"; }
+
+/* --- YouTube Embed --- */
+
+.shortcode-youtube {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    height: 0;
+    overflow: hidden;
+    margin: var(--space-8) 0;
+    border-radius: var(--space-2);
+    border: 1px solid var(--border);
+    background: var(--bg-code);
+}
+
+.shortcode-youtube iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* --- Figures --- */
+
+.shortcode-figure {
+    margin: var(--space-10) auto;
+    text-align: center;
+}
+
+.shortcode-figure img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--space-2);
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.shortcode-figure figcaption {
+    margin-top: var(--space-3);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    font-family: var(--font-serif);
+    font-style: italic;
+}
+
+/* --- Details --- */
+
+.shortcode-details {
+    margin: var(--space-6) 0;
+    padding: var(--space-4);
+    border: 1px solid var(--border);
+    border-radius: var(--space-2);
+    background: var(--bg-tint);
+}
+
+.shortcode-details summary {
+    cursor: pointer;
+    font-weight: var(--font-weight-medium);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--accent-primary);
+    outline: none;
+    user-select: none;
+}
+
+.shortcode-details summary:hover {
+    color: var(--accent-secondary);
+}
+
+.details-content {
+    margin-top: var(--space-4);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--border);
+}
+
+@media (max-width: 768px) {
+    .shortcode-callout { padding: var(--space-4) var(--space-5); margin: var(--space-6) 0; }
+    .callout-title { font-size: var(--text-xs); }
+    .callout-content { font-size: var(--text-base); }
+}

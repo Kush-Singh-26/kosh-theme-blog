@@ -1,0 +1,82 @@
+@import "./fonts.css";
+@import "./theme.css";
+@import "./core.css";
+
+/* Portfolio Specific Overrides & Modules */
+@import "../assets/css/base.css";
+@import "../assets/css/nav.css";
+@import "../assets/css/hero.css";
+@import "../assets/css/components.css";
+@import "../assets/css/animations.css";
+@import "../assets/css/enhancements.css";
+@import "../assets/css/visual2.css";
+
+/* --- ZEN PORTFOLIO REFINEMENTS --- */
+
+/* Typography Overrides */
+:root {
+    --font-heading: var(--font-serif);
+    --font-stack: var(--font-main);
+}
+
+.headline {
+    font-family: var(--font-serif) !important;
+    font-weight: var(--font-weight-medium) !important;
+    letter-spacing: var(--tracking-tight) !important;
+}
+
+.section-label {
+    font-family: var(--font-serif) !important;
+    font-weight: var(--font-weight-medium) !important;
+    text-transform: none !important;
+    letter-spacing: var(--tracking-tight) !important;
+    font-size: var(--text-2xl) !important;
+}
+
+/* Spacing & Layout */
+.section-container {
+    padding: var(--space-12) 0 !important;
+    max-width: 1000px !important;
+    margin: 0 auto !important;
+}
+
+/* Toning down effects */
+.scanline-overlay, 
+.grid-overlay, 
+#progress-circuit {
+    display: none !important;
+}
+
+.loss-landscape {
+    border: 1px solid var(--border) !important;
+    background: var(--bg-card) !important;
+    box-shadow: none !important;
+    filter: none !important;
+}
+
+.loss-canvas {
+    filter: grayscale(0.5) opacity(0.8) !important;
+}
+
+/* Bento refinement */
+.bento-card {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border) !important;
+    box-shadow: none !important;
+}
+
+.bento-card:hover {
+    border-color: var(--accent-border) !important;
+    background: var(--bg-card-hover) !important;
+}
+
+/* Social grid refinement */
+.social-item {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+}
+
+.social-item.highlight-link {
+    color: var(--accent-primary);
+}
