@@ -1,340 +1,150 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <script>
-        (function() {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'light') {
-                document.documentElement.setAttribute('data-theme', 'light');
-            }
-        })();
-    </script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ .TabTitle }}</title>
-    <meta name="description" content="Page not found">
-    <meta name="theme-color" content="#111113">
-
-    {{ if and .Config.GetFeatures.Generators.IsPWAEnabled (not .Config.IsDevMode) }}
-    <link rel="apple-touch-icon" href="{{ relativize .BaseURL .RelativePrefix "/static/images/icon-192.png" }}">
-    <link rel="manifest" href="{{ relativize .BaseURL .RelativePrefix "/manifest.json" }}">
-    {{ end }}
-
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self'; object-src 'none'; base-uri 'self'; worker-src 'self'; manifest-src 'self';">
+{{ define "content" }}
+<div class="error-container">
+    <span class="error-code">Entrance Forbidden</span>
     
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="404 - Page Not Found">
-    <meta property="og:description" content="The page you're looking for doesn't exist.">
-
-    {{ if len .Assets }}
-    <link rel="stylesheet" href="{{ relativize .BaseURL .RelativePrefix (index .Assets "/static/css/layout.css") }}">
-    {{ else }}
-    <link rel="stylesheet" href="{{ relativize .BaseURL .RelativePrefix "/static/css/layout.css" }}">
-    {{ end }}
-
-
-    <style>
-        
-        /* Custom 404 Styles */
-
-        .error-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 70vh;
-            text-align: center;
-            padding: 3rem 1rem;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        .error-code {
-            font-family: var(--font-serif);
-            font-size: 1.5rem;
-            font-weight: 400;
-            color: var(--accent-tertiary); /* Gold */
-            margin-bottom: 2rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-        }
-        
-        .error-title {
-            font-family: var(--font-serif);
-            font-size: 3rem;
-            margin: 0 0 2rem;
-            color: var(--text-main);
-            font-weight: 400;
-            line-height: 1.2;
-        }
-        
-        .error-message {
-            font-family: var(--font-sans);
-            font-size: 1.1rem;
-            color: var(--text-muted);
-            margin-bottom: 3rem;
-            max-width: 500px;
-            line-height: 1.8;
-            font-style: italic;
-        }
-        
-        .error-actions {
-            display: flex;
-            gap: 2rem;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        
-        .btn {
-            padding: 0.6rem 2rem;
-            font-family: var(--font-sans);
-            font-size: 0.9rem;
-            letter-spacing: 0.1em;
-            text-decoration: none;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            text-transform: uppercase;
-            border: 1px solid var(--border);
-        }
-        
-        .btn-primary {
-            background: transparent;
-            color: var(--text-main);
-        }
-        
-        .btn-primary:hover {
-            border-color: var(--accent-tertiary);
-            color: var(--accent-tertiary);
-            box-shadow: 0 0 20px rgba(180, 168, 150, 0.1);
-        }
-        
-        .btn-secondary {
-            background: transparent;
-            color: var(--text-muted);
-        }
-        
-        .btn-secondary:hover {
-            border-color: var(--accent-primary);
-            color: var(--accent-primary);
-        }
-        
-        .suggestions {
-            margin-top: 5rem;
-            padding: 2rem 0;
-            border-top: 1px solid var(--border-subtle);
-            width: 100%;
-        }
-        
-        .suggestions h3 {
-            font-family: var(--font-serif);
-            margin-bottom: 2rem;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            font-weight: 400;
-        }
-        
-        .suggestions ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            gap: 3rem;
-            flex-wrap: wrap;
-        }
-        
-        .suggestions a {
-            color: var(--text-main);
-            text-decoration: none;
-            font-family: var(--font-serif);
-            font-size: 1.1rem;
-            transition: color 0.3s ease;
-        }
-        
-        .suggestions a:hover {
-            color: var(--accent-tertiary);
-        }
-    </style>
+    <h1 class="error-title">The Path Ends Here</h1>
     
-    <script>
-        window.siteBaseURL = "{{ .BaseURL }}";
-        window.buildVersion = "{{ .BuildVersion }}";
-        window.blogTags = {{ .AllTags | jsonify }};
-    </script>
-    {{ if .Config.Logo }}
-    <link rel="icon" type="image/png" href="{{ relativize .BaseURL .RelativePrefix (printf "/%s" .Config.Logo) }}">
-    {{ end }}
-</head>
-
-<body>
-    <header>
-        <a href="{{ relativize .BaseURL .RelativePrefix "/" }}" class="site-title">
-            {{ if .Config.Logo }}
-            <img src="{{ relativize .BaseURL .RelativePrefix (printf "/%s" .Config.Logo) }}" alt="Logo" class="site-logo" width="35" height="35">
-            {{ end }}
-            {{ .Config.Title }}
+    <p class="error-message">
+        "Not all those who wander are lost, but this scroll appears to have been misplaced by the archivists."
+    </p>
+    
+    <div class="error-actions">
+        <a href="{{ relativize .BaseURL .RelativePrefix "/" }}" class="btn btn-primary">
+             Return to Path
         </a>
-        <nav>
-            {{ range .Config.Menu }}
-                {{ if eq .Name "Search" }}
-                <button {{ if .ID }}id="{{ .ID }}"{{ end }} {{ if .Class }}class="{{ .Class }}"{{ end }} aria-label="{{ .Name }}" title="{{ .Name }}">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                </button>
-                {{ else }}
-                <a href="{{ if hasPrefix .URL "http" }}{{ .URL }}{{ else }}{{ relativize $.BaseURL $.RelativePrefix .URL }}{{ end }}" {{ if .Target }}target="{{ .Target }}"{{ end }} {{ if .ID }}id="{{ .ID }}"{{ end }} {{ if .Class }}class="{{ .Class }}"{{ end }} aria-label="{{ .Name }}" title="{{ .Name }}">
-                    {{ if eq .Name "Tags" }}
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
-                    {{ else if eq .Name "Graph" }}
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
-                    {{ else if eq .Name "Home" }}
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-                    {{ else }}
-                    {{ .Name }}
-                    {{ end }}
-                </a>
-                {{ end }}
-            {{ end }}
-            <button id="theme-toggle" aria-label="Toggle Theme">
-                <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-                <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-            </button>
-        </nav>
-    </header>
-
-
-    <main>
-        <div class="error-container">
-            <span class="error-code">Entrance Forbidden</span>
-            
-            <h1 class="error-title">The Path Ends Here</h1>
-            
-            <p class="error-message">
-                "Not all those who wander are lost, but this scroll appears to have been misplaced by the archivists."
-            </p>
-            
-            <div class="error-actions">
-                <a href="{{ relativize .BaseURL .RelativePrefix "/" }}" class="btn btn-primary">
-                     Return to Path
-                </a>
-                <a href="{{ relativize .BaseURL .RelativePrefix "/tags/index.html" }}" class="btn btn-secondary">
-                     Consult Index
-                </a>
-            </div>
-            
-            <div class="suggestions">
-                <h3>Seek Knowledge Elsewhere</h3>
-                <ul>
-                    <li><a href="{{ relativize .BaseURL .RelativePrefix "/graph.html" }}">Knowledge Graph</a></li>
-                    <li><a href="https://kush-singh-26.github.io/" target="_blank" rel="noopener">The Author</a></li>
-                </ul>
-            </div>
-        </div>
-    </main>
-
-    <footer class="colophon">
-        <div class="colophon-grid">
-            <div class="colophon-left">
-                <span class="colophon-title">{{ .Config.Title }}</span>
-                <span class="colophon-tagline">&copy; {{ now.Year }} &bull; Kush Blogs</span>
-            </div>
-            <!-- Scholar's Seal -->
-            <div class="colophon-center">
-                <div class="scholar-seal">
-                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="2" y="2" width="36" height="36" rx="2" stroke="currentColor" stroke-width="1.5"/>
-                        <path d="M10 10 L30 10 M10 20 L30 20 M10 30 L30 30 M20 10 L20 30" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                    </svg>
-                </div>
-            </div>
-            <div class="colophon-right">
-                <div class="colophon-social">
-                    {{ range $index, $item := .Config.FooterMenu }}
-                    {{ if $index }}<span class="social-dot">&bull;</span>{{ end }}
-                    <a href="{{ if hasPrefix $item.URL "http" }}{{ $item.URL }}{{ else }}{{ relativize $.BaseURL $.RelativePrefix $item.URL }}{{ end }}" {{ if $item.Target }}target="{{ $item.Target }}"{{ end }} rel="noopener">{{ $item.Name }}</a>
-                    {{ end }}
-                </div>
-                <div class="colophon-meta">
-                    <a href="https://github.com/Kush-Singh-26/kosh" target="_blank" rel="noopener">Built with Kosh</a>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    
-    <!-- Search Modal -->
-    <div id="search-modal" class="modal">
-        <div class="modal-content">
-            <div class="search-header">
-                <input type="text" id="search-input" placeholder="Search posts..."
-                    autocomplete="off">
-                <span class="close-search">&times;</span>
-            </div>
-            <div id="search-suggestions" class="search-suggestions"></div>
-            <div id="search-results"></div>
-            <div class="search-footer">
-                <div class="search-help">
-                    <span><kbd>+</kbd> required</span>
-                    <span><kbd>-</kbd> exclude</span>
-                    <span><kbd>"phrase"</kbd> exact</span>
-                </div>
-                <div class="search-controls">
-                    <kbd>Esc</kbd> close | <kbd>↑↓</kbd> navigate
-                </div>
-            </div>
-        </div>
+        <a href="{{ relativize .BaseURL .RelativePrefix "/tags/index.html" }}" class="btn btn-secondary">
+             Consult Index
+        </a>
     </div>
+    
+    <div class="suggestions">
+        <h3>Seek Knowledge Elsewhere</h3>
+        <ul>
+            <li><a href="{{ relativize .BaseURL .RelativePrefix "/graph.html" }}">Knowledge Graph</a></li>
+            <li><a href="https://kush-singh-26.github.io/" target="_blank" rel="noopener">The Author</a></li>
+        </ul>
+    </div>
+</div>
 
-    {{ if .Assets }}
-    <script defer src="{{ relativize .BaseURL .RelativePrefix (index .Assets "/static/js/main.js") }}"></script>
-    <script defer src="{{ relativize .BaseURL .RelativePrefix (index .Assets "/static/js/search.js") }}"></script>
-    {{ else }}
-    <script defer src="{{ relativize .BaseURL .RelativePrefix "/static/js/main.js" }}?v={{ .BuildVersion }}"></script>
-    <script defer src="{{ relativize .BaseURL .RelativePrefix "/static/js/search.js" }}?v={{ .BuildVersion }}"></script>
-    {{ end }}
-    <script>
-        (function() {
-            const hosts = ["localhost", "127.0.0.1", "0.0.0.0"];
-            
-            // DEV MODE: Aggressive cache clearing and SW nuking
-            if (hosts.includes(window.location.hostname)) {
-                // Immediately unregister any Service Workers
-                if ('serviceWorker' in navigator) {
-                    navigator.serviceWorker.getRegistrations().then(registrations => {
-                        registrations.forEach(registration => {
-                            registration.unregister();
-                            console.log('🚧 Service Worker unregistered');
-                        });
-                    });
-                }
-                
-                // Clear caches
-                if ('caches' in window) {
-                    caches.keys().then(cacheNames => {
-                        cacheNames.forEach(cacheName => {
-                            caches.delete(cacheName);
-                            console.log('🗑️ Cache cleared:', cacheName);
-                        });
-                    });
-                }
-            } else {
-                // Production: PWA Service Worker Registration
-                if ('serviceWorker' in navigator) {
-                    window.addEventListener('load', () => {
-                        const swPath = '{{ relativize .BaseURL .RelativePrefix "/sw.js" }}';
-                        navigator.serviceWorker.register(swPath)
-                            .then(registration => {
-                                console.log('✅ ServiceWorker registration successful with scope: ', registration.scope);
-                            })
-                            .catch(err => {
-                                console.error('❌ ServiceWorker registration failed: ', err);
-                            });
-                    });
-                }
-            }
-        })();
-    </script>
-</body>
-
-</html>
+<style>
+    /* Custom 404 Styles */
+    .error-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 70vh;
+        text-align: center;
+        padding: 3rem 1rem;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .error-code {
+        font-family: var(--font-serif);
+        font-size: 1.5rem;
+        font-weight: 400;
+        color: var(--accent-tertiary); /* Gold */
+        margin-bottom: 2rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+    }
+    
+    .error-title {
+        font-family: var(--font-serif);
+        font-size: 3rem;
+        margin: 0 0 2rem;
+        color: var(--text-main);
+        font-weight: 400;
+        line-height: 1.2;
+    }
+    
+    .error-message {
+        font-family: var(--font-sans);
+        font-size: 1.1rem;
+        color: var(--text-muted);
+        margin-bottom: 3rem;
+        max-width: 500px;
+        line-height: 1.8;
+        font-style: italic;
+    }
+    
+    .error-actions {
+        display: flex;
+        gap: 2rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .btn {
+        padding: 0.6rem 2rem;
+        font-family: var(--font-sans);
+        font-size: 0.9rem;
+        letter-spacing: 0.1em;
+        text-decoration: none;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        text-transform: uppercase;
+        border: 1px solid var(--border);
+    }
+    
+    .btn-primary {
+        background: transparent;
+        color: var(--text-main);
+    }
+    
+    .btn-primary:hover {
+        border-color: var(--accent-tertiary);
+        color: var(--accent-tertiary);
+        box-shadow: 0 0 20px rgba(180, 168, 150, 0.1);
+    }
+    
+    .btn-secondary {
+        background: transparent;
+        color: var(--text-muted);
+    }
+    
+    .btn-secondary:hover {
+        border-color: var(--accent-primary);
+        color: var(--accent-primary);
+    }
+    
+    .suggestions {
+        margin-top: 5rem;
+        padding: 2rem 0;
+        border-top: 1px solid var(--border-subtle);
+        width: 100%;
+    }
+    
+    .suggestions h3 {
+        font-family: var(--font-serif);
+        margin-bottom: 2rem;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        font-weight: 400;
+    }
+    
+    .suggestions ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        gap: 3rem;
+        flex-wrap: wrap;
+    }
+    
+    .suggestions a {
+        color: var(--text-main);
+        text-decoration: none;
+        font-family: var(--font-serif);
+        font-size: 1.1rem;
+        transition: color 0.3s ease;
+    }
+    
+    .suggestions a:hover {
+        color: var(--accent-tertiary);
+    }
+</style>
+{{ end }}
