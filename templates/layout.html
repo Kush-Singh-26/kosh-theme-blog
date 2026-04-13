@@ -28,7 +28,7 @@
         {{ if .Tags }}
         <div class="tag-row">
             {{ range .Tags }}
-            <a href="{{ relativize $.BaseURL $.RelativePrefix (printf "/tags/%s.html" (. | slugify)) }}" class="mini-tag">#{{ . }}</a>
+            <a href="{{ relativize $.BaseURL $.RelativePrefix (printf "/blogs/tags/%s.html" (. | slugify)) }}" class="mini-tag">#{{ . }}</a>
             {{ end }}
         </div>
         {{ end }}
@@ -53,7 +53,7 @@
         {{ if .Meta.tags }}
         <span class="meta-divider">|</span>
         {{ range .Meta.tags }}
-        <a href="{{ relativize $.BaseURL $.RelativePrefix (printf "/tags/%s.html" (. | slugify)) }}" class="tag-pill small-pill">#{{ . }}</a>
+        <a href="{{ relativize $.BaseURL $.RelativePrefix (printf "/blogs/tags/%s.html" (. | slugify)) }}" class="tag-pill small-pill">#{{ . }}</a>
         {{ end }}
         {{ end }}
 
