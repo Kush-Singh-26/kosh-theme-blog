@@ -40,56 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(type, 1000);
     }
 
-    const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    function scramble(el) {
-        const orig = el.dataset.value || el.innerText;
-        el.dataset.value = orig;
-        let iter = 0;
-        clearInterval(el._sc);
-        el._sc = setInterval(() => {
-            el.innerText = orig.split('').map((ch, idx) =>
-                idx < iter ? orig[idx] : ch === ' ' ? ' ' : CHARS[Math.floor(Math.random() * 26)]
-            ).join('');
-            if (iter >= orig.length) clearInterval(el._sc);
-            iter += 1 / 3;
-        }, 28);
-    }
-    const scrambleObs = new IntersectionObserver(entries => {
-        entries.forEach(e => { if (e.isIntersecting) { scramble(e.target); scrambleObs.unobserve(e.target); } });
-    }, { threshold: 0.8 });
-    document.querySelectorAll('.section-label').forEach(el => scrambleObs.observe(el));
-
-    document.querySelectorAll('.nav-links a, .social-item').forEach(link => {
-        link.addEventListener('mouseenter', () => {
-            const orig = link.dataset.value || link.innerText;
-            if (!link.dataset.value) link.dataset.value = orig;
-            let iter = 0;
-            clearInterval(link._gl);
-            link._gl = setInterval(() => {
-                link.innerText = orig.split('').map((ch, idx) =>
-                    idx < iter ? orig[idx] : ch === ' ' ? ' ' : CHARS[Math.floor(Math.random() * 26)]
-                ).join('');
-                if (iter >= orig.length) clearInterval(link._gl);
-                iter += 1 / 2;
-            }, 28);
-        });
-    });
-
-    if (finePointer && !prefersReducedMotion) {
-        document.querySelectorAll('.nav-links a, .social-item, .nav-cta, .link-arrow').forEach(el => {
-            el.addEventListener('pointermove', e => {
-                const r = el.getBoundingClientRect();
-                el.style.transform = `translate(${(e.clientX - r.left - r.width/2) * 0.3}px,${(e.clientY - r.top - r.height/2) * 0.3}px) scale(1.04)`;
-                el.style.transition = 'transform 0.08s cubic-bezier(0.2,0.8,0.2,1)';
-            }, { passive: true });
-            el.addEventListener('pointerleave', () => {
-                el.style.transform = '';
-                el.style.transition = 'transform 0.4s cubic-bezier(0.2,0.8,0.2,1)';
-            }, { passive: true });
-        });
-    }
-
-    const orbs = document.querySelectorAll('.ambient-orb');
+const orbs = document.querySelectorAll('.ambient-orb');
     if (orbs.length && finePointer && !prefersReducedMotion) {
         document.addEventListener('pointermove', e => {
             const x = e.clientX / window.innerWidth - 0.5;

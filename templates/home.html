@@ -4,114 +4,24 @@
 
     <!-- Portfolio Assets (bundled and hashed via esbuild) -->
     <link rel="stylesheet" href="{{ relativize .BaseURL .RelativePrefix (index .Assets "/static/css/portfolio.css") }}">
-
-    <style>
-        /* Portfolio content specific overrides to play nice with Zen theme */
-        main { max-width: none !important; padding: 0 !important; margin: 0 !important; }
-        
-        /* Ensure the portfolio hero fills the viewport but respects the Zen header */
-        .hero-section { min-height: calc(100vh - 80px); }
-    </style>
 {{ end }}
 
 {{ define "content" }}
     {{ $p := .SiteData.portfolio }}
-    <a class="skip-link" href="#hero">Skip to content</a>
-
-    <!-- ============ COMMAND PALETTE ============ -->
-    <div id="cmd-overlay" role="dialog" aria-modal="true" aria-label="Command palette">
-        <div id="cmd-palette">
-            <div class="cmd-search-row">
-                <svg class="cmd-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                </svg>
-                <input id="cmd-input" type="text" placeholder="Search commands, projects, links..." autocomplete="off" spellcheck="false">
-                <span class="cmd-kbd-hint">ESC to close</span>
-            </div>
-            <div class="cmd-results" id="cmd-results"></div>
-            <div class="cmd-footer">
-                <span class="cmd-footer-key"><kbd>↑↓</kbd> navigate</span>
-                <span class="cmd-footer-key"><kbd>↵</kbd> select</span>
-                <span class="cmd-footer-key"><kbd>ESC</kbd> close</span>
-                <span class="cmd-footer-key" style="margin-left:auto;"><kbd>⌘K</kbd> toggle</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- ============ TERMINAL OVERLAY ============ -->
-    <div id="terminal-overlay" role="dialog" aria-modal="true" aria-label="Interactive Terminal">
-        <div class="interactive-terminal" id="interactive-terminal">
-            <div class="iterm-header">
-                <div class="term-dots">
-                    <span class="term-dot term-red" id="term-close-btn" title="Close Terminal"></span>
-                    <span class="term-dot term-yellow"></span>
-                    <span class="term-dot term-green"></span>
-                </div>
-                <div class="iterm-tabs">
-                    <div class="iterm-tab active">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                        <span class="mono-text">bash</span>
-                    </div>
-                    <div class="iterm-tab">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
-                        <span class="mono-text">output.log</span>
-                    </div>
-                </div>
-                <div class="iterm-controls">
-                    <span class="iterm-title mono-text">kush@portfolio - zsh</span>
-                </div>
-            </div>
-            <div class="iterm-toolbar">
-                <span class="mono-text toolbar-item"><span class="toolbar-icon">⟳</span> refresh</span>
-                <span class="mono-text toolbar-item"><span class="toolbar-icon">↑</span> 0 commands</span>
-                <span class="mono-text toolbar-item" id="term-time"></span>
-            </div>
-            <div class="iterm-body">
-                <div class="iterm-history"></div>
-                <div class="iterm-input-row">
-                    <div class="iterm-prompt-wrap mono-text">
-                        <span class="iterm-prompt-user">kush</span>
-                        <span class="iterm-prompt-at">@</span>
-                        <span class="iterm-prompt-host">portfolio</span>
-                        <span class="iterm-prompt-colon">:</span>
-                        <span class="iterm-prompt-path">~</span>
-                        <span class="iterm-prompt-sym">❯</span>
-                    </div>
-                    <input class="iterm-input" type="text" autocomplete="off" spellcheck="false"
-                        placeholder="type 'help' to start..." aria-label="Terminal input">
-                </div>
-            </div>
-            <div class="iterm-footer">
-                <span class="mono-text footer-hint">↑↓ history</span>
-                <span class="mono-text footer-hint">TAB completion</span>
-                <span class="mono-text footer-hint">ESC clear</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Toast -->
-    <div id="toast" role="status" aria-live="polite"></div>
-
-    <!-- Scroll Progress Bar -->
-    <div id="scroll-progress"></div>
-
     <!-- HERO -->
     <section id="hero" class="hero-section">
         <div class="hero-content fade-in">
-            <pre id="ascii-canvas" aria-hidden="true"></pre>
             <span class="hero-identity fade-in-stagger mono-text">{{ $p.identity }}</span>
-            <h1 class="headline fade-in-stagger" aria-label="{{ $p.headline }}">Beyond.<br><span class="accent-text">Binary.</span></h1>
+            <h1 class="headline fade-in-stagger" aria-label="beyond. binary.">
+                <span class="breathe-word">beyond.</span><br>
+                <span class="accent-text">binary.</span>
+            </h1>
             <p class="sub-headline fade-in-stagger">{{ $p.subHeadline }}</p>
 
             <div class="hero-links fade-in-stagger">
                 <a href="#projects" class="link-arrow">View Projects <span class="arrow">↓</span></a>
                 <a href="{{ relativize .BaseURL .RelativePrefix "/resume.pdf" }}" target="_blank" class="link-arrow link-arrow-secondary">Resume ↗</a>
                 <a href="{{ relativize .BaseURL .RelativePrefix "/blogs/" }}" target="_blank" class="link-arrow link-arrow-secondary">Read Blog ↗</a>
-                <button class="link-arrow cmd-trigger" style="cursor:pointer;border:1px solid var(--border-subtle);background:transparent;font-family:var(--font-mono);font-size:0.82rem;color:var(--text-secondary);gap:0.6rem;" title="Open command palette">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                    search <kbd style="opacity:0.5;font-size:0.7rem;">⌘K</kbd>
-                </button>
             </div>
         </div>
     </section>
@@ -131,22 +41,8 @@
                     <span class="avatar-bracket avatar-bracket--tr"></span>
                     <span class="avatar-bracket avatar-bracket--bl"></span>
                     <span class="avatar-bracket avatar-bracket--br"></span>
-                    <img class="avatar-img" src="{{ relativize .BaseURL .RelativePrefix (printf "/%s" $p.about.profileImg) }}" alt="Kush Singh" width="180" height="240" loading="lazy" decoding="async">
+                    <img class="avatar-img" src="{{ relativize .BaseURL .RelativePrefix (printf "/%s" $p.about.profileImg) }}" alt="Kush Singh" width="180" height="220" loading="lazy" decoding="async">
                     <span class="avatar-label">// kush_singh</span>
-                </div>
-            </div>
-
-            <div class="mini-terminal-trigger fade-in" id="mini-terminal-trigger" role="button" tabindex="0" aria-label="Open Interactive Terminal">
-                <div class="mini-term-header">
-                    <div class="term-dots">
-                        <span class="term-dot term-red"></span>
-                        <span class="term-dot term-yellow"></span>
-                        <span class="term-dot term-green"></span>
-                    </div>
-                    <span class="mini-term-title mono-text">kush@portfolio - bash</span>
-                </div>
-                <div class="mini-term-body mono-text">
-                    <span class="iterm-prompt-sym">❯</span> Launch interactive terminal<span class="cursor-blink">_</span>
                 </div>
             </div>
         </div>

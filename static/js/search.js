@@ -83,12 +83,12 @@
                     var name = tag.Name;
                     var link = tag.Link || '';
                     var slug = '';
-                    if (link.indexOf && link.indexOf('/tags/') > -1) {
-                        slug = link.split('/tags/')[1].replace('.html', '');
+                    if (link.indexOf && link.indexOf('/blogs/tags/') > -1) {
+                        slug = link.split('/blogs/tags/')[1].replace('.html', '');
                     } else if (name) {
                         slug = name.toLowerCase().replace(/\s+/g, '-');
                     }
-                    var url = slug ? (baseURL + '/tags/' + slug + '.html') : (baseURL + '/tags.html');
+                    var url = slug ? (baseURL + '/blogs/tags/' + slug + '.html') : (baseURL + '/blogs/tags/index.html');
                     return '<a href="' + url + '" class="discovery-tag">#' + name + '</a>';
                 }).join('');
             }
@@ -96,10 +96,10 @@
         
         if (!tagsHTML) {
             tagsHTML = 
-                '<a href="' + baseURL + '/tags/minimalism.html" class="discovery-tag">#minimalism</a>' +
-                '<a href="' + baseURL + '/tags/technology.html" class="discovery-tag">#technology</a>' +
-                '<a href="' + baseURL + '/tags/design.html" class="discovery-tag">#design</a>' +
-                '<a href="' + baseURL + '/tags/writing.html" class="discovery-tag">#writing</a>';
+                '<a href="' + baseURL + '/blogs/tags/minimalism.html" class="discovery-tag">#minimalism</a>' +
+                '<a href="' + baseURL + '/blogs/tags/technology.html" class="discovery-tag">#technology</a>' +
+                '<a href="' + baseURL + '/blogs/tags/design.html" class="discovery-tag">#design</a>' +
+                '<a href="' + baseURL + '/blogs/tags/writing.html" class="discovery-tag">#writing</a>';
         }
         
         searchResults.innerHTML = `
@@ -212,12 +212,12 @@
                     var name = tag.Name;
                     var link = tag.Link || '';
                     var slug = '';
-                    if (link.indexOf && link.indexOf('/tags/') > -1) {
-                        slug = link.split('/tags/')[1].replace('.html', '');
+                    if (link.indexOf && link.indexOf('/blogs/tags/') > -1) {
+                        slug = link.split('/blogs/tags/')[1].replace('.html', '');
                     } else if (name) {
                         slug = name.toLowerCase().replace(/\s+/g, '-');
                     }
-                    var url = slug ? (baseURL + '/tags/' + slug + '.html') : (baseURL + '/tags.html');
+                    var url = slug ? (baseURL + '/blogs/tags/' + slug + '.html') : (baseURL + '/blogs/tags/index.html');
                     return '<a href="' + url + '" class="discovery-tag">#' + name + '</a>';
                 }).join('');
             }
@@ -225,10 +225,10 @@
         
         if (!tagsHTML) {
             tagsHTML = 
-                '<a href="' + baseURL + '/tags/minimalism.html" class="discovery-tag">#minimalism</a>' +
-                '<a href="' + baseURL + '/tags/technology.html" class="discovery-tag">#technology</a>' +
-                '<a href="' + baseURL + '/tags/design.html" class="discovery-tag">#design</a>' +
-                '<a href="' + baseURL + '/tags/writing.html" class="discovery-tag">#writing</a>';
+                '<a href="' + baseURL + '/blogs/tags/minimalism.html" class="discovery-tag">#minimalism</a>' +
+                '<a href="' + baseURL + '/blogs/tags/technology.html" class="discovery-tag">#technology</a>' +
+                '<a href="' + baseURL + '/blogs/tags/design.html" class="discovery-tag">#design</a>' +
+                '<a href="' + baseURL + '/blogs/tags/writing.html" class="discovery-tag">#writing</a>';
         }
 
         const noResultsHTML = noResults ? `<div class="search-no-results">No results found for "${searchInput.value}". Try exploring these topics instead:</div>` : '';
@@ -246,7 +246,7 @@
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3m0 14v3M2 12h3m14 0h3M4.9 4.9l2.1 2.1m10 10l2.1 2.1M4.9 19.1l2.1-2.1m10-10l2.1-2.1"></path></svg>
                         Explore Knowledge Graph
                     </a>
-                    <a href="${joinPath(baseURL, '/tags.html')}" class="recent-search-item">
+                    <a href="${joinPath(baseURL, '/blogs/tags/')}" class="recent-search-item">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
                         Browse All Topics
                     </a>

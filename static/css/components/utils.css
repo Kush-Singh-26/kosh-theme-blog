@@ -242,6 +242,56 @@ blockquote::before {
     padding-left: 0;
 }
 
+/* Tag Pages - Post List Styling */
+.post-list {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-8) auto;
+    max-width: var(--container-max);
+}
+
+.post-list li {
+    padding: var(--space-8) var(--space-6);
+    border-bottom: 1px solid var(--border);
+    transition: all var(--transition-base);
+    margin-bottom: 0;
+}
+
+.post-list li:hover {
+    background: var(--bg-card-hover);
+    padding-left: var(--space-8);
+}
+
+.post-list .post-title {
+    font-family: var(--font-serif);
+    font-size: var(--text-xl);
+    color: var(--h2-color);
+    text-decoration: none;
+    font-weight: var(--font-weight-medium);
+    transition: color var(--transition-base);
+    display: block;
+    margin-bottom: var(--space-3);
+}
+
+.post-list .post-title:hover {
+    color: var(--accent-primary);
+}
+
+.post-list .post-desc {
+    color: var(--text-secondary);
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+    margin-bottom: var(--space-4);
+    opacity: 0.9;
+}
+
+.post-list .tag-row {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    margin-top: var(--space-4);
+}
+
 /* --- Footer & Colophon --- */
 .colophon-social {
     display: flex;

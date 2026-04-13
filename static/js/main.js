@@ -132,10 +132,12 @@
                 htmlEl.removeAttribute('data-theme');
                 localStorage.setItem('theme', 'dark');
                 window.dispatchEvent(new CustomEvent('themeChanged', { detail: { theme: 'dark' } }));
+                window.dispatchEvent(new CustomEvent('themechanged', { detail: { theme: 'dark' } }));
             } else {
                 htmlEl.setAttribute('data-theme', 'light');
                 localStorage.setItem('theme', 'light');
                 window.dispatchEvent(new CustomEvent('themeChanged', { detail: { theme: 'light' } }));
+                window.dispatchEvent(new CustomEvent('themechanged', { detail: { theme: 'light' } }));
             }
         }
 

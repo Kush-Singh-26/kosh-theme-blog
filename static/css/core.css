@@ -1,4 +1,4 @@
-/* --- CORE & FOUNDATION --- */
+/* --- CORE & FOUNDATION - THE SCHOLAR'S CANVAS --- */
 
 * {
     box-sizing: border-box;
@@ -6,40 +6,51 @@
     padding: 0;
 }
 
-/* Reading Progress Bar (Organic Sage) */
+/* Reading Progress Bar (Aged Sage) */
 #progress-bar {
     position: fixed;
     top: 0;
     left: 0;
     width: 0%;
-    height: 3px;
+    height: 2px;
     background: var(--accent-sage);
     z-index: 9999;
-    transition: width var(--transition-base), opacity var(--transition-base);
+    /* transition: width var(--transition-base); <-- Removed for scroll performance */
     opacity: 0.8;
 }
 
-[data-theme="dark"] #progress-bar {
-    opacity: 0.6;
+body {
+    margin: 0 auto;
+    padding: 0 0 var(--space-12) 0;
+    min-height: 100vh;
+    background-color: var(--bg-body);
 }
 
-body {
-    max-width: var(--container-max);
-    margin: 0 auto;
-    padding: 0 var(--space-6) var(--space-12) var(--space-6);
-    min-height: 100vh;
+/* Hardware accelerated fixed background for smooth scrolling */
+body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(circle at 50% 50%, oklch(100% 0 0 / 0.02), transparent 80%);
+    pointer-events: none;
+    z-index: -1;
+    will-change: transform; /* Hint to browser to use GPU */
 }
 
 article {
     max-width: var(--measure);
     margin: 0 auto;
+    padding: var(--space-10) var(--space-6);
 }
 
 main {
-    animation: fadeIn 1.2s var(--ease-calm);
+    animation: fadeLift var(--transition-slow);
 }
 
-@keyframes fadeIn {
+@keyframes fadeLift {
     from { 
         opacity: 0; 
         transform: translateY(var(--space-4)); 
@@ -64,14 +75,10 @@ main {
     transition: opacity var(--transition-base);
 }
 
-.sidenote:hover {
-    opacity: 1;
-}
-
 @media (min-width: 1600px) {
     .sidenote {
         position: absolute;
-        right: -300px;
+        right: -320px;
         width: 260px;
         border-left: none;
         padding-left: 0;
@@ -101,16 +108,25 @@ main {
     height: 0%;
     background: var(--accent-gold);
     opacity: 0.6;
-    transition: height 0.1s var(--ease-calm);
+    /* transition: height 0.1s var(--ease-mechanical); <-- Removed for scroll performance */
 }
 
 img {
     max-width: 100%;
-    margin: var(--space-10) auto var(--space-5) auto; /* Reduced bottom margin for caption adjacency */
+    margin: var(--space-10) auto var(--space-5) auto;
     display: block;
-    border-radius: 12px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
-    transition: transform 0.6s var(--ease-calm), box-shadow 0.6s var(--ease-calm);
+    border-radius: 2px; /* Precise mechanical radius */
+    box-shadow: 0 20px 40px oklch(0% 0 0 / 0.1);
+    transition: var(--transition-base);
+}
+
+img:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 30px 60px oklch(0% 0 0 / 0.2);
+}
+
+[data-theme="dark"] img {
+    box-shadow: 0 20px 40px oklch(0% 0 0 / 0.4);
 }
 
 /* Museum Label Image Captions */
@@ -129,15 +145,13 @@ figcaption {
     letter-spacing: var(--tracking-xxwide);
     text-align: center;
     padding-top: var(--space-4);
-    position: relative;
     max-width: 80%;
     opacity: 0.7;
     transition: opacity var(--transition-base);
 }
 
-.katex-display {
-    margin: var(--space-6) 0 !important; /* Reduced from default */
-    padding: var(--space-2) 0 !important;
+figure:hover figcaption {
+    opacity: 1;
 }
 
 .center-text { text-align: center; }
@@ -146,18 +160,18 @@ figcaption {
 .no-border { border: none !important; }
 .small-pill { font-size: var(--text-xs); }
 
-/* Wide-Canvas Marginalia (Editorial Polish) */
+/* Editorial Wide-Canvas Marginalia */
 @media (min-width: 1600px) {
     .article-meta {
         position: fixed;
-        top: var(--space-16);
-        left: calc(50% - 720px); /* Balance with TOC on the right */
-        width: 220px;
+        top: var(--space-12);
+        left: calc(50% - 800px);
+        width: 240px;
         display: flex !important;
         flex-direction: column;
         align-items: flex-end;
         text-align: right;
-        gap: var(--space-7);
+        gap: var(--space-8);
         margin: 0 !important;
         padding-right: var(--space-6);
         border-right: 1px solid var(--border);
@@ -173,31 +187,10 @@ figcaption {
     .article-meta time {
         display: block;
         width: 100%;
-        font-size: var(--text-sm);
+        font-size: var(--text-xs);
         letter-spacing: var(--tracking-wide);
         text-transform: uppercase;
+        font-family: var(--font-mono);
+        color: var(--accent-primary);
     }
-
-    .article-meta .meta-divider {
-        display: none !important;
-    }
-
-    .article-meta .tag-pill {
-        margin: var(--space-1) 0;
-        padding: var(--space-1) var(--space-3);
-        font-size: var(--text-xs);
-    }
-}
-
-figure:hover figcaption {
-    opacity: 1;
-}
-
-img:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 30px 60px rgba(0,0,0,0.12);
-}
-
-[data-theme="dark"] img {
-    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
 }

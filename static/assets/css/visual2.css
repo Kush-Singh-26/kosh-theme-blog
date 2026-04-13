@@ -7,7 +7,7 @@
    ============================================ */
 
 /* ------------------------------------------------
-   1. VARIABLE FONT BREATHING - headline
+   1. OVERSIZED BACKGROUND TEXT behind sections
    ------------------------------------------------ */
 /* Animation settings adapted for Syncopate (non-variable) */
 @keyframes font-breathe {
@@ -311,7 +311,7 @@ section {
     display: inline-block;
     width: 180px;
     margin: 0;
-    padding: 6px 6px 36px 6px;
+    padding: 4px 4px 10px 4px;
     background: var(--bg-card);
     box-shadow: var(--shadow-base);
     border: 1px solid var(--border-subtle);
@@ -323,18 +323,18 @@ section {
 /* Corner brackets */
 .avatar-bracket {
     position: absolute;
-    width: 18px;
-    height: 18px;
+    width: 12px;
+    height: 12px;
     border-color: var(--accent-primary);
     border-style: solid;
     border-width: 0;
     pointer-events: none;
     z-index: 2;
 }
-.avatar-bracket--tl { top: -6px; left: -6px; border-top-width: 2px; border-left-width: 2px; }
-.avatar-bracket--tr { top: -6px; right: -6px; border-top-width: 2px; border-right-width: 2px; }
-.avatar-bracket--bl { bottom: 30px; left: -6px; border-bottom-width: 2px; border-left-width: 2px; }
-.avatar-bracket--br { bottom: 30px; right: -6px; border-bottom-width: 2px; border-right-width: 2px; }
+.avatar-bracket--tl { top: -4px; left: -4px; border-top-width: 2px; border-left-width: 2px; }
+.avatar-bracket--tr { top: -4px; right: -4px; border-top-width: 2px; border-right-width: 2px; }
+.avatar-bracket--bl { bottom: 4px; left: -4px; border-bottom-width: 2px; border-left-width: 2px; }
+.avatar-bracket--br { bottom: 4px; right: -4px; border-bottom-width: 2px; border-right-width: 2px; }
 
 .avatar-img {
     width: 100%;
@@ -351,10 +351,10 @@ section {
 .avatar-wrap::after {
     content: '';
     position: absolute;
-    top: 6px;
-    left: 6px;
-    right: 6px;
-    bottom: 36px;
+    top: 4px;
+    left: 4px;
+    right: 4px;
+    bottom: 30px;
     background: repeating-linear-gradient(
         0deg,
         transparent,
@@ -374,11 +374,11 @@ section {
 /* Code label in polaroid bottom */
 .avatar-label {
     position: absolute;
-    bottom: 10px;
+    bottom: 6px;
     left: 50%;
     transform: translateX(-50%);
     font-family: var(--font-mono);
-    font-size: 0.62rem;
+    font-size: 0.55rem;
     color: var(--text-secondary);
     white-space: nowrap;
     letter-spacing: 0.04em;
