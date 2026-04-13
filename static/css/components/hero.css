@@ -30,7 +30,7 @@
 }
 
 .hero-title span.accent-ink {
-    color: var(--accent-secondary);
+    color: var(--accent-primary);
     font-style: italic;
     font-family: var(--font-serif);
     font-weight: 400; /* Lighter weight for "binary." */

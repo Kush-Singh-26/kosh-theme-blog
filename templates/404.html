@@ -21,7 +21,7 @@
         <h3>Seek Knowledge Elsewhere</h3>
         <ul>
             <li><a href="{{ relativize .BaseURL .RelativePrefix "/graph.html" }}">Knowledge Graph</a></li>
-            <li><a href="https://kush-singh-26.github.io/" target="_blank" rel="noopener">The Author</a></li>
+            <li><a href="{{ relativize .BaseURL .RelativePrefix "/blogs/" }}">The Library</a></li>
         </ul>
     </div>
 </div>
@@ -95,7 +95,7 @@
     .btn-primary:hover {
         border-color: var(--accent-tertiary);
         color: var(--accent-tertiary);
-        box-shadow: 0 0 20px rgba(180, 168, 150, 0.1);
+        box-shadow: 0 0 20px color-mix(in oklch, var(--accent-tertiary), transparent 90%);
     }
     
     .btn-secondary {

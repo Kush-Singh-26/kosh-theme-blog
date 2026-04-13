@@ -70,3 +70,21 @@
     flex-wrap: wrap;
     margin-top: var(--space-4);
 }
+
+.bento-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--accent-sage);
+    text-decoration: none;
+    border: 1px solid color-mix(in srgb, var(--accent-sage), transparent 80%);
+    padding: 1px 6px;
+    border-radius: 2px;
+    transition: all 0.3s var(--ease-calm);
+    background: color-mix(in srgb, var(--accent-sage), transparent 95%);
+}
+
+.bento-tag:hover {
+    border-color: var(--accent-sage);
+    background: color-mix(in srgb, var(--accent-sage), transparent 85%);
+    transform: translateY(-1px);
+}

@@ -58,7 +58,7 @@
                 wasmLoadedVersion = currentVersion;
             } catch (err) {
                 console.error("Search initialization failed:", err);
-                if (searchResults) searchResults.innerHTML = `<div style="padding: 2rem; color: #f85149;">Search failed to load.</div>`;
+                if (searchResults) searchResults.innerHTML = `<div style="padding: 2rem; color: var(--color-error);">Search failed to load.</div>`;
             }
         })();
         return wasmPromise;
@@ -266,7 +266,8 @@
         const fragment = document.createDocumentFragment();
         results.slice(0, 20).forEach(res => {
             const item = document.createElement('a');
-            item.href = joinPath(baseURL, res.link);
+            // res.link is already absolute (e.g., /blogs/maths-matrices.html), use it directly
+            item.href = res.link;
             item.className = 'search-result-item';
             item.innerHTML = `
                 <div class="search-result-title">${res.title}</div>
@@ -277,7 +278,8 @@
             gBtn.textContent = 'Explore in Graph';
             gBtn.onclick = (e) => {
                 e.preventDefault(); e.stopPropagation();
-                const absLink = joinPath(baseURL, res.link);
+                // res.link is already absolute
+                const absLink = res.link;
                 if (document.getElementById('graph-canvas')) {
                     window.dispatchEvent(new CustomEvent('kosh:graph-focus', { detail: { link: absLink } }));
                 } else {

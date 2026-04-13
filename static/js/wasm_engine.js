@@ -52,8 +52,8 @@ class WasmSim extends HTMLElement {
 
         // Create canvas and UI (labels created dynamically by C++)
         this.innerHTML = `
-            <div style="background: #161b22; padding: 20px; border-radius: 8px; border: 1px solid #30363d; display: inline-block; margin: 20px 0;">
-                <div id="canvas_container_${simName}" style="position: relative; width: 800px; height: 600px; background: #0d1117; border: 1px solid #30363d; margin-bottom: 20px; overflow: hidden;">
+            <div style="background: var(--bg-card); padding: 20px; border-radius: 8px; border: 1px solid var(--border); display: inline-block; margin: 20px 0;">
+                <div id="canvas_container_${simName}" style="position: relative; width: 800px; height: 600px; background: var(--bg-body); border: 1px solid var(--border); margin-bottom: 20px; overflow: hidden;">
                     <canvas id="${prefix}" oncontextmenu="event.preventDefault()" style="width: 100%; height: 100%; display: block;"></canvas>
                 </div>
                 <div id="ui_${simName}" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; align-items: end;"></div>
@@ -61,16 +61,17 @@ class WasmSim extends HTMLElement {
             <style>
                 .sim-label {
                     position: absolute; top: 0; left: 0; 
-                    font-family: sans-serif; font-weight: bold; font-size: 16px; 
-                    text-shadow: 0 0 4px black; pointer-events: none;
+                    font-family: var(--font-main); font-weight: bold; font-size: 16px; 
+                    text-shadow: 0 0 4px var(--bg-body); pointer-events: none;
                     transition: opacity 0.1s;
                     z-index: 10;
                 }
                 .sim-btn {
-                    padding: 8px 16px; background: #238636; color: white; border: none; border-radius: 6px; cursor: pointer; width: 100%; font-weight: 600;
+                    padding: 8px 16px; background: var(--color-success); color: white; border: none; border-radius: 6px; cursor: pointer; width: 100%; font-weight: 600;
+                    font-family: var(--font-main);
                 }
-                .sim-btn:hover { background: #2ea043; }
-                .sim-btn:active { background: #238636; opacity: 0.8; }
+                .sim-btn:hover { background: color-mix(in oklch, var(--color-success), white 10%); }
+                .sim-btn:active { background: var(--color-success); opacity: 0.8; }
             </style>
         `;
 
@@ -89,18 +90,23 @@ class WasmSim extends HTMLElement {
     async initWasm(name, controls) {
         const canvas = this.querySelector('canvas');
         
+        // Compute relative path to static assets based on current location
+        // Blog pages at /blogs/* need ../static, home page at /* needs static
+        const pathDepth = window.location.pathname.split('/').filter(Boolean).length;
+        const wasmPrefix = pathDepth > 1 ? '../' : '';
+        
         // Load the engine script only once
         if (!document.getElementById(`script_engine`)) {
             const script = document.createElement('script');
             script.id = `script_engine`;
-            script.src = `static/wasm/engine.js`;
+            script.src = wasmPrefix + 'static/wasm/engine.js';
             document.body.appendChild(script);
         }
 
-        await this.waitForEngine(name, canvas, controls);
+        await this.waitForEngine(name, canvas, controls, wasmPrefix);
     }
 
-    async waitForEngine(name, canvas, controls) {
+    async waitForEngine(name, canvas, controls, wasmPrefix) {
         // Wait for the factory function to exist
         while (!window[`create_engine`]) {
             await new Promise(resolve => setTimeout(resolve, 50));
@@ -109,7 +115,7 @@ class WasmSim extends HTMLElement {
         // Pre-fetch the WASM binary ONCE and cache it
         if (!wasmBinaryCachePromise) {
             console.log("Fetching WASM binary (will be cached for all sims)...");
-            wasmBinaryCachePromise = fetch('static/wasm/engine.wasm')
+            wasmBinaryCachePromise = fetch(wasmPrefix + 'static/wasm/engine.wasm')
                 .then(response => response.arrayBuffer())
                 .then(buffer => {
                     wasmBinaryCache = buffer;
@@ -131,7 +137,7 @@ class WasmSim extends HTMLElement {
             // execution time — scriptDirectory becomes "" and locateFile would
             // resolve to a bare "engine.wasm" filename (wrong). Override it to
             // always point at the correct static path relative to the page root.
-            locateFile: (path) => `static/wasm/${path}`,
+            locateFile: (path) => wasmPrefix + 'static/wasm/' + path,
             print: (text) => console.log(name + ": " + text),
             printErr: (text) => console.error(name + ": " + text),
             setStatus: (text) => { },
@@ -192,13 +198,13 @@ class WasmSim extends HTMLElement {
                 wrapper.style.height = "100%";
                 wrapper.innerHTML = `
                     <input type="checkbox" id="chk_${name}_${c.id}" ${c.val ? 'checked' : ''} style="margin-right: 10px; transform: scale(1.2);">
-                    <label for="chk_${name}_${c.id}" style="color: #c9d1d9; cursor: pointer;">${c.label}</label>
+                    <label for="chk_${name}_${c.id}" style="color: var(--text-secondary); cursor: pointer; font-family: var(--font-main);">${c.label}</label>
                 `;
                 wrapper.querySelector('input').onchange = (e) => setSimProp(c.id, e.target.checked);
             } else {
                 setSimProp(c.id, c.val);
                 wrapper.innerHTML = `
-                    <div style="color: #8b949e; font-size: 13px; margin-bottom: 6px;">${c.label}: <span id="val_${name}_${c.id}">${c.val}</span></div>
+                    <div style="color: var(--text-muted); font-size: 13px; margin-bottom: 6px; font-family: var(--font-main);">${c.label}: <span id="val_${name}_${c.id}">${c.val}</span></div>
                     <input id="input_${name}_${c.id}" type="range" min="${c.min}" max="${c.max}" step="${c.step}" value="${c.val}" style="width: 100%;">
                 `;
                 wrapper.querySelector('input').addEventListener('input', (e) => {

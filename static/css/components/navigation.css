@@ -9,6 +9,19 @@ header {
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
     transition: var(--transition-base);
+    --scroll-percent: 0%;
+}
+
+header::after {
+    content: "";
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: var(--scroll-percent);
+    height: 1px;
+    background: var(--accent-primary);
+    transition: width 0.1s linear;
+    z-index: 1001;
 }
 
 .nav-container {

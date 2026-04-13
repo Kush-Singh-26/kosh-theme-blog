@@ -6,19 +6,6 @@
     padding: 0;
 }
 
-/* Reading Progress Bar (Aged Sage) */
-#progress-bar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 0%;
-    height: 2px;
-    background: var(--accent-sage);
-    z-index: 9999;
-    /* transition: width var(--transition-base); <-- Removed for scroll performance */
-    opacity: 0.8;
-}
-
 body {
     margin: 0 auto;
     padding: 0 0 var(--space-12) 0;

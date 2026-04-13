@@ -32,8 +32,7 @@
             }
         });
 
-        // 3. Scroll UI Elements (Progress Bar & Back to Top)
-        let progressBar = document.getElementById('progress-bar');
+        // 3. Scroll UI Elements (Integrated Progress & Back to Top)
         let ghostFill = document.getElementById('scroll-ghost-fill');
         let backToTopBtn = document.getElementById('back-to-top');
 
@@ -45,6 +44,7 @@
         if (!window.__scrollInitialized) {
             window.__scrollInitialized = true;
             let ticking = false;
+            const header = document.querySelector('header');
             
             window.addEventListener('scroll', () => {
                 if (!ticking) {
@@ -52,10 +52,12 @@
                         const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
                         const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
                         
-                        // Update Progress Bar
+                        // Update Integrated Reading Progress Indicator
                         if (scrollHeight > 0) {
                             const progress = (scrollTop / scrollHeight) * 100;
-                            if (progressBar) progressBar.style.width = progress + "%";
+                            if (header) {
+                                header.style.setProperty('--scroll-percent', progress + "%");
+                            }
                             if (ghostFill) ghostFill.style.height = progress + "%";
                         }
                         

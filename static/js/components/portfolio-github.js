@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const WEEKS = 52, DAYS = 7;
         const username = 'Kush-Singh-26';
         const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        const now = new Date();
         let cells = null;
 
         try {
@@ -39,17 +40,29 @@ document.addEventListener('DOMContentLoaded', () => {
         // Month label bar
         const labelRow = document.createElement('div');
         labelRow.className = 'contrib-months mono-text';
-        const now = new Date();
+        
+        // Accurate Start Date: 52 weeks ago, aligned to Sunday
+        const startDate = new Date(now);
+        startDate.setDate(startDate.getDate() - (WEEKS * 7));
+        startDate.setDate(startDate.getDate() - startDate.getDay());
+
         let lastMo = -1;
+        let lastLabelWeek = -10; 
+
         for (let w = 0; w < WEEKS; w++) {
-            const d = new Date(now);
-            d.setDate(d.getDate() - (WEEKS - 1 - w) * 7);
+            const d = new Date(startDate);
+            d.setDate(d.getDate() + (w * 7));
             const mo = d.getMonth();
+            
+            // Precision placement: Render label at the EXACT week it starts.
             if (mo !== lastMo) {
-                const lbl = document.createElement('span');
-                lbl.textContent = monthNames[mo];
-                lbl.style.gridColumn = (w + 1).toString();
-                labelRow.appendChild(lbl);
+                if ((w - lastLabelWeek) >= 2) {
+                    const lbl = document.createElement('span');
+                    lbl.textContent = monthNames[mo];
+                    lbl.style.gridColumn = (w + 1).toString();
+                    labelRow.appendChild(lbl);
+                    lastLabelWeek = w;
+                }
                 lastMo = mo;
             }
         }
@@ -58,15 +71,17 @@ document.addEventListener('DOMContentLoaded', () => {
         // Build cells with tooltips
         const frag = document.createDocumentFragment();
         for (let w = 0; w < WEEKS; w++) {
-            const wkDate = new Date(now);
-            wkDate.setDate(wkDate.getDate() - (WEEKS - 1 - w) * 7);
+            // Use the SAME startDate logic as the labels
+            const wkDate = new Date(startDate);
+            wkDate.setDate(wkDate.getDate() + (w * 7));
+
             for (let d = 0; d < DAYS; d++) {
                 const cell = document.createElement('div');
                 cell.className = 'contrib-cell';
                 const level = cells[w * DAYS + d] ?? 0;
                 cell.dataset.level = level;
                 const dayDate = new Date(wkDate);
-                dayDate.setDate(dayDate.getDate() - (6 - d));
+                dayDate.setDate(dayDate.getDate() + d); // Start from Sun (0) to Sat (6)
                 const countLabel = ['No','1–2','3–5','6–9','10+'][level];
                 cell.title = `${dayDate.toDateString()} · ${countLabel} contributions`;
                 frag.appendChild(cell);

@@ -43,19 +43,38 @@
     --h6-color: var(--text-muted);
 
     /* Accent Colors - Aged Earth Tones */
-    --accent-primary: oklch(65% 0.04 160); /* Sage Ink */
-    --accent-secondary: oklch(70% 0.06 80); /* Aged Gold */
-    --accent-cool: oklch(75% 0.04 220);    /* Scholar Blue */
-    --accent-warm: oklch(70% 0.06 40);     /* Clay Red */
+    --accent-primary: oklch(65% 0.04 160);   /* Sage Ink */
+    --accent-secondary: oklch(70% 0.06 80);  /* Aged Gold */
+    --accent-tertiary: oklch(60% 0.03 160);   /* Muted Sage */
+    --accent-cool: oklch(75% 0.04 220);      /* Scholar Blue */
+    --accent-warm: oklch(70% 0.06 40);       /* Clay Red */
+    --accent-indigo: oklch(55% 0.05 240);    /* Deep Indigo */
     --accent-highlight: oklch(28% 0.01 160);
     --accent-border: oklch(30% 0.01 160);
     --accent-link: var(--accent-cool); 
     --accent-link-hover: oklch(100% 0 0);
 
-    /* Editorial Accent Palette */
-    --accent-sage: oklch(65% 0.04 160);
-    --accent-gold: oklch(70% 0.06 80);
-    --accent-clay: oklch(65% 0.06 40);
+    /* Typography Color Scale - Standardized Grays */
+    --text-100: oklch(98% 0.005 160);
+    --text-200: oklch(94% 0.01 160);
+    --text-300: oklch(90% 0.01 160);
+    --text-400: oklch(80% 0.01 160);
+    --text-500: oklch(70% 0.01 160);
+    --text-600: oklch(60% 0.01 160);
+    --text-700: oklch(40% 0.02 160);
+    --text-800: oklch(25% 0.02 160);
+    --text-900: oklch(14% 0.03 160);
+
+    /* Semantic Colors */
+    --color-success: oklch(65% 0.1 120);
+    --color-warning: oklch(65% 0.15 45);
+    --color-info: oklch(65% 0.08 220);
+    --color-error: oklch(65% 0.1 10);
+
+    /* Legacy Palette Aliases (for compatibility) */
+    --accent-sage: var(--accent-primary);
+    --accent-gold: var(--accent-secondary);
+    --accent-clay: var(--accent-warm);
 
     /* Borders */
     --border: oklch(100% 0 0 / 0.06);
@@ -137,18 +156,69 @@
     /* Accent Colors - Aged Bronze */
     --accent-primary: oklch(45% 0.04 80); 
     --accent-secondary: oklch(40% 0.06 80); 
+    --accent-tertiary: oklch(50% 0.03 80);
     --accent-cool: oklch(40% 0.04 220); 
     --accent-warm: oklch(45% 0.06 40);
+    --accent-indigo: oklch(40% 0.05 240);
     --accent-highlight: oklch(90% 0.01 80);
     --accent-border: oklch(85% 0.01 80);
     --accent-link: var(--accent-cool);
     --accent-link-hover: oklch(0% 0 0);
+
+    /* Typography Color Scale - Light Theme */
+    --text-100: oklch(10% 0.02 80);
+    --text-200: oklch(20% 0.02 80);
+    --text-300: oklch(30% 0.02 80);
+    --text-400: oklch(40% 0.02 80);
+    --text-500: oklch(50% 0.02 80);
+    --text-600: oklch(60% 0.02 80);
+    --text-700: oklch(75% 0.01 80);
+    --text-800: oklch(85% 0.01 80);
+    --text-900: oklch(95% 0.01 80);
 
     /* Borders */
     --border: oklch(0% 0 0 / 0.08);
     --border-hover: oklch(0% 0 0 / 0.15);
     
     --glow-hover: 0 20px 40px oklch(10% 0.02 80 / 0.1);
+}
+
+/* --- GLOBAL SELECTION --- */
+::selection {
+    background-color: color-mix(in oklch, var(--accent-primary), transparent 70%);
+    color: inherit;
+}
+
+/* --- SCHOLAR SCROLLBARS --- */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-body);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--accent-border);
+    border-radius: 10px;
+    transition: var(--transition-base);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-primary);
+}
+
+/* FireFox Scrollbar */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-border) var(--bg-body);
+}
+
+/* --- ACCESSIBILITY FOCUS --- */
+:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
 }
 
 /* Base Styles */
@@ -199,6 +269,27 @@ p {
     max-width: var(--measure);
     margin-bottom: var(--space-6);
     line-height: var(--leading-relaxed);
+}
+
+hr {
+    border: none;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--border) 50%, transparent);
+    position: relative;
+    margin: var(--space-12) 0;
+    overflow: visible;
+}
+
+hr::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    width: 6px;
+    height: 6px;
+    background-color: var(--accent-primary);
+    border: 1px solid var(--bg-body);
 }
 
 /* Global Hover Logic - Pure Mechanical Lift */
