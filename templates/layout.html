@@ -2,7 +2,7 @@
 {{ if .IsTagsIndex }}
 <h1 class="center-text no-border">Topics</h1>
 <div class="tag-cloud center-flex">
-    {{ range .AllTags }}
+    {{ range .Taxonomies.tags.Terms }}
     <a href="{{ relativize $.BaseURL $.RelativePrefix .Link }}" class="tag-pill">
         #{{ .Name }}
         <span class="tag-count">{{ .Count }}</span>
@@ -25,9 +25,9 @@
 
         <div class="post-desc">{{ .Description }}</div>
 
-        {{ if .Tags }}
+        {{ if .Taxonomies.tags }}
         <div class="tag-row">
-            {{ range .Tags }}
+            {{ range .Taxonomies.tags }}
             <a href="{{ relativize $.BaseURL $.RelativePrefix (printf "/blogs/tags/%s.html" (. | slugify)) }}" class="mini-tag">#{{ . }}</a>
             {{ end }}
         </div>
@@ -50,9 +50,9 @@
         <span>⏱️ {{ .Meta.readingTime }} min read</span>
         {{ end }}
 
-        {{ if .Meta.tags }}
+        {{ if .Taxonomies.tags }}
         <span class="meta-divider">|</span>
-        {{ range .Meta.tags }}
+        {{ range .Taxonomies.tags }}
         <a href="{{ relativize $.BaseURL $.RelativePrefix (printf "/blogs/tags/%s.html" (. | slugify)) }}" class="tag-pill small-pill">#{{ . }}</a>
         {{ end }}
         {{ end }}
