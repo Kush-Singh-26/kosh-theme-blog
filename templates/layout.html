@@ -50,9 +50,9 @@
         <span>⏱️ {{ .Meta.readingTime }} min read</span>
         {{ end }}
 
-        {{ if .Taxonomies.tags }}
+        {{ if .ItemTaxonomies.tags }}
         <span class="meta-divider">|</span>
-        {{ range .Taxonomies.tags }}
+        {{ range .ItemTaxonomies.tags }}
         <a href="{{ relativize $.BaseURL $.RelativePrefix (printf "/blogs/tags/%s.html" (. | slugify)) }}" class="tag-pill small-pill">#{{ . }}</a>
         {{ end }}
         {{ end }}
