@@ -88,6 +88,7 @@
     fetch(joinPath(baseURL, '/graph.json'))
         .then(res => { if (!res.ok) throw new Error('Failed to load graph'); return res.json(); })
         .then(data => {
+            window.graphData = data;
             initNodes(data);
             
             // Handle direct focus from URL

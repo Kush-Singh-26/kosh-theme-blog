@@ -23,7 +23,7 @@
                 {{ if .Taxonomies.tags }}
                 {{ $firstTag := index .Taxonomies.tags 0 }}
                 <object>
-                    <a href="{{ relativize $.BaseURL $.RelativePrefix (printf "/blogs/tags/%s.html" ($firstTag | slugify)) }}" class="bento-tag">#{{ $firstTag }}</a>
+                    <a href="{{ relativize $.BaseURL $.RelativePrefix (printf "/%s/%s/%s.html" $.Config.ContentPrefix "tags" ($firstTag | slugify)) }}" class="bento-tag">#{{ $firstTag }}</a>
                 </object>
                 {{ end }}
             </div>
@@ -54,7 +54,7 @@
                 <span class="separator">•</span>
                 {{ range .Taxonomies.tags }}
                 <object>
-                    <a href="{{ relativize $.BaseURL $.RelativePrefix (printf "/blogs/tags/%s.html" (. | slugify)) }}" class="list-tag">#{{ . }}</a>
+                    <a href="{{ relativize $.BaseURL $.RelativePrefix (printf "/%s/%s/%s.html" $.Config.ContentPrefix "tags" (. | slugify)) }}" class="list-tag">#{{ . }}</a>
                 </object>
                 {{ end }}
                 {{ end }}

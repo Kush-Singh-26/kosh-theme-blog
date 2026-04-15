@@ -55,6 +55,7 @@
                 const binPath = joinPath(baseURL, '/search.bin') + versionQuery;
                 await window.initSearch(binPath);
                 wasmLoaded = true;
+                window.koshWasmLoaded = true;
                 wasmLoadedVersion = currentVersion;
             } catch (err) {
                 console.error("Search initialization failed:", err);
