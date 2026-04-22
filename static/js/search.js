@@ -30,6 +30,16 @@
         return base + path;
     };
 
+    const slugifyTopic = (value) => {
+        return String(value || '')
+            .normalize('NFKD')
+            .replace(/[^\w\s-]/g, '')
+            .trim()
+            .replace(/[\s_-]+/g, '-')
+            .replace(/^-+|-+$/g, '')
+            .toLowerCase();
+    };
+
     async function loadWasm() {
         const currentVersion = window.buildVersion || '';
         if (wasmLoaded && wasmLoadedVersion === currentVersion) return;
@@ -58,9 +68,21 @@
                     ? searchEndpoints 
                     : [joinPath(baseURL, '/search.bin')];
                 
-                await Promise.all(endpoints.map(ep => {
+                await Promise.all(endpoints.map(async ep => {
                     const epUrl = ep + versionQuery;
-                    return window.initSearch(epUrl).catch(e => console.warn("Failed to load federated search:", ep, e));
+                    try {
+                        const response = await fetch(epUrl);
+                        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                        
+                        const data = await response.arrayBuffer();
+                        const uint8Array = new Uint8Array(data);
+                        const result = window.initSearch(uint8Array);
+                        if (typeof result === 'string' && result.startsWith('Error')) {
+                            console.warn("Failed to load search index:", ep, result);
+                        }
+                    } catch (e) {
+                        console.warn("Failed to load federated search:", ep, e);
+                    }
                 }));
 
                 wasmLoaded = true;
@@ -79,6 +101,7 @@
         
         let tagsHTML = '';
         const taxonomies = window.siteTaxonomies || {};
+        const blogTags = Array.isArray(window.blogTags) ? window.blogTags : [];
         const taxonomyBaseURL = window.taxonomyBaseURL || '';
         
         try {
@@ -90,6 +113,28 @@
                     tagsHTML = sorted.map(term => `<a href="${joinPath(baseURL, term.Link)}" class="discovery-tag">#${term.Name}</a>`).join('');
                 }
             }
+
+            if (!tagsHTML && blogTags.length > 0) {
+                const sorted = blogTags.slice().sort((a, b) => (b.Count || 0) - (a.Count || 0)).slice(0, 4);
+                const tagPrefix = taxonomyBaseURL ? `/${taxonomyBaseURL}/tags/` : '/blogs/tags/';
+                tagsHTML = sorted.map(term => {
+                    const slug = slugifyTopic(term.Name);
+                    const link = `${tagPrefix}${slug}.html`;
+                    return `<a href="${joinPath(baseURL, link)}" class="discovery-tag">#${term.Name}</a>`;
+                }).join('');
+            }
+
+            if (!tagsHTML && wasmLoaded && typeof window.getFeaturedTopics === 'function') {
+                const featuredTopics = window.getFeaturedTopics();
+                if (Array.isArray(featuredTopics) && featuredTopics.length > 0) {
+                    const tagPrefix = taxonomyBaseURL ? `/${taxonomyBaseURL}/tags/` : '/blogs/tags/';
+                    tagsHTML = featuredTopics.slice(0, 4).map(term => {
+                        const slug = slugifyTopic(term.name);
+                        const link = `${tagPrefix}${slug}.html`;
+                        return `<a href="${joinPath(baseURL, link)}" class="discovery-tag">#${term.name}</a>`;
+                    }).join('');
+                }
+            }
         } catch (e) {
             console.error("Discovery rendering failed:", e);
         }
@@ -99,7 +144,7 @@
             tagsHTML = '<div class="discovery-tag">No topics found</div>';
         }
         
-        const noResultsHTML = noResults ? `<div class="search-no-results">No results found for "${searchInput.value}". Try exploring these topics instead:</div>` : '';
+        const noResultsHTML = noResults ? `<div class="search-no-results">No results found for "${searchInput.value}".</div>` : '';
         const allTopicsPath = taxonomyBaseURL ? '/' + taxonomyBaseURL + '/tags/' : '/blogs/tags/';
 
         searchResults.innerHTML = `
@@ -129,7 +174,15 @@
         searchModal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
         renderDiscovery();
-        loadWasm().then(() => { if (searchInput) { searchInput.value = ''; searchInput.focus(); } }).catch(() => {});
+        loadWasm().then(() => {
+            if (searchInput) {
+                searchInput.value = '';
+                searchInput.focus();
+            }
+            if (searchResults && (!searchInput || !searchInput.value)) {
+                renderDiscovery();
+            }
+        }).catch(() => {});
     }
 
     function closeModal() {
@@ -166,8 +219,16 @@
             if (e.key === 'ArrowDown') {
                 e.preventDefault();
                 if (suggestionsActive && sugItems.length > 0) {
-                    selectedSuggestionIndex = Math.min(selectedSuggestionIndex + 1, sugItems.length - 1);
-                    updateSuggestionSelection(sugItems);
+                    if (selectedSuggestionIndex < sugItems.length - 1) {
+                        selectedSuggestionIndex = Math.min(selectedSuggestionIndex + 1, sugItems.length - 1);
+                        updateSuggestionSelection(sugItems);
+                    } else if (items.length > 0) {
+                        suggestionsActive = false;
+                        selectedSuggestionIndex = -1;
+                        selectedIndex = 0;
+                        updateSuggestionSelection(sugItems);
+                        updateSelection(items);
+                    }
                 } else if (items.length > 0) {
                     selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
                     updateSelection(items);
@@ -175,11 +236,27 @@
             } else if (e.key === 'ArrowUp') {
                 e.preventDefault();
                 if (suggestionsActive && sugItems.length > 0) {
-                    selectedSuggestionIndex = Math.max(selectedSuggestionIndex - 1, 0);
-                    updateSuggestionSelection(sugItems);
+                    if (selectedSuggestionIndex > 0) {
+                        selectedSuggestionIndex = Math.max(selectedSuggestionIndex - 1, 0);
+                        updateSuggestionSelection(sugItems);
+                    } else if (items.length > 0) {
+                        suggestionsActive = false;
+                        selectedSuggestionIndex = -1;
+                        selectedIndex = items.length - 1;
+                        updateSuggestionSelection(sugItems);
+                        updateSelection(items);
+                    }
                 } else if (items.length > 0) {
-                    selectedIndex = Math.max(selectedIndex - 1, 0);
-                    updateSelection(items);
+                    if (selectedIndex > 0) {
+                        selectedIndex = Math.max(selectedIndex - 1, 0);
+                        updateSelection(items);
+                    } else if (sugItems.length > 0) {
+                        suggestionsActive = true;
+                        selectedSuggestionIndex = sugItems.length - 1;
+                        selectedIndex = -1;
+                        updateSuggestionSelection(sugItems);
+                        updateSelection(items);
+                    }
                 }
             } else if (e.key === 'Enter') {
                 if (suggestionsActive && selectedSuggestionIndex >= 0 && sugItems[selectedSuggestionIndex]) {

@@ -122,10 +122,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 card.target = '_blank';
                 card.rel = 'noopener noreferrer';
                 card.innerHTML = `
-                    <span class="content-snippet-date mono-text">${cardData.dateLabel}</span>
-                    <h3>${cardData.title}</h3>
-                    <p>${cardData.excerpt.slice(0, 160)}${cardData.excerpt.length > 160 ? '…' : ''}</p>
-                    <span class="content-snippet-link mono-text">Read →</span>
+                    <span class="content-snippet-kicker mono-text">Latest note</span>
+                    <h3 class="content-snippet-title">${cardData.title}</h3>
+                    <p class="content-snippet-excerpt">${cardData.excerpt.slice(0, 160)}${cardData.excerpt.length > 160 ? '…' : ''}</p>
+                    <div class="content-snippet-footer">
+                        <span class="content-snippet-date mono-text">${cardData.dateLabel}</span>
+                        <span class="content-snippet-link mono-text">Read →</span>
+                    </div>
                 `;
                 grid.appendChild(card);
             });
