@@ -74,9 +74,9 @@ document.addEventListener('DOMContentLoaded', () => {
     updateTermTime();
     scheduleTermTime();
 
-    // 6. Blog snippets fetcher (from RSS)
-    async function loadBlogSnippets() {
-        const grid = document.getElementById('blog-snippets-grid');
+    // 6. Content snippets fetcher (from RSS)
+    async function loadContentSnippets() {
+        const grid = document.getElementById('content-snippets-grid');
         if (!grid) return;
 
         try {
@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const items = Array.from(doc.querySelectorAll('item')).slice(0, 3);
 
             if (!items.length) {
-                grid.innerHTML = '<div class="blog-snippet-card is-loading">No posts found.</div>';
+                grid.innerHTML = '<div class="content-snippet-card is-loading">No items found.</div>';
                 return;
             }
 
@@ -112,30 +112,30 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // Store for Command Palette search
-            window.BLOG_POSTS = cards;
-            document.dispatchEvent(new CustomEvent('blog-posts-ready'));
+            window.CONTENT_ITEMS = cards;
+            document.dispatchEvent(new CustomEvent('content-items-ready'));
 
             cards.forEach(cardData => {
                 const card = document.createElement('a');
-                card.className = 'blog-snippet-card';
+                card.className = 'content-snippet-card';
                 card.href = cardData.link;
                 card.target = '_blank';
                 card.rel = 'noopener noreferrer';
                 card.innerHTML = `
-                    <span class="blog-snippet-date mono-text">${cardData.dateLabel}</span>
+                    <span class="content-snippet-date mono-text">${cardData.dateLabel}</span>
                     <h3>${cardData.title}</h3>
                     <p>${cardData.excerpt.slice(0, 160)}${cardData.excerpt.length > 160 ? '…' : ''}</p>
-                    <span class="blog-snippet-link mono-text">Read →</span>
+                    <span class="content-snippet-link mono-text">Read →</span>
                 `;
                 grid.appendChild(card);
             });
         } catch (err) {
-            console.error('Failed to load blog snippets:', err);
-            grid.innerHTML = '<div class="blog-snippet-card is-loading">Latest posts unavailable.</div>';
+            console.error('Failed to load content snippets:', err);
+            grid.innerHTML = '<div class="content-snippet-card is-loading">Latest items unavailable.</div>';
         }
     }
 
-    loadBlogSnippets();
+    loadContentSnippets();
 
     // 7. Tokenizer Hero Interaction
     function initTokenizer() {

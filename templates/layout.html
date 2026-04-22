@@ -1,19 +1,21 @@
 {{ define "content" }}
-{{ if .IsTagsIndex }}
+{{ if .IsTaxonomyIndex }}
 <h1 class="center-text no-border">Topics</h1>
 <div class="tag-cloud center-flex">
-    {{ range .Taxonomies.tags.Terms }}
+    {{ range $taxKey, $tax := .Taxonomies }}
+    {{ range $tax.Terms }}
     <a href="{{ relativize $.BaseURL $.RelativePrefix .Link }}" class="tag-pill">
         #{{ .Name }}
         <span class="tag-count">{{ .Count }}</span>
     </a>
     {{ end }}
+    {{ end }}
 </div>
 
-{{ else if .Posts }}
+{{ else if .Items }}
 <h1 class="center-text">{{ .Title }}</h1>
 <ul class="post-list">
-    {{ range .Posts }}
+    {{ range .Items }}
     <li>
         <a href="{{ relativize $.BaseURL $.RelativePrefix .Link }}" class="post-title">{{ .Title }}</a>
 
@@ -25,10 +27,10 @@
 
         <div class="post-desc">{{ .Description }}</div>
 
-        {{ if .Taxonomies.tags }}
+        {{ range $taxKey, $terms := .Taxonomies }}
         <div class="tag-row">
-            {{ range .Taxonomies.tags }}
-            <a href="{{ relativize $.BaseURL $.RelativePrefix (printf "/%s/%s/%s.html" $.Config.ContentPrefix "tags" (. | slugify)) }}" class="mini-tag">#{{ . }}</a>
+            {{ range $terms }}
+            <a href="{{ relativize $.BaseURL $.RelativePrefix (printf "/%s/%s/%s.html" $.Config.ContentPrefix (index $.Config.Taxonomies $taxKey) (. | slugify)) }}" class="mini-tag">#{{ . }}</a>
             {{ end }}
         </div>
         {{ end }}
@@ -50,10 +52,10 @@
         <span>⏱️ {{ .Meta.readingTime }} min read</span>
         {{ end }}
 
-        {{ if .ItemTaxonomies.tags }}
+        {{ range $taxKey, $terms := .ItemTaxonomies }}
         <span class="meta-divider">|</span>
-        {{ range .ItemTaxonomies.tags }}
-        <a href="{{ relativize $.BaseURL $.RelativePrefix (printf "/%s/%s/%s.html" $.Config.ContentPrefix "tags" (. | slugify)) }}" class="tag-pill small-pill">#{{ . }}</a>
+        {{ range $terms }}
+        <a href="{{ relativize $.BaseURL $.RelativePrefix (printf "/%s/%s/%s.html" $.Config.ContentPrefix (index $.Config.Taxonomies $taxKey) (. | slugify)) }}" class="tag-pill small-pill">#{{ . }}</a>
         {{ end }}
         {{ end }}
 
@@ -89,6 +91,4 @@
 {{ end }}
 {{ end }}
 
-{{ define "head-extra" }}
-<meta name="google-site-verification" content="Xr0Ov0Imhz_enNxV6fyMfzSrJyICO_V5PZV49w4b2DM" />
-{{ end }}
+{{ define "head-extra" }}{{ end }}

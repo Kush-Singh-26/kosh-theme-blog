@@ -10,30 +10,10 @@
             });
         }
 
-        // 2. Code Block Setup (Language Badges & Copy Buttons)
-        document.querySelectorAll('.code-wrapper').forEach(wrapper => {
-            // Language Badge
-            const lang = wrapper.getAttribute('data-lang');
-            if (lang && lang !== 'text' && !wrapper.querySelector('.code-badge')) {
-                const badge = document.createElement('span');
-                badge.className = 'code-badge';
-                badge.textContent = lang.toUpperCase();
-                wrapper.appendChild(badge);
-                wrapper.classList.add('has-badge');
-            }
-
-            // Copy Button (Event listener handled globally)
-            const pre = wrapper.querySelector('pre');
-            if (pre && !pre.classList.contains('d2') && !wrapper.querySelector('.copy-btn')) {
-                const btn = document.createElement('button');
-                btn.className = 'copy-btn';
-                btn.textContent = 'Copy';
-                wrapper.appendChild(btn);
-            }
-        });
-
+        // 2. Code Block Setup
+        // Handled by SSG
+        
         // 3. Scroll UI Elements (Integrated Progress & Back to Top)
-        let ghostFill = document.getElementById('scroll-ghost-fill');
         let backToTopBtn = document.getElementById('back-to-top');
 
         const floatingTocBtn = document.getElementById('floating-toc-btn');
@@ -56,9 +36,8 @@
                         if (scrollHeight > 0) {
                             const progress = (scrollTop / scrollHeight) * 100;
                             if (header) {
-                                header.style.setProperty('--scroll-percent', progress + "%");
+                                 header.style.setProperty('--scroll-percent', progress + "%");
                             }
-                            if (ghostFill) ghostFill.style.height = progress + "%";
                         }
                         
                         // Update Back to Top Visibility
@@ -134,12 +113,10 @@
                 htmlEl.removeAttribute('data-theme');
                 localStorage.setItem('theme', 'dark');
                 window.dispatchEvent(new CustomEvent('themeChanged', { detail: { theme: 'dark' } }));
-                window.dispatchEvent(new CustomEvent('themechanged', { detail: { theme: 'dark' } }));
             } else {
                 htmlEl.setAttribute('data-theme', 'light');
                 localStorage.setItem('theme', 'light');
                 window.dispatchEvent(new CustomEvent('themeChanged', { detail: { theme: 'light' } }));
-                window.dispatchEvent(new CustomEvent('themechanged', { detail: { theme: 'light' } }));
             }
         }
 
@@ -272,39 +249,31 @@
                     return;
                 }
 
-                // Handle Copy Button Click
-                const copyBtn = e.target.closest('.copy-btn');
+                // Handle Copy Button Click (Unified)
+                const copyBtn = e.target.closest('.copy-btn, .copy-btn-explicit, .katex-copy-btn');
                 if (copyBtn) {
-                    const wrapper = copyBtn.closest('.code-wrapper');
-                    const code = wrapper ? wrapper.querySelector('code') : null;
-                    if (code) {
-                        navigator.clipboard.writeText(code.textContent.trimEnd()).then(() => {
-                            copyBtn.textContent = 'Copied!';
+                    let textToCopy = '';
+                    const container = copyBtn.closest('.code-block-container, [data-latex]');
+                    
+                    if (copyBtn.classList.contains('katex-copy-btn')) {
+                        textToCopy = container ? container.getAttribute('data-latex') : '';
+                    } else {
+                        const code = container ? container.querySelector('code') : null;
+                        textToCopy = code ? code.textContent.trimEnd() : '';
+                    }
+
+                    if (textToCopy) {
+                        navigator.clipboard.writeText(textToCopy).then(() => {
+                            const textEl = copyBtn.querySelector('.copy-text') || copyBtn;
+                            const originalText = textEl.textContent;
+                            
+                            textEl.textContent = 'Copied!';
                             copyBtn.classList.add('copied');
                             setTimeout(() => {
-                                copyBtn.textContent = 'Copy';
+                                textEl.textContent = originalText;
                                 copyBtn.classList.remove('copied');
                             }, 2000);
                         }).catch(err => console.error('Failed to copy:', err));
-                    }
-                    return;
-                }
-
-                // Handle LaTeX Copy Button Click
-                const katexCopyBtn = e.target.closest('.katex-copy-btn');
-                if (katexCopyBtn) {
-                    const container = katexCopyBtn.closest('[data-latex]');
-                    const latex = container ? container.getAttribute('data-latex') : null;
-                    if (latex) {
-                        navigator.clipboard.writeText(latex).then(() => {
-                            const originalText = katexCopyBtn.textContent;
-                            katexCopyBtn.textContent = 'Copied!';
-                            katexCopyBtn.classList.add('copied');
-                            setTimeout(() => {
-                                katexCopyBtn.textContent = originalText;
-                                katexCopyBtn.classList.remove('copied');
-                            }, 2000);
-                        }).catch(err => console.error('Failed to copy LaTeX:', err));
                     }
                     return;
                 }

@@ -12,19 +12,22 @@
     </div>
 </div>
 
-{{ if .PinnedPosts }}
+{{ if .PinnedItems }}
 <div class="section-label">Featured Collections</div>
 <div class="bento-grid">
-    {{ range .PinnedPosts }}
+    {{ range .PinnedItems }}
     <a href="{{ relativize $.BaseURL $.RelativePrefix .Link }}" class="bento-card">
         <div class="card-content">
             <div class="card-top">
                 <span class="meta-badge">Featured</span>
-                {{ if .Taxonomies.tags }}
-                {{ $firstTag := index .Taxonomies.tags 0 }}
+                {{ range $name, $terms := .Taxonomies }}
+                {{ range $index, $term := $terms }}
+                {{ if eq $index 0 }}
                 <object>
-                    <a href="{{ relativize $.BaseURL $.RelativePrefix (printf "/%s/%s/%s.html" $.Config.ContentPrefix "tags" ($firstTag | slugify)) }}" class="bento-tag">#{{ $firstTag }}</a>
+                    <a href="{{ relativize $.BaseURL $.RelativePrefix (printf "/%s/%s/%s.html" $.Config.ContentPrefix (index $.Config.Taxonomies $name) ($term | slugify)) }}" class="bento-tag">#{{ $term }}</a>
                 </object>
+                {{ end }}
+                {{ end }}
                 {{ end }}
             </div>
             <h2>{{ .Title }}</h2>
@@ -41,7 +44,7 @@
 
 <div id="latest" class="section-label divider-top">Latest Updates</div>
 <div class="latest-list">
-    {{ range .Posts }}
+    {{ range .Items }}
     <a href="{{ relativize $.BaseURL $.RelativePrefix .Link }}" class="list-item">
         <div class="list-content">
             <h3 class="list-title">{{ .Title }}</h3>
@@ -50,11 +53,11 @@
                 <span>{{ .DateObj.Format "Jan 02, 2006" }}</span>
                 <span class="separator">•</span>
                 <span>{{ .ReadingTime }} min read</span>
-                {{ if .Taxonomies.tags }}
+                {{ range $name, $terms := .Taxonomies }}
                 <span class="separator">•</span>
-                {{ range .Taxonomies.tags }}
+                {{ range $terms }}
                 <object>
-                    <a href="{{ relativize $.BaseURL $.RelativePrefix (printf "/%s/%s/%s.html" $.Config.ContentPrefix "tags" (. | slugify)) }}" class="list-tag">#{{ . }}</a>
+                    <a href="{{ relativize $.BaseURL $.RelativePrefix (printf "/%s/%s/%s.html" $.Config.ContentPrefix (index $.Config.Taxonomies $name) (. | slugify)) }}" class="list-tag">#{{ . }}</a>
                 </object>
                 {{ end }}
                 {{ end }}
@@ -96,5 +99,4 @@
 
 {{ define "head-extra" }}
 <link rel="preconnect" href="https://github-contributions-api.jogruber.de">
-<meta name="google-site-verification" content="Xr0Ov0Imhz_enNxV6fyMfzSrJyICO_V5PZV49w4b2DM" />
 {{ end }}

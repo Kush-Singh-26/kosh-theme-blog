@@ -52,28 +52,28 @@
     background-color: color-mix(in srgb, var(--bg-card), var(--accent-indigo) 8%);
 }
 .callout-note .callout-title, .callout-info .callout-title { color: var(--accent-indigo); }
-.callout-note .callout-title::before { content: "§"; }
+.callout-note .callout-title::before, .callout-info .callout-title::before { content: "§"; }
 
 .callout-tip, .callout-success {
     border-color: color-mix(in srgb, var(--accent-sage), transparent 80%);
     background-color: color-mix(in srgb, var(--bg-card), var(--accent-sage) 8%);
 }
 .callout-tip .callout-title, .callout-success .callout-title { color: var(--accent-sage); }
-.callout-tip .callout-title::before { content: "✧"; }
+.callout-tip .callout-title::before, .callout-success .callout-title::before { content: "✧"; }
 
 .callout-warning, .callout-caution {
     border-color: color-mix(in srgb, var(--accent-gold), transparent 80%);
     background-color: color-mix(in srgb, var(--bg-card), var(--accent-gold) 8%);
 }
 .callout-warning .callout-title, .callout-caution .callout-title { color: var(--accent-gold); }
-.callout-warning .callout-title::before { content: "!"; }
+.callout-warning .callout-title::before, .callout-caution .callout-title::before { content: "!"; }
 
 .callout-danger, .callout-error {
-    border-color: color-mix(in srgb, var(--accent-terracotta), transparent 80%);
-    background-color: color-mix(in srgb, var(--bg-card), var(--accent-terracotta) 10%);
+    border-color: color-mix(in srgb, var(--accent-warm), transparent 80%);
+    background-color: color-mix(in srgb, var(--bg-card), var(--accent-warm) 10%);
 }
-.callout-danger .callout-title, .callout-error .callout-title { color: var(--accent-terracotta); }
-.callout-danger .callout-title::before { content: "※"; }
+.callout-danger .callout-title, .callout-error .callout-title { color: var(--accent-warm); }
+.callout-danger .callout-title::before, .callout-error .callout-title::before { content: "※"; }
 
 /* --- YouTube Embed --- */
 
@@ -96,25 +96,19 @@
     height: 100%;
 }
 
-/* --- Figures --- */
+/* --- Figures (Inherits from core.css) --- */
 
 .shortcode-figure {
     margin: var(--space-10) auto;
-    text-align: center;
 }
 
 .shortcode-figure img {
-    max-width: 100%;
-    height: auto;
     border-radius: var(--space-2);
     border: 1px solid var(--border);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--glow-hover);
 }
 
 .shortcode-figure figcaption {
-    margin-top: var(--space-3);
-    font-size: var(--text-sm);
-    color: var(--text-muted);
     font-family: var(--font-serif);
     font-style: italic;
 }

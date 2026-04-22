@@ -12,16 +12,15 @@
     <section id="hero" class="hero-section">
         <div class="hero-content fade-in">
 
-            <span class="hero-identity fade-in-stagger mono-text">{{ $p.identity }}</span>
             <h1 class="headline fade-in-stagger" aria-label="Beyond Binary."><span class="breathe-word">Beyond.</span><br><span class="accent-text">Binary.</span></h1>
             <pre id="ascii-canvas" aria-hidden="true"></pre>
             <p class="sub-headline fade-in-stagger">{{ $p.subHeadline }}</p>
 
-            <div class="hero-links fade-in-stagger">
-                <a href="#projects" class="link-arrow">View Projects <span class="arrow">↓</span></a>
-                <a href="{{ relativize .BaseURL .RelativePrefix "/resume.pdf" }}" target="_blank" class="link-arrow link-arrow-secondary">Resume ↗</a>
-                <a href="{{ relativize .BaseURL .RelativePrefix "/blogs/" }}" target="_blank" class="link-arrow link-arrow-secondary">Read Blog ↗</a>
-            </div>
+<div class="hero-links fade-in-stagger">
+<a href="#projects" class="link-arrow">View Projects <span class="arrow">↓</span></a>
+<a href="{{ relativize .BaseURL .RelativePrefix "/resume.pdf" }}" target="_blank" class="link-arrow link-arrow-secondary">Resume ↗</a>
+<a href="{{ relativize .BaseURL .RelativePrefix (printf "/%s/" $.Config.GetContentPrefix) }}" target="_blank" class="link-arrow link-arrow-secondary">Read Blog ↗</a>
+</div>
         </div>
     </section>
 
@@ -147,24 +146,24 @@
         </div>
     </section>
 
-    <!-- BLOG SNIPPETS -->
-    <section id="blog-snippets" class="section-container">
+    <!-- CONTENT SNIPPETS -->
+    <section id="content-snippets" class="section-container">
         <div class="section-label-wrap fade-in">
             <span class="section-line"></span>
-            <h2 class="section-label">From The Blog</h2>
+            <h2 class="section-label">Latest Content</h2>
             <span class="section-line"></span>
         </div>
         <p class="blog-snippets-sub fade-in">
-            Recent notes and deep dives from the blog. Fresh posts load automatically.
+            Recent notes and deep dives. Fresh items load automatically.
         </p>
-        <div class="blog-snippets-grid fade-in" id="blog-snippets-grid" aria-live="polite">
-            <div class="blog-snippet-card is-loading">Loading latest posts…</div>
+        <div class="content-snippets-grid fade-in" id="content-snippets-grid" aria-live="polite">
+            <div class="content-snippet-card is-loading">Loading latest items…</div>
         </div>
-        <div class="blog-snippets-cta fade-in">
-            <a href="{{ relativize .BaseURL .RelativePrefix "/blogs/" }}" target="_blank" rel="noopener noreferrer" class="link-arrow">
-                Read all posts <span class="arrow">→</span>
-            </a>
-        </div>
+<div class="content-snippets-cta fade-in">
+<a href="{{ relativize .BaseURL .RelativePrefix (printf "/%s/" $.Config.GetContentPrefix) }}" target="_blank" rel="noopener noreferrer" class="link-arrow">
+View all items <span class="arrow">→</span>
+</a>
+</div>
     </section>
 
     <!-- CONTACT -->
@@ -183,12 +182,12 @@
                         <svg id="check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:none"><polyline points="20 6 9 17 4 12"/></svg>
                     </button>
                 </div>
-                <a href="{{ $p.socials.github }}" target="_blank" rel="noopener noreferrer" class="social-item">GitHub</a>
-                <a href="{{ $p.socials.linkedin }}" target="_blank" rel="noopener noreferrer" class="social-item">LinkedIn</a>
-                <a href="{{ $p.socials.huggingFace }}" target="_blank" rel="noopener noreferrer" class="social-item">HuggingFace</a>
-                <a href="{{ $p.socials.leetCode }}" target="_blank" rel="noopener noreferrer" class="social-item">LeetCode</a>
-                <a href="{{ $p.socials.codeforces }}" target="_blank" rel="noopener noreferrer" class="social-item">Codeforces</a>
-                <a href="{{ relativize .BaseURL .RelativePrefix "/blogs/" }}" target="_blank" rel="noopener noreferrer" class="social-item">Blog</a>
+<a href="{{ $p.socials.github }}" target="_blank" rel="noopener noreferrer" class="social-item">GitHub</a>
+<a href="{{ $p.socials.linkedin }}" target="_blank" rel="noopener noreferrer" class="social-item">LinkedIn</a>
+<a href="{{ $p.socials.huggingFace }}" target="_blank" rel="noopener noreferrer" class="social-item">HuggingFace</a>
+<a href="{{ $p.socials.leetCode }}" target="_blank" rel="noopener noreferrer" class="social-item">LeetCode</a>
+<a href="{{ $p.socials.codeforces }}" target="_blank" rel="noopener noreferrer" class="social-item">Codeforces</a>
+<a href="{{ relativize .BaseURL .RelativePrefix (printf "/%s/" $.Config.GetContentPrefix) }}" target="_blank" rel="noopener noreferrer" class="social-item">Blog</a>
             </div>
         </div>
     </section>

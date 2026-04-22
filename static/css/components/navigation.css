@@ -39,7 +39,7 @@ header::after {
     align-items: center;
     gap: var(--space-3);
     font-weight: 700;
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     color: var(--h1-color);
     letter-spacing: var(--tracking-wide);
     text-transform: lowercase;
@@ -83,7 +83,7 @@ header nav button,
     color: var(--text-secondary);
     text-decoration: none;
     transition: var(--transition-base);
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     font-weight: 600;
     background: transparent;
     border: 1px solid transparent;

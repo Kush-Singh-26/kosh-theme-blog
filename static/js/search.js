@@ -52,8 +52,17 @@
                 const response = await fetch(wasmPath);
                 const result = await WebAssembly.instantiateStreaming(response, go.importObject);
                 go.run(result.instance);
-                const binPath = joinPath(baseURL, '/search.bin') + versionQuery;
-                await window.initSearch(binPath);
+
+                const searchEndpoints = window.searchEndpoints;
+                const endpoints = (Array.isArray(searchEndpoints) && searchEndpoints.length > 0) 
+                    ? searchEndpoints 
+                    : [joinPath(baseURL, '/search.bin')];
+                
+                await Promise.all(endpoints.map(ep => {
+                    const epUrl = ep + versionQuery;
+                    return window.initSearch(epUrl).catch(e => console.warn("Failed to load federated search:", ep, e));
+                }));
+
                 wasmLoaded = true;
                 window.koshWasmLoaded = true;
                 wasmLoadedVersion = currentVersion;
@@ -65,46 +74,37 @@
         return wasmPromise;
     }
 
-    function renderDiscovery() {
+    function renderDiscovery(noResults = false) {
         if (!searchResults) return;
         
-        var tagsHTML = '';
+        let tagsHTML = '';
+        const taxonomies = window.siteTaxonomies || {};
+        const taxonomyBaseURL = window.taxonomyBaseURL || '';
         
         try {
-            var tags = window.blogTags;
-            if (typeof tags === 'string') {
-                tags = JSON.parse(tags);
+            const taxonomyList = Object.values(taxonomies);
+            if (taxonomyList.length > 0) {
+                const targetTax = taxonomies["tags"] || taxonomyList.find(t => t.Terms && t.Terms.length > 0);
+                if (targetTax && targetTax.Terms && targetTax.Terms.length > 0) {
+                    const sorted = targetTax.Terms.slice().sort((a, b) => (b.Count || 0) - (a.Count || 0)).slice(0, 4);
+                    tagsHTML = sorted.map(term => `<a href="${joinPath(baseURL, term.Link)}" class="discovery-tag">#${term.Name}</a>`).join('');
+                }
             }
-            if (tags && tags.length > 0 && tags[0] && tags[0].Name) {
-                var sorted = tags.slice().sort(function(a, b) {
-                    return (b.Count || 0) - (a.Count || 0);
-                }).slice(0, 4);
-                
-                tagsHTML = sorted.map(function(tag) {
-                    var name = tag.Name;
-                    var link = tag.Link || '';
-                    var slug = '';
-                    if (link.indexOf && link.indexOf('/blogs/tags/') > -1) {
-                        slug = link.split('/blogs/tags/')[1].replace('.html', '');
-                    } else if (name) {
-                        slug = name.toLowerCase().replace(/\s+/g, '-');
-                    }
-                    var url = slug ? (baseURL + '/blogs/tags/' + slug + '.html') : (baseURL + '/blogs/tags/index.html');
-                    return '<a href="' + url + '" class="discovery-tag">#' + name + '</a>';
-                }).join('');
-            }
-        } catch (e) {}
-        
+        } catch (e) {
+            console.error("Discovery rendering failed:", e);
+        }
+
         if (!tagsHTML) {
-            tagsHTML = 
-                '<a href="' + baseURL + '/blogs/tags/minimalism.html" class="discovery-tag">#minimalism</a>' +
-                '<a href="' + baseURL + '/blogs/tags/technology.html" class="discovery-tag">#technology</a>' +
-                '<a href="' + baseURL + '/blogs/tags/design.html" class="discovery-tag">#design</a>' +
-                '<a href="' + baseURL + '/blogs/tags/writing.html" class="discovery-tag">#writing</a>';
+            // Only if we truly have no data from the backend
+            tagsHTML = '<div class="discovery-tag">No topics found</div>';
         }
         
+        const noResultsHTML = noResults ? `<div class="search-no-results">No results found for "${searchInput.value}". Try exploring these topics instead:</div>` : '';
+        const allTopicsPath = taxonomyBaseURL ? '/' + taxonomyBaseURL + '/tags/' : '/blogs/tags/';
+
         searchResults.innerHTML = `
             <div class="search-empty-state">
+                ${noResultsHTML}
                 <div class="discovery-section">
                     <div class="discovery-title">Featured Topics</div>
                     <div class="discovery-tags">${tagsHTML}</div>
@@ -115,7 +115,7 @@
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3m0 14v3M2 12h3m14 0h3M4.9 4.9l2.1 2.1m10 10l2.1 2.1M4.9 19.1l2.1-2.1m10-10l2.1-2.1"></path></svg>
                         Explore Knowledge Graph
                     </a>
-                    <a href="${joinPath(baseURL, '/tags')}" class="recent-search-item">
+                    <a href="${joinPath(baseURL, allTopicsPath)}" class="recent-search-item">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
                         Browse All Topics
                     </a>
@@ -159,17 +159,64 @@
         }
         if (isSearchOpen) {
             if (e.key === 'Escape') { closeModal(); return; }
+
             const items = searchResults ? searchResults.querySelectorAll('.search-result-item') : [];
-            if (e.key === 'ArrowDown') { e.preventDefault(); if (items.length > 0) { selectedIndex = Math.min(selectedIndex + 1, items.length - 1); updateSelection(items); } }
-            else if (e.key === 'ArrowUp') { e.preventDefault(); if (items.length > 0) { selectedIndex = Math.max(selectedIndex - 1, 0); updateSelection(items); } }
-            else if (e.key === 'Enter' && selectedIndex >= 0 && items[selectedIndex]) { e.preventDefault(); items[selectedIndex].click(); }
+            const sugItems = searchSuggestions ? searchSuggestions.querySelectorAll('.suggestion-item') : [];
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (suggestionsActive && sugItems.length > 0) {
+                    selectedSuggestionIndex = Math.min(selectedSuggestionIndex + 1, sugItems.length - 1);
+                    updateSuggestionSelection(sugItems);
+                } else if (items.length > 0) {
+                    selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+                    updateSelection(items);
+                }
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (suggestionsActive && sugItems.length > 0) {
+                    selectedSuggestionIndex = Math.max(selectedSuggestionIndex - 1, 0);
+                    updateSuggestionSelection(sugItems);
+                } else if (items.length > 0) {
+                    selectedIndex = Math.max(selectedIndex - 1, 0);
+                    updateSelection(items);
+                }
+            } else if (e.key === 'Enter') {
+                if (suggestionsActive && selectedSuggestionIndex >= 0 && sugItems[selectedSuggestionIndex]) {
+                    e.preventDefault();
+                    sugItems[selectedSuggestionIndex].click();
+                } else if (selectedIndex >= 0 && items[selectedIndex]) {
+                    e.preventDefault();
+                    items[selectedIndex].click();
+                }
+            } else if (e.key === 'Tab') {
+                if (suggestionsActive && sugItems.length > 0) {
+                    e.preventDefault();
+                    selectedSuggestionIndex = (selectedSuggestionIndex + 1) % sugItems.length;
+                    updateSuggestionSelection(sugItems);
+                }
+            }
         }
     });
 
     function updateSelection(items) {
         items.forEach((item, i) => {
-            if (i === selectedIndex) { item.classList.add('selected'); item.scrollIntoView({ block: 'nearest' }); }
-            else { item.classList.remove('selected'); }
+            if (i === selectedIndex) { 
+                item.classList.add('selected'); 
+                item.scrollIntoView({ block: 'nearest' }); 
+            } else { 
+                item.classList.remove('selected'); 
+            }
+        });
+    }
+
+    function updateSuggestionSelection(items) {
+        items.forEach((item, i) => {
+            if (i === selectedSuggestionIndex) { 
+                item.classList.add('selected'); 
+            } else { 
+                item.classList.remove('selected'); 
+            }
         });
     }
 
@@ -178,82 +225,69 @@
         searchInput.addEventListener('input', (e) => {
             clearTimeout(debounceTimer);
             const query = e.target.value;
+            
+            // Real-time suggestions
+            if (wasmLoaded && query.trim().length > 1) {
+                fetchSuggestions(query);
+            } else {
+                if (searchSuggestions) {
+                    searchSuggestions.style.display = 'none';
+                    searchSuggestions.innerHTML = '';
+                    suggestionsActive = false;
+                }
+            }
+
             debounceTimer = setTimeout(() => { performSearch(query); }, 100);
         });
+    }
+
+    function fetchSuggestions(query) {
+        try {
+            const suggestions = window.getSuggestions(query);
+            if (suggestions && suggestions.length > 0) {
+                renderSuggestions(suggestions);
+            } else {
+                if (searchSuggestions) {
+                    searchSuggestions.style.display = 'none';
+                    suggestionsActive = false;
+                }
+            }
+        } catch (e) {
+            console.error("Suggestion fetch failed:", e);
+        }
+    }
+
+    function renderSuggestions(suggestions) {
+        if (!searchSuggestions) return;
+        searchSuggestions.innerHTML = '';
+        selectedSuggestionIndex = -1;
+        suggestionsActive = true;
+        
+        suggestions.slice(0, 5).forEach(s => {
+            const div = document.createElement('div');
+            div.className = 'suggestion-item';
+            div.textContent = s;
+            div.onclick = () => {
+                searchInput.value = s;
+                performSearch(s);
+                searchSuggestions.style.display = 'none';
+                suggestionsActive = false;
+            };
+            searchSuggestions.appendChild(div);
+        });
+        searchSuggestions.style.display = 'flex';
     }
 
     function performSearch(query) {
         if (!wasmLoaded || !query || !query.trim()) { renderDiscovery(); return; }
         try {
-            const results = window.searchPosts(query, "all");
+            const results = window.searchItems(query, "all");
             if (!results || results.length === 0) {
                 renderDiscovery(true);
             } else {
                 renderResults(results);
             }
         } catch (err) { console.error("Search failed:", err); }
-    }
-
-    function renderDiscovery(noResults = false) {
-        if (!searchResults) return;
-        
-        var tagsHTML = '';
-        
-        try {
-            var tags = window.blogTags;
-            if (typeof tags === 'string') {
-                tags = JSON.parse(tags);
-            }
-            if (tags && tags.length > 0 && tags[0] && tags[0].Name) {
-                var sorted = tags.slice().sort(function(a, b) {
-                    return (b.Count || 0) - (a.Count || 0);
-                }).slice(0, 4);
-                
-                tagsHTML = sorted.map(function(tag) {
-                    var name = tag.Name;
-                    var link = tag.Link || '';
-                    var slug = '';
-                    if (link.indexOf && link.indexOf('/blogs/tags/') > -1) {
-                        slug = link.split('/blogs/tags/')[1].replace('.html', '');
-                    } else if (name) {
-                        slug = name.toLowerCase().replace(/\s+/g, '-');
-                    }
-                    var url = slug ? (baseURL + '/blogs/tags/' + slug + '.html') : (baseURL + '/blogs/tags/index.html');
-                    return '<a href="' + url + '" class="discovery-tag">#' + name + '</a>';
-                }).join('');
-            }
-        } catch (e) {}
-        
-        if (!tagsHTML) {
-            tagsHTML = 
-                '<a href="' + baseURL + '/blogs/tags/minimalism.html" class="discovery-tag">#minimalism</a>' +
-                '<a href="' + baseURL + '/blogs/tags/technology.html" class="discovery-tag">#technology</a>' +
-                '<a href="' + baseURL + '/blogs/tags/design.html" class="discovery-tag">#design</a>' +
-                '<a href="' + baseURL + '/blogs/tags/writing.html" class="discovery-tag">#writing</a>';
-        }
-
-        const noResultsHTML = noResults ? `<div class="search-no-results">No results found for "${searchInput.value}". Try exploring these topics instead:</div>` : '';
-        
-        searchResults.innerHTML = `
-            <div class="search-empty-state">
-                ${noResultsHTML}
-                <div class="discovery-section">
-                    <div class="discovery-title">Featured Topics</div>
-                    <div class="discovery-tags">${tagsHTML}</div>
-                </div>
-                <div class="discovery-section discovery-recent">
-                    <div class="discovery-title">Quick Actions</div>
-                    <a href="${joinPath(baseURL, '/graph.html')}" class="recent-search-item">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3m0 14v3M2 12h3m14 0h3M4.9 4.9l2.1 2.1m10 10l2.1 2.1M4.9 19.1l2.1-2.1m10-10l2.1-2.1"></path></svg>
-                        Explore Knowledge Graph
-                    </a>
-                    <a href="${joinPath(baseURL, '/blogs/tags/')}" class="recent-search-item">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
-                        Browse All Topics
-                    </a>
-                </div>
-            </div>
-        `;
     }
 
     function renderResults(results) {

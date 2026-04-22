@@ -2,52 +2,9 @@
    ZEN UTILITIES - REFINED CONTENT STYLES
    ============================================ */
 
-/* --- Layout & Core --- */
-article { 
-    width: 100%; 
-    margin: 0 auto; 
-}
-
-.content-body { 
-    line-height: var(--leading-loose); 
-    font-size: var(--text-lg); 
-    color: var(--text-main);
-}
-
 /* --- Blockquotes & Pull Quotes --- */
-blockquote {
-    margin: var(--space-10) 0;
-    padding: var(--space-8) var(--space-8) var(--space-4) var(--space-8);
-    border: 1px solid color-mix(in srgb, var(--accent-primary), transparent 80%);
-    background: color-mix(in srgb, var(--bg-card), var(--accent-primary) 3%);
-    border-radius: var(--space-2);
-    font-style: italic;
-    color: var(--text-main);
-    font-family: var(--font-serif);
-    font-size: var(--text-xl);
-    line-height: var(--leading-normal);
-    position: relative;
-    transition: all var(--transition-base);
-}
-
-blockquote:hover {
-    border-color: var(--accent-primary);
-    background: color-mix(in srgb, var(--bg-card), var(--accent-primary) 6%);
-}
-
 blockquote p:last-child {
     margin-bottom: 0;
-}
-
-blockquote::before {
-    content: "“";
-    position: absolute;
-    top: 0;
-    left: var(--space-4);
-    font-size: var(--text-6xl);
-    color: var(--accent-primary);
-    opacity: 0.2;
-    font-family: var(--font-serif);
 }
 
 .pull-quote {
@@ -79,7 +36,7 @@ blockquote::before {
     color: var(--accent-primary);
 }
 
-/* --- Editorial Imagery & Captions --- */
+/* --- Editorial Imagery & Captions (Enhanced) --- */
 .content-body figure {
     margin: var(--space-12) auto;
     text-align: center;
@@ -92,31 +49,14 @@ blockquote::before {
     max-width: 100%;
     border-radius: 12px;
     border: 1px solid var(--border);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--glow-hover);
     cursor: zoom-in;
     transition: all var(--transition-base);
 }
 
-[data-theme="light"] .content-body figure img {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-}
-
 .content-body figure img:hover {
     transform: translateY(-2px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
     filter: brightness(1.05);
-}
-
-.content-body figcaption {
-    display: block;
-    margin-top: var(--space-4);
-    font-family: var(--font-mono);
-    font-size: var(--text-sm);
-    color: var(--text-muted);
-    text-align: center;
-    font-style: normal;
-    letter-spacing: var(--tracking-wide);
-    opacity: 0.85;
 }
 
 .content-body figcaption::before {
@@ -125,22 +65,7 @@ blockquote::before {
     font-weight: bold;
 }
 
-/* --- Lists (Proper Indentation) --- */
-.content-body ul,
-.content-body ol {
-    margin: var(--space-4) 0;
-    padding-left: var(--space-6);
-}
-
-.content-body ul {
-    list-style-type: disc;
-}
-
-.content-body ol {
-    list-style-type: decimal;
-}
-
-/* Nested lists - progressive indentation */
+/* --- Lists (Incremental Indentation) --- */
 .content-body ul ul,
 .content-body ol ol,
 .content-body ul ol,
@@ -149,45 +74,7 @@ blockquote::before {
     padding-left: var(--space-6);
 }
 
-.content-body li {
-    margin: var(--space-3) 0;
-    line-height: var(--leading-relaxed);
-}
-
-/* --- Zen Ledgers (Table Styles) --- */
-.content-body table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: var(--space-8) 0;
-    font-size: var(--text-sm);
-    line-height: var(--leading-normal);
-    border: none;
-    background: var(--bg-card);
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.content-body th {
-    font-family: var(--font-mono);
-    font-weight: var(--font-weight-semibold);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-xxwide);
-    color: var(--accent-primary);
-    background: color-mix(in srgb, var(--bg-card), var(--accent-sage) 4%);
-    padding: var(--space-4) var(--space-5);
-    text-align: left;
-    border-bottom: 2px solid var(--border);
-    white-space: nowrap;
-}
-
-.content-body td {
-    padding: var(--space-4) var(--space-5);
-    border-bottom: 1px solid var(--border);
-    color: var(--text-secondary);
-    transition: all var(--transition-base);
-}
-
+/* --- Zen Ledgers (Table Enhancements) --- */
 .content-body tr:last-child td {
     border-bottom: none;
 }
@@ -200,49 +87,18 @@ blockquote::before {
 .content-body a {
     color: var(--accent-link);
     text-decoration: none;
-    border-bottom: 2px solid rgba(157, 180, 192, 0.2);
+    border-bottom: 2px solid color-mix(in srgb, var(--accent-link), transparent 80%);
     transition: all var(--transition-base);
     padding: 0 1px;
-}
-
-[data-theme="light"] .content-body a {
-    border-bottom-color: rgba(74, 93, 106, 0.2);
 }
 
 .content-body a:hover {
     color: var(--accent-link-hover);
     border-bottom-color: var(--accent-primary);
-    background: color-mix(in srgb, transparent, var(--accent-sage) 8%);
+    background: color-mix(in srgb, var(--accent-primary), transparent 92%);
 }
 
-/* Responsive Tables */
-@media (max-width: 768px) {
-    .content-body table {
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap;
-        -webkit-overflow-scrolling: touch;
-        margin: var(--space-5) 0;
-    }
-    
-    .content-body th, 
-    .content-body td {
-        padding: var(--space-3) var(--space-4);
-    }
-}
-
-/* Remove list-style from specific components that shouldn't have bullets */
-.content-body .post-list,
-.content-body .post-list li,
-.content-body .bento-grid,
-.content-body .bento-card,
-.content-body .latest-list,
-.content-body .list-item {
-    list-style: none;
-    padding-left: 0;
-}
-
-/* Tag Pages - Post List Styling */
+/* --- Tag Pages - Post List Styling --- */
 .post-list {
     list-style: none;
     padding: 0;
@@ -255,6 +111,7 @@ blockquote::before {
     border-bottom: 1px solid var(--border);
     transition: all var(--transition-base);
     margin-bottom: 0;
+    list-style: none !important;
 }
 
 .post-list li:hover {
@@ -285,20 +142,12 @@ blockquote::before {
     opacity: 0.9;
 }
 
-.post-list .tag-row {
-    display: flex;
-    gap: var(--space-3);
-    flex-wrap: wrap;
-    margin-top: var(--space-4);
-}
-
 /* --- Footer & Colophon --- */
 .colophon-social {
     display: flex;
     justify-content: flex-end;
     align-items: center;
     gap: var(--space-4);
-    margin-bottom: 0;
     font-family: var(--font-mono);
     font-size: var(--text-xs);
     text-transform: uppercase;
@@ -309,7 +158,6 @@ blockquote::before {
     color: var(--text-muted);
     text-decoration: none;
     transition: color var(--transition-base);
-    border: none !important;
 }
 
 .colophon-social a:hover {
@@ -322,8 +170,8 @@ blockquote::before {
 }
 
 .colophon {
-    margin-top: var(--space-12);
-    padding: var(--space-10) 0;
+    margin-top: var(--space-8);
+    padding: var(--space-6) 0;
     border-top: 1px solid var(--border);
     position: relative;
 }
@@ -331,7 +179,7 @@ blockquote::before {
 .colophon::before {
     content: "•";
     position: absolute;
-    top: calc(var(--space-2) * -1.2);
+    top: calc(var(--space-1) * -1.2);
     left: 50%;
     transform: translateX(-50%);
     background: var(--bg-body);
@@ -350,35 +198,10 @@ blockquote::before {
     padding: 0 var(--space-6);
 }
 
-.colophon-left {
-    text-align: left;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-}
-
-.colophon-center {
-    display: flex;
-    justify-content: center;
-}
-
-.colophon-right {
-    text-align: right;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-    align-items: flex-end;
-}
-
 @media (max-width: 768px) {
     .colophon-grid {
         grid-template-columns: 1fr;
-        gap: var(--space-6);
         text-align: center;
-    }
-    .colophon-left, .colophon-right {
-        text-align: center;
-        align-items: center;
     }
     .colophon-social {
         justify-content: center;
@@ -405,18 +228,24 @@ blockquote::before {
     font-size: var(--text-xs);
     color: var(--text-muted);
     text-align: right;
+    margin-top: var(--space-2);
 }
 
 .colophon-meta a {
-    color: var(--text-secondary);
+    color: var(--text-muted);
     text-decoration: none;
     border-bottom: 1px solid transparent;
     transition: all var(--transition-base);
 }
 
+.colophon-meta a:hover {
+    color: var(--accent-primary);
+    border-bottom-color: var(--accent-primary);
+}
+
 /* Scholar's Seal (Chop) */
 .scholar-seal {
-    color: var(--accent-terracotta);
+    color: var(--accent-warm);
     opacity: 0.6;
     transition: all var(--transition-base);
     cursor: help;
@@ -427,7 +256,7 @@ blockquote::before {
     opacity: 1;
     transform: translateY(-2px);
     color: var(--accent-gold);
-    filter: drop-shadow(var(--glow-hover));
+    filter: drop-shadow(0 0 8px var(--accent-gold));
 }
 
 /* Whisper Footnotes */
@@ -448,23 +277,12 @@ blockquote::before {
     font-size: var(--text-xs);
     vertical-align: super;
     text-decoration: none;
-    padding: 0 2px;
 }
 
 .footnote-backref {
     color: var(--accent-indigo);
     text-decoration: none;
     font-family: var(--font-mono);
-}
-
-.footnotes li {
-    padding: var(--space-2) 0;
-    transition: background var(--transition-base);
-}
-
-.footnotes li:target {
-    background: color-mix(in srgb, var(--bg-tint), var(--accent-sage) 5%);
-    box-shadow: var(--glow-hover);
 }
 
 /* Pagination */
@@ -505,7 +323,7 @@ blockquote::before {
     cursor: not-allowed;
 }
 
-/* Back to Top Button (The Scholar's Ascent) */
+/* Back to Top Button */
 #back-to-top {
     position: fixed;
     bottom: var(--space-6);
@@ -526,8 +344,6 @@ blockquote::before {
     transform: translateY(10px);
     transition: all var(--transition-base);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    font-family: inherit;
-    padding: 0;
 }
 
 #back-to-top.visible {
@@ -544,78 +360,14 @@ blockquote::before {
     transform: translateY(-5px);
 }
 
-#back-to-top svg {
-    transition: transform var(--transition-base);
-}
-
-#back-to-top:hover svg {
-    transform: translateY(-2px);
-}
-
-@media (max-width: 768px) {
-    #back-to-top {
-        bottom: var(--space-4);
-        right: var(--space-4);
-        width: var(--space-8);
-        height: var(--space-8);
-    }
-}
-
 /* --- Footer --- */
 footer {
-    text-align: center !important;
-    margin-top: var(--space-10);
-    padding: var(--space-8) 0;
+    text-align: center;
+    margin-top: var(--space-8);
+    padding: var(--space-6) 0;
     width: 100%;
     color: var(--text-muted);
     font-size: var(--text-xs);
     border-top: 1px solid var(--border);
     font-family: var(--font-mono);
-}
-
-/* --- Meta & Tags Overrides --- */
-.meta-info {
-    font-size: var(--text-sm) !important;
-    color: var(--accent-primary) !important;
-    font-family: var(--font-mono) !important;
-    font-weight: var(--font-weight-medium) !important;
-}
-
-.meta-divider, .separator {
-    margin: 0 var(--space-2) !important;
-    color: var(--border) !important;
-    opacity: 0.5 !important;
-}
-
-.tag-pill, .list-tag, .mini-tag {
-    background: var(--bg-tint) !important;
-    color: var(--accent-cool) !important;
-    border: 1px solid var(--accent-border) !important;
-    transition: all var(--transition-base) !important;
-    padding: calc(var(--space-1) / 2) var(--space-3) !important;
-    border-radius: var(--space-1) !important;
-    text-decoration: none !important;
-    font-family: var(--font-mono) !important;
-    font-size: var(--text-xs) !important;
-}
-
-.tag-pill:hover, .list-tag:hover, .mini-tag:hover {
-    background: var(--accent-cool) !important;
-    color: var(--text-inverse) !important;
-    border-color: var(--accent-cool) !important;
-}
-
-.small-pill {
-    padding: calc(var(--space-1) / 2) var(--space-2) !important;
-    font-size: var(--text-xs) !important;
-}
-
-/* Hide time in single article metadata */
-.article-meta time::after {
-    content: none !important;
-    display: none !important;
-}
-
-.article-meta time {
-    font-size: var(--text-sm) !important;
 }
