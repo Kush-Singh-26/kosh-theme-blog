@@ -241,7 +241,8 @@
             accentClay: rootStyle.getPropertyValue('--accent-clay').trim() || '#a38c85',
             accentIndigo: rootStyle.getPropertyValue('--accent-indigo').trim() || '#6c7e8c',
             accentGold: rootStyle.getPropertyValue('--accent-gold').trim() || '#b4a896',
-            accentTerracotta: rootStyle.getPropertyValue('--accent-terracotta').trim() || '#a38c85',
+            accentWarm: rootStyle.getPropertyValue('--accent-warm').trim() || '#a38c85',
+            accentTerracotta: rootStyle.getPropertyValue('--accent-terracotta').trim() || '#c4704a',
             textMuted: rootStyle.getPropertyValue('--text-muted').trim() || '#787470',
             cardBg: rootStyle.getPropertyValue('--bg-card').trim() || '#23221e'
         };
@@ -642,14 +643,14 @@
             if (e.key === 'ArrowDown') {
                 next = root;
             } else if (e.key === 'ArrowUp') {
-                const posts = active.conns.filter(c => c.group === 1);
-                if (posts.length > 0) next = posts[0];
+                const items = active.conns.filter(c => c.group === 1);
+                if (items.length > 0) next = items[0];
             } else {
                 const idx = allTags.indexOf(active);
                 if (e.key === 'ArrowRight') next = allTags[(idx + 1) % allTags.length];
                 if (e.key === 'ArrowLeft') next = allTags[(idx - 1 + allTags.length) % allTags.length];
             }
-        } else if (active.group === 1) { // Post
+        } else if (active.group === 1) { // Item
             const parentTags = active.conns.filter(c => c.group === 2);
             const parentTag = parentTags[0]; // Simple fallback: use first tag connection
             if (e.key === 'ArrowDown') {
