@@ -61,7 +61,7 @@
 
         {{ if .Config.Features.UseRawMarkdown }}
         <span class="meta-divider">|</span>
-        <a href="{{ relativize $.BaseURL $.RelativePrefix (replace ".html" ".md" .Permalink) }}" target="_blank" class="tag-pill small-pill">View Source</a>
+        <a href="{{ relativize $.BaseURL $.RelativePrefix (replace ".html" ".md" (.Permalink | lower)) }}" target="_blank" class="tag-pill small-pill">View Source</a>
         {{ end }}
     </div>
 
@@ -76,7 +76,7 @@
             <ul>
                 {{ range .TOC }}
                 <li class="toc-level-{{ .Level }}">
-                    <a href="#{{ .ID }}">{{ .Text }}</a>
+                    <a href="#{{ .ID }}">{{ .Text | safeHTML }}</a>
                 </li>
                 {{ end }}
             </ul>

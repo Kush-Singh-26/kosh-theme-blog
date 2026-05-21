@@ -3,7 +3,11 @@
     <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
 
     <!-- Portfolio Assets (bundled and hashed via esbuild) -->
+    {{ if .Assets }}
     <link rel="stylesheet" href="{{ relativize .BaseURL .RelativePrefix (index .Assets "/static/css/portfolio.css") }}">
+    {{ else }}
+    <link rel="stylesheet" href="{{ relativize .BaseURL .RelativePrefix "/static/css/portfolio.css" }}">
+    {{ end }}
 {{ end }}
 
 {{ define "content" }}
@@ -195,7 +199,13 @@ View all items <span class="arrow">→</span>
 {{ end }}
 
 {{ define "scripts-extra" }}
+    {{ if .Assets }}
     <script src="{{ relativize .BaseURL .RelativePrefix (index .Assets "/static/js/components/portfolio-ascii.js") }}" defer></script>
     <script src="{{ relativize .BaseURL .RelativePrefix (index .Assets "/static/js/components/portfolio-github.js") }}" defer></script>
     <script src="{{ relativize .BaseURL .RelativePrefix (index .Assets "/static/js/components/portfolio-main.js") }}" defer></script>
+    {{ else }}
+    <script src="{{ relativize .BaseURL .RelativePrefix "/static/js/components/portfolio-ascii.js" }}" defer></script>
+    <script src="{{ relativize .BaseURL .RelativePrefix "/static/js/components/portfolio-github.js" }}" defer></script>
+    <script src="{{ relativize .BaseURL .RelativePrefix "/static/js/components/portfolio-main.js" }}" defer></script>
+    {{ end }}
 {{ end }}

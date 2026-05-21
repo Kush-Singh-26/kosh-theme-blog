@@ -156,10 +156,10 @@
     --h5-color: oklch(50% 0.02 80);
     --h6-color: oklch(60% 0.02 80);
 
-    /* Accent Colors - Aged Bronze */
-    --accent-primary: oklch(45% 0.04 80); 
+    /* Accent Colors - Sage for consistency across themes */
+    --accent-primary: oklch(45% 0.04 160); 
     --accent-secondary: oklch(40% 0.06 80); 
-    --accent-tertiary: oklch(50% 0.03 80);
+    --accent-tertiary: oklch(50% 0.03 160);
     --accent-cool: oklch(40% 0.04 220); 
     --accent-warm: oklch(45% 0.06 40);
     --accent-indigo: oklch(40% 0.05 240);
