@@ -4,7 +4,7 @@
 
     <!-- Portfolio Assets (bundled and hashed via esbuild) -->
     {{ if .Assets }}
-    <link rel="stylesheet" href="{{ relativize .BaseURL .RelativePrefix (index .Assets "/static/css/portfolio.css") }}">
+    <link rel="stylesheet" href="{{ index .Assets "/static/css/portfolio.css" }}">
     {{ else }}
     <link rel="stylesheet" href="{{ relativize .BaseURL .RelativePrefix "/static/css/portfolio.css" }}">
     {{ end }}
@@ -59,7 +59,16 @@
         </div>
         <div class="project-grid fade-in">
             {{ range $index, $proj := $p.projects }}
-            <div class="project-card fade-in stagger-{{ add $index 1 }} card-spotlight">
+            <div class="project-card fade-in stagger-{{ add $index 1 }} card-spotlight{{ if .image }} has-image{{ end }}">
+                {{ if .image }}
+                {{ $imgWebP := .image }}
+                {{ $imgWebP = replace ".png" ".webp" $imgWebP }}
+                {{ $imgWebP = replace ".jpg" ".webp" $imgWebP }}
+                {{ $imgWebP = replace ".jpeg" ".webp" $imgWebP }}
+                <div class="project-card-image-wrap">
+                    <img class="project-image" src="{{ relativize $.BaseURL $.RelativePrefix (printf "/static/%s" $imgWebP) }}" alt="{{ .title }} Mockup" loading="lazy" decoding="async">
+                </div>
+                {{ end }}
                 <div class="card-content">
                     <span class="card-eyebrow mono-text">{{ .eyebrow }}</span>
                     <h3>{{ .title }}</h3>
@@ -200,12 +209,12 @@ View all items <span class="arrow">→</span>
 
 {{ define "scripts-extra" }}
     {{ if .Assets }}
-    <script src="{{ relativize .BaseURL .RelativePrefix (index .Assets "/static/js/components/portfolio-ascii.js") }}" defer></script>
-    <script src="{{ relativize .BaseURL .RelativePrefix (index .Assets "/static/js/components/portfolio-github.js") }}" defer></script>
-    <script src="{{ relativize .BaseURL .RelativePrefix (index .Assets "/static/js/components/portfolio-main.js") }}" defer></script>
+    <script type="module" src="{{ index .Assets "/static/js/components/portfolio-ascii.js" }}"></script>
+    <script type="module" src="{{ index .Assets "/static/js/components/portfolio-github.js" }}"></script>
+    <script type="module" src="{{ index .Assets "/static/js/components/portfolio-main.js" }}"></script>
     {{ else }}
-    <script src="{{ relativize .BaseURL .RelativePrefix "/static/js/components/portfolio-ascii.js" }}" defer></script>
-    <script src="{{ relativize .BaseURL .RelativePrefix "/static/js/components/portfolio-github.js" }}" defer></script>
-    <script src="{{ relativize .BaseURL .RelativePrefix "/static/js/components/portfolio-main.js" }}" defer></script>
+    <script type="module" src="{{ relativize .BaseURL .RelativePrefix "/static/js/components/portfolio-ascii.js" }}"></script>
+    <script type="module" src="{{ relativize .BaseURL .RelativePrefix "/static/js/components/portfolio-github.js" }}"></script>
+    <script type="module" src="{{ relativize .BaseURL .RelativePrefix "/static/js/components/portfolio-main.js" }}"></script>
     {{ end }}
 {{ end }}

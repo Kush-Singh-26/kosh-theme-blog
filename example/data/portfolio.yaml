@@ -1,0 +1,55 @@
+identity: "usr // kosh_dev"
+headline: "Kosh Developer"
+subHeadline: "Exploring low-level systems, compiler design, and high-performance web tooling."
+
+about:
+  largeText: "I am a software engineer focused on writing clean, high-performance, and robust code. I believe in mastering systems from first principles — understanding the journey from high-level abstractions down to the silicon level. I build static site generators, compilers, and fast database engines."
+  profileImg: "images/profile.webp"
+
+projects:
+  - eyebrow: "Compiler Engineering"
+    title: "Kosh Static Site Generator"
+    description: "High-performance static site generator written in Go with streaming pipelined parsing, native D2 diagram generation, KaTeX LaTeX math support, and XXH3-based incremental builds."
+    tags: ["Golang", "Markdown", "Go-WASM", "KaTeX"]
+    github: "https://github.com/Kush-Singh-26/kosh"
+
+  - eyebrow: "Systems Engineering"
+    title: "Inference Engine AVX"
+    description: "High-speed C++ model inference engine using SIMD AVX2 intrinsics. Implements custom matrix multiplication kernels, KV-caches, and symmetric 8-bit quantization."
+    tags: ["C++", "AVX2 SIMD", "Quantization", "KV-Cache"]
+    github: "https://github.com/Kush-Singh-26/Inference_Engine"
+
+  - eyebrow: "Distributed Databases"
+    title: "K-Share Distributed DB"
+    description: "A consensus-driven, replicated key-value database using the Raft algorithm. Supports multi-leader writes, atomic transaction logs, and BoltDB-backed persistence."
+    tags: ["Go", "Raft", "Distributed Systems", "BoltDB"]
+    github: "https://github.com/Kush-Singh-26/k-share"
+
+competencies:
+  - category: "// languages"
+    items: "Go · C++ · Python · JavaScript · Assembly"
+  - category: "// performance"
+    items: "SIMD Intrinsics · Pipelined Execution · Memory Caching"
+  - category: "// infrastructure"
+    items: "Linux · Docker · Git · GitHub Actions · WebAssembly"
+
+timeline:
+  - hash: "c389bf4"
+    date: "2024 - present"
+    title: "Lead Core Maintainer"
+    subtitle: "Kosh Open Source Project"
+    meta: "Core Systems Architect"
+  
+  - hash: "b21a8cd"
+    date: "2022 - 2024"
+    title: "Systems Engineer"
+    subtitle: "High Performance Computing Lab"
+    meta: "Focus: Parallelization & SIMD"
+
+socials:
+  email: "developer@kosh.ssg"
+  github: "https://github.com/Kush-Singh-26"
+  linkedin: "https://linkedin.com"
+  huggingFace: "https://huggingface.co"
+  leetCode: "https://leetcode.com"
+  codeforces: "https://codeforces.com"

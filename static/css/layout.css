@@ -5,3 +5,14 @@
 
 /* --- BLOG LAYOUT & STRUCTURE --- */
 /* Theme-specific design layer (after kosh-core.css) */
+
+/* Push footer to viewport bottom on short pages (tags index, etc.) */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;
+}
