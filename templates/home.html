@@ -8,28 +8,42 @@
     {{ else }}
     <link rel="stylesheet" href="{{ relativize .BaseURL .RelativePrefix "/static/css/portfolio.css" }}">
     {{ end }}
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Kush Singh",
+        "url": "{{ .BaseURL }}",
+        "jobTitle": "Computer Science Student & Software Engineer",
+        "sameAs": [
+            "https://github.com/Kush-Singh-26",
+            "https://www.linkedin.com/in/kush-singh-2b2440280/",
+            "https://huggingface.co/Kush26"
+        ]
+    }
+    </script>
 {{ end }}
 
 {{ define "content" }}
     {{ $p := .SiteData.portfolio }}
     <!-- HERO -->
-    <section id="hero" class="hero-section">
+    <section id="hero" class="hero-section" aria-label="Hero">
         <div class="hero-content fade-in">
 
-            <h1 class="headline fade-in-stagger" aria-label="Beyond Binary."><span class="breathe-word">Beyond.</span><br><span class="accent-text">Binary.</span></h1>
-            <pre id="ascii-canvas" aria-hidden="true"></pre>
+            <h1 class="headline fade-in-stagger" aria-label="Kernels and Tensors."><span class="breathe-word">Kernels</span><br><span class="headline-amp">&amp;</span><br><span class="accent-text">Tensors</span></h1>
             <p class="sub-headline fade-in-stagger">{{ $p.subHeadline }}</p>
 
 <div class="hero-links fade-in-stagger">
-<a href="#projects" class="link-arrow">View Projects <span class="arrow">↓</span></a>
-<a href="{{ relativize .BaseURL .RelativePrefix "/resume.pdf" }}" target="_blank" class="link-arrow link-arrow-secondary">Resume ↗</a>
-<a href="{{ relativize .BaseURL .RelativePrefix (printf "/%s/" $.Config.GetContentPrefix) }}" target="_blank" class="link-arrow link-arrow-secondary">Read Blog ↗</a>
+<a href="#projects" class="link-arrow">View Projects <span class="arrow">&darr;</span></a>
+<a href="{{ relativize .BaseURL .RelativePrefix "/resume.pdf" }}" target="_blank" rel="noopener noreferrer" class="link-arrow link-arrow-secondary">Resume &nearr;</a>
+<a href="{{ relativize .BaseURL .RelativePrefix (printf "/%s/" $.Config.GetContentPrefix) }}" target="_blank" rel="noopener noreferrer" class="link-arrow link-arrow-secondary">Read Blog &nearr;</a>
 </div>
         </div>
     </section>
 
     <!-- ABOUT -->
-    <section id="about" class="section-container">
+    <section id="about" class="section-container" aria-label="About">
         <div class="content-block fade-in">
             <div class="section-label-wrap">
                 <span class="section-line"></span>
@@ -51,15 +65,15 @@
     </section>
 
     <!-- PROJECTS -->
-    <section id="projects" class="section-container">
+    <section id="projects" class="section-container" aria-label="Selected Work">
         <div class="section-label-wrap fade-in">
             <span class="section-line"></span>
             <h2 class="section-label">Selected Work</h2>
             <span class="section-line"></span>
         </div>
-        <div class="project-grid fade-in">
+        <div class="project-grid fade-in" role="list">
             {{ range $index, $proj := $p.projects }}
-            <div class="project-card fade-in stagger-{{ add $index 1 }} card-spotlight{{ if .image }} has-image{{ end }}">
+            <article class="project-card fade-in stagger-{{ add $index 1 }} card-spotlight{{ if .image }} has-image{{ end }}" role="listitem" aria-label="{{ .title }}">
                 {{ if .image }}
                 {{ $imgWebP := .image }}
                 {{ $imgWebP = replace ".png" ".webp" $imgWebP }}
@@ -73,24 +87,26 @@
                     <span class="card-eyebrow mono-text">{{ .eyebrow }}</span>
                     <h3>{{ .title }}</h3>
                     <p>{{ .description }}</p>
+                    {{ if .metric }}
+                    {{ end }}
                     <div class="stack-tags">
                         {{ range .tags }}
                         <span class="stack-tag">{{ . }}</span>
                         {{ end }}
                     </div>
                     <div class="link-group">
-                        {{ if .github }}<a href="{{ .github }}" target="_blank" class="card-link">GitHub →</a>{{ end }}
-                        {{ if .huggingFace }}<a href="{{ .huggingFace }}" target="_blank" class="card-link">HuggingFace →</a>{{ end }}
-                        {{ if .demo }}<a href="{{ .demo }}" target="_blank" class="card-link">Live Demo</a>{{ end }}
+                        {{ if .github }}<a href="{{ .github }}" target="_blank" rel="noopener noreferrer" class="card-action-btn" aria-label="View {{ .title }} source on GitHub">Source</a>{{ end }}
+                        {{ if .huggingFace }}<a href="{{ .huggingFace }}" target="_blank" rel="noopener noreferrer" class="card-action-btn" aria-label="View {{ .title }} on HuggingFace">HF &nearr;</a>{{ end }}
+                        {{ if .demo }}<a href="{{ .demo }}" target="_blank" rel="noopener noreferrer" class="card-action-btn card-action-primary" aria-label="Open {{ .title }} live demo">Live Demo &nearr;</a>{{ end }}
                     </div>
                 </div>
-            </div>
+            </article>
             {{ end }}
         </div>
     </section>
 
     <!-- SKILLS -->
-    <section id="skills" class="section-container">
+    <section id="skills" class="section-container" aria-label="Competencies">
         <div class="skills-wrapper fade-in">
             <div class="section-label-wrap">
                 <span class="section-line"></span>
@@ -100,8 +116,12 @@
             <div class="skills-list">
                 {{ range $p.competencies }}
                 <div class="skill-category">
-                    <h3>{{ .category }}</h3>
-                    <p>{{ .items }}</p>
+                    <h3><span class="skill-category-prefix">//</span> {{ .category }}</h3>
+                    <div class="skill-pills">
+                        {{ range .items }}
+                        <span class="skill-pill">{{ . }}</span>
+                        {{ end }}
+                    </div>
                 </div>
                 {{ end }}
             </div>
@@ -109,7 +129,7 @@
     </section>
 
     <!-- TIMELINE -->
-    <section id="education" class="section-container">
+    <section id="education" class="section-container" aria-label="Timeline">
         <div class="section-label-wrap fade-in">
             <span class="section-line"></span>
             <h2 class="section-label">Timeline</h2>
@@ -118,7 +138,7 @@
         <div class="timeline fade-in">
             {{ range $p.timeline }}
             <div class="timeline-entry">
-                <div class="timeline-date mono-text">{{ .date }}</div>
+                <div class="timeline-date mono-text"><time>{{ .date }}</time></div>
                 <div class="timeline-body">
                     <strong>{{ .title }}</strong>
                     <p>{{ .subtitle }}</p>
@@ -130,7 +150,7 @@
     </section>
 
     <!-- GITHUB ACTIVITY -->
-    <section id="github" class="section-container github-section">
+    <section id="github" class="section-container github-section" aria-label="GitHub Activity">
         <div class="section-label-wrap fade-in">
             <span class="section-line"></span>
             <h2 class="section-label">// activity</h2>
@@ -140,11 +160,11 @@
         <div class="github-contrib fade-in">
             <div class="github-activity-inner">
                 <div class="github-header">
-                    <a href="https://github.com/Kush-Singh-26" target="_blank" rel="noopener noreferrer" class="github-branding">
+                    <a href="https://github.com/Kush-Singh-26" target="_blank" rel="noopener noreferrer" class="github-branding" aria-label="GitHub profile">
                         <svg class="github-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
                         <span class="github-username mono-text">@Kush-Singh-26</span>
                     </a>
-                    <div class="contrib-legend mono-text">
+                    <div class="contrib-legend mono-text" aria-hidden="true">
                         <span>less</span>
                         <span class="legend-cell" style="--lvl:0"></span>
                         <span class="legend-cell" style="--lvl:1"></span>
@@ -154,13 +174,37 @@
                         <span>more</span>
                     </div>
                 </div>
-                <div class="contrib-grid" id="contrib-grid"></div>
+                <div class="contrib-grid" id="contrib-grid" role="img" aria-label="GitHub contribution heatmap"></div>
             </div>
         </div>
     </section>
 
+    <!-- FEATURED POSTS -->
+    {{ if .PinnedItems }}
+    <section id="featured" class="section-container" aria-label="Featured Posts">
+        <div class="section-label-wrap fade-in">
+            <span class="section-line"></span>
+            <h2 class="section-label">Featured</h2>
+            <span class="section-line"></span>
+        </div>
+        <div class="featured-grid fade-in" role="list">
+            {{ range $index, $item := .PinnedItems }}
+            <a href="{{ relativize $.BaseURL $.RelativePrefix .Link }}" class="featured-card fade-in stagger-{{ add $index 1 }}" role="listitem" aria-label="Featured: {{ .Title }}">
+                <span class="featured-badge mono-text">Featured</span>
+                <h3>{{ .Title }}</h3>
+                <p>{{ .Description }}</p>
+                <div class="featured-meta mono-text">
+                    <span>{{ .DateObj.Format "Jan 2006" }}</span>
+                    <span>{{ .ReadingTime }} min read</span>
+                </div>
+            </a>
+            {{ end }}
+        </div>
+    </section>
+    {{ end }}
+
     <!-- CONTENT SNIPPETS -->
-    <section id="content-snippets" class="section-container">
+    <section id="content-snippets" class="section-container" aria-label="Latest Blog Posts">
         <div class="section-label-wrap fade-in">
             <span class="section-line"></span>
             <h2 class="section-label">Latest Content</h2>
@@ -169,18 +213,34 @@
         <p class="blog-snippets-sub fade-in">
             Recent notes and deep dives.
         </p>
-        <div class="content-snippets-grid fade-in" id="content-snippets-grid" aria-live="polite">
-            <div class="content-snippet-card is-loading">Loading latest items…</div>
+        {{ if .Items }}
+        <div class="content-snippets-grid fade-in" id="content-snippets-grid" aria-live="polite" aria-label="Latest blog posts">
+            {{ range .Items }}
+            <a href="{{ relativize $.BaseURL $.RelativePrefix .Link }}" class="content-snippet-card" aria-label="{{ .Title }}">
+                <span class="content-snippet-kicker mono-text">Latest note</span>
+                <h3 class="content-snippet-title">{{ .Title }}</h3>
+                <p class="content-snippet-excerpt">{{ .Description }}</p>
+                <div class="content-snippet-footer">
+                    <span class="content-snippet-date mono-text">{{ .DateObj.Format "Jan 02, 2006" }}</span>
+                    <span class="content-snippet-link mono-text">Read &rarr;</span>
+                </div>
+            </a>
+            {{ end }}
         </div>
+        {{ else }}
+        <div class="content-snippets-grid fade-in" id="content-snippets-grid" aria-live="polite">
+            <div class="content-snippet-card is-loading">Loading latest items&hellip;</div>
+        </div>
+        {{ end }}
 <div class="content-snippets-cta fade-in">
 <a href="{{ relativize .BaseURL .RelativePrefix (printf "/%s/" $.Config.GetContentPrefix) }}" target="_blank" rel="noopener noreferrer" class="link-arrow">
-View all items <span class="arrow">→</span>
+View all items <span class="arrow">&rarr;</span>
 </a>
 </div>
     </section>
 
     <!-- CONTACT -->
-    <section id="contact" class="section-container">
+    <section id="contact" class="section-container" aria-label="Connect">
         <div class="content-block fade-in">
             <div class="section-label-wrap">
                 <span class="section-line"></span>
@@ -189,18 +249,19 @@ View all items <span class="arrow">→</span>
             </div>
             <div class="social-grid">
                 <div class="email-wrapper">
-                    <a href="mailto:{{ $p.socials.email }}" class="social-item highlight-link" id="email-link">{{ $p.socials.email }}</a>
-                    <button class="copy-btn" id="copy-email" aria-label="Copy email" title="Copy email">
+                    <a href="mailto:{{ $p.socials.email }}" class="social-item highlight-link" id="email-link" aria-label="Email Kush Singh">{{ $p.socials.email }}</a>
+                    <button class="copy-btn" id="copy-email" aria-label="Copy email to clipboard" title="Copy email" aria-live="polite">
                         <svg id="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
                         <svg id="check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:none"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span class="sr-only">Email copied</span>
                     </button>
                 </div>
-<a href="{{ $p.socials.github }}" target="_blank" rel="noopener noreferrer" class="social-item">GitHub</a>
-<a href="{{ $p.socials.linkedin }}" target="_blank" rel="noopener noreferrer" class="social-item">LinkedIn</a>
-<a href="{{ $p.socials.huggingFace }}" target="_blank" rel="noopener noreferrer" class="social-item">HuggingFace</a>
-<a href="{{ $p.socials.leetCode }}" target="_blank" rel="noopener noreferrer" class="social-item">LeetCode</a>
-<a href="{{ $p.socials.codeforces }}" target="_blank" rel="noopener noreferrer" class="social-item">Codeforces</a>
-<a href="{{ relativize .BaseURL .RelativePrefix (printf "/%s/" $.Config.GetContentPrefix) }}" target="_blank" rel="noopener noreferrer" class="social-item">Blog</a>
+<a href="{{ $p.socials.github }}" target="_blank" rel="noopener noreferrer" class="social-item" aria-label="GitHub profile">GitHub</a>
+<a href="{{ $p.socials.linkedin }}" target="_blank" rel="noopener noreferrer" class="social-item" aria-label="LinkedIn profile">LinkedIn</a>
+<a href="{{ $p.socials.huggingFace }}" target="_blank" rel="noopener noreferrer" class="social-item" aria-label="HuggingFace profile">HuggingFace</a>
+<a href="{{ $p.socials.leetCode }}" target="_blank" rel="noopener noreferrer" class="social-item" aria-label="LeetCode profile">LeetCode</a>
+<a href="{{ $p.socials.codeforces }}" target="_blank" rel="noopener noreferrer" class="social-item" aria-label="Codeforces profile">Codeforces</a>
+<a href="{{ relativize .BaseURL .RelativePrefix (printf "/%s/" $.Config.GetContentPrefix) }}" target="_blank" rel="noopener noreferrer" class="social-item" aria-label="Read the blog">Blog</a>
             </div>
         </div>
     </section>
@@ -209,11 +270,9 @@ View all items <span class="arrow">→</span>
 
 {{ define "scripts-extra" }}
     {{ if .Assets }}
-    <script type="module" src="{{ index .Assets "/static/js/components/portfolio-ascii.js" }}"></script>
     <script type="module" src="{{ index .Assets "/static/js/components/portfolio-github.js" }}"></script>
     <script type="module" src="{{ index .Assets "/static/js/components/portfolio-main.js" }}"></script>
     {{ else }}
-    <script type="module" src="{{ relativize .BaseURL .RelativePrefix "/static/js/components/portfolio-ascii.js" }}"></script>
     <script type="module" src="{{ relativize .BaseURL .RelativePrefix "/static/js/components/portfolio-github.js" }}"></script>
     <script type="module" src="{{ relativize .BaseURL .RelativePrefix "/static/js/components/portfolio-main.js" }}"></script>
     {{ end }}
