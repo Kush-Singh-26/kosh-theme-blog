@@ -505,6 +505,10 @@
     padding-bottom: var(--space-2);
 }
 
+.github-contrib:not([hidden]) + .github-contrib:not([hidden]) {
+    margin-top: var(--space-6);
+}
+
 .github-activity-inner {
     width: 100%;
 }
